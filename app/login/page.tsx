@@ -53,17 +53,58 @@ export default function LoginPage() {
       <Navbar />
 
       <main className="flex-grow flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md space-y-6">
           <Card className="shadow-lg border-0 bg-card">
             <CardHeader className="text-center space-y-2">
               <CardTitle className="text-3xl font-bold text-primary">
                 Welcome to Byte
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                Sign in with Google to continue
+                Sign in with your email or Google to continue
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-medium"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
+              <div className="flex items-center my-2">
+                <div className="flex-grow border-t border-muted" />
+                <span className="mx-2 text-muted-foreground text-xs">OR</span>
+                <div className="flex-grow border-t border-muted" />
+              </div>
               <Button
                 type="button"
                 variant="outline"
@@ -83,6 +124,14 @@ export default function LoginPage() {
                 </svg>
                 Continue with Google
               </Button>
+              <div className="text-center mt-4">
+                <span className="text-sm text-muted-foreground">
+                  Don't have an account?{" "}
+                  <Link href="/register" className="text-primary underline">
+                    Register
+                  </Link>
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>

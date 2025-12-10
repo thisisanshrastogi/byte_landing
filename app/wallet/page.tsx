@@ -50,17 +50,10 @@ export default function WalletPage() {
   const getPaymentSession = async (amount: number) => {
     // Call your backend API to create a payment session
     try {
-      const response = await fetch(
-        "http://34.100.235.255:2707/api/v1/payments/create-order",
-        {
-          method: "POST",
-          credentials: "include",
-          body: JSON.stringify({ order_amount: amount }),
-        }
-      );
-
-      console.log("response", response);
-      const data = await response.json();
+      const response = await axi.post("/payments/create-payment", {
+        order_amount: amount,
+      });
+      const data = response.data;
       console.log("Payment session created:", data);
       return data.payment_session_id;
     } catch (error) {
@@ -117,6 +110,9 @@ export default function WalletPage() {
           {
             method: "GET",
             credentials: "include",
+            headers: {
+              "Client-Type": "web",
+            },
           }
         );
         const data = await response.json();

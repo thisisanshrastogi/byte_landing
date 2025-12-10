@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       newBalance,
-      message: `Successfully added ₹${amount} to wallet`,
+      message: `Successfully added ₹{amount} to wallet`,
     })
   } catch (error) {
     return NextResponse.json({ error: "Recharge failed" }, { status: 500 })

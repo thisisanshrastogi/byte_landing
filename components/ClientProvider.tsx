@@ -17,9 +17,9 @@ export default function ClientProviders({ children }: Props) {
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </SessionProvider>
+      {/* <SessionProvider> */}
+      <AuthProvider>{children}</AuthProvider>
+      {/* </SessionProvider> */}
     </ThemeProvider>
   );
 }

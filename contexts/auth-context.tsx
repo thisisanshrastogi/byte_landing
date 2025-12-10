@@ -1,5 +1,6 @@
 "use client";
 
+import axi from "@/lib/axi";
 import {
   createContext,
   useContext,
@@ -36,18 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch(
-        "http://34.100.235.255:2707/api/v1/auth/me",
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      }
+      const response = await axi.get("/auth/me");
+      setUser(response.data);
     } catch (error) {
       console.error("Auth check failed:", error);
     } finally {
@@ -57,19 +48,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch(
-        "http://34.100.235.255:2707/api/v1/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include",
-        }
-      );
-      if (response.ok) {
-        const userData = await response.json();
-
-        setUser({ ...userData });
+      const response = await axi.post("/auth/login", {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        setUser(response.data);
         return true;
       }
       return false;
@@ -81,7 +65,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch("/api/logout", { method: "POST" });
+      await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Client-Type": "web",
+        },
+      });
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
