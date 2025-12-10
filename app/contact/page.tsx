@@ -30,7 +30,7 @@ export default function ContactPage() {
                 </p>
                 <p className="text-sm sm:text-base text-foreground">
                   <a href="mailto:hello@byte.app" className="text-primary hover:underline break-all">
-                    hello@byte.app
+                    thisisanshrastogi@gmail.com
                   </a>
                 </p>
               </CardContent>
@@ -46,7 +46,7 @@ export default function ContactPage() {
                 </p>
                 <p className="text-sm sm:text-base text-foreground">
                   <a href="mailto:business@byte.app" className="text-primary hover:underline break-all">
-                    business@byte.app
+                    thisisanshrastogi@gmail.com
                   </a>
                 </p>
               </CardContent>
