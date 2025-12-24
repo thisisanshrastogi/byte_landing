@@ -13,8 +13,8 @@
   --popover-foreground:#5c4d45; /* Dark Teal for text in popovers */
   --primary: #ff9e75; /* Soft Coral for buttons */
   --primary-foreground: #ffffff; /* Dark Teal for button text */
-  --secondary: #f0eae5; /* Muted Green for secondary buttons */
-  --secondary-foreground: oklch(0.205 0 0); /* Dark Teal for secondary button text */
+  --secondary: #f0eae5;
+  --secondary-foreground: #5c4d45; /* Dark Teal for secondary button text */
   --muted: #f5efe8; /* Light Gray for muted text */
   --muted-foreground: #9c8c84; /* Dark Teal for muted text */
   --accent: #fff0e6; /* Dark Teal for accents */
@@ -26,10 +26,11 @@
   --ring: #ff9e75; /* Semi-transparent Dark Teal for focus rings */
   --chart-1: oklch(0.646 0.222 41.116); /* Soft Coral for chart elements */
   --chart-2: oklch(0.6 0.118 184.704); /* Muted Green for chart elements */
-  --chart-3: oklch(0.398 0.07 227.392); /* Light Gray for chart elements */
+  --chart-3: oklch(82.065% 0.14932 98.795); /* Light Gray for chart elements */
   --chart-4: oklch(0.828 0.189 84.429); /* Light Peach for chart elements */
   --chart-5: oklch(0.769 0.188 70.08); /* Dark Teal for chart elements */
   --radius: 1.5rem; /* Rounded corners */
+  /* ignoring below for now */
   --sidebar: oklch(1 0 0); /* White for sidebar background */
   --sidebar-foreground: oklch(0.145 0 0); /* Dark Teal for sidebar text */
   --sidebar-primary: oklch(0.205 0 0); /* Soft Coral for primary sidebar elements */
