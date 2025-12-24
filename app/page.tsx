@@ -10,9 +10,8 @@ import { Footer } from "@/components/layout/footer";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background/60 relative z-10">
       <Navbar />
-
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
