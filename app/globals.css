@@ -4,32 +4,32 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens to match Byte's custom color palette */
-  --background: oklch(1 0 0); /* Light Peach */
-  --foreground: oklch(0.145 0 0); /* Dark Teal */
+  /* Updated color tokens to match Arjun Manjunath's custom clay color palette */
+  --background: #fffbf7; /* Light Peach */
+  --foreground: #5c4d45; /* Dark Teal */
   --card: oklch(1 0 0); /* White for cards */
-  --card-foreground: oklch(0.145 0 0); /* Dark Teal for text on cards */
-  --popover: oklch(1 0 0); /* White for popovers */
-  --popover-foreground: oklch(0.145 0 0); /* Dark Teal for text in popovers */
-  --primary: oklch(0.205 0 0); /* Soft Coral for buttons */
-  --primary-foreground: oklch(0.985 0 0); /* Dark Teal for button text */
-  --secondary: oklch(0.97 0 0); /* Muted Green for secondary buttons */
+  --card-foreground: #5c4d45; /* Dark Teal for text on cards */
+  --popover: #ffffff; /* White for popovers */
+  --popover-foreground:#5c4d45; /* Dark Teal for text in popovers */
+  --primary: #ff9e75; /* Soft Coral for buttons */
+  --primary-foreground: #ffffff; /* Dark Teal for button text */
+  --secondary: #f0eae5; /* Muted Green for secondary buttons */
   --secondary-foreground: oklch(0.205 0 0); /* Dark Teal for secondary button text */
-  --muted: oklch(0.97 0 0); /* Light Gray for muted text */
-  --muted-foreground: oklch(0.556 0 0); /* Dark Teal for muted text */
-  --accent: oklch(0.97 0 0); /* Dark Teal for accents */
-  --accent-foreground: oklch(0.205 0 0); /* White for text on accent backgrounds */
-  --destructive: oklch(0.577 0.245 27.325); /* Red for error messages */
-  --destructive-foreground: oklch(0.577 0.245 27.325); /* White for text on error backgrounds */
-  --border: oklch(0.922 0 0); /* Light Gray for borders */
-  --input: oklch(0.922 0 0); /* White for input fields */
-  --ring: oklch(0.708 0 0); /* Semi-transparent Dark Teal for focus rings */
+  --muted: #f5efe8; /* Light Gray for muted text */
+  --muted-foreground: #9c8c84; /* Dark Teal for muted text */
+  --accent: #fff0e6; /* Dark Teal for accents */
+  --accent-foreground:#5c4d45; /* White for text on accent backgrounds */
+  --destructive: #ff6b6b; /* Red for error messages */
+  --destructive-foreground: #ffffff; /* White for text on error backgrounds */
+  --border: #ebe0d6; /* Light Gray for borders */
+  --input:  #ebe0d6; /* White for input fields */
+  --ring: #ff9e75; /* Semi-transparent Dark Teal for focus rings */
   --chart-1: oklch(0.646 0.222 41.116); /* Soft Coral for chart elements */
   --chart-2: oklch(0.6 0.118 184.704); /* Muted Green for chart elements */
   --chart-3: oklch(0.398 0.07 227.392); /* Light Gray for chart elements */
   --chart-4: oklch(0.828 0.189 84.429); /* Light Peach for chart elements */
   --chart-5: oklch(0.769 0.188 70.08); /* Dark Teal for chart elements */
-  --radius: 0.625rem; /* Rounded corners */
+  --radius: 1.5rem; /* Rounded corners */
   --sidebar: oklch(1 0 0); /* White for sidebar background */
   --sidebar-foreground: oklch(0.145 0 0); /* Dark Teal for sidebar text */
   --sidebar-primary: oklch(0.205 0 0); /* Soft Coral for primary sidebar elements */

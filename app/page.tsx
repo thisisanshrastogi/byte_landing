@@ -77,8 +77,7 @@ export default function HomePage() {
                 Enjoy Your Food
               </h3>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                Enjoy quick pickup from your favorite campus
-                canteens.
+                Enjoy quick pickup from your favorite campus canteens.
               </p>
             </div>
           </div>
