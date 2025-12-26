@@ -4,9 +4,9 @@ import axios, { AxiosInstance } from "axios"
 const axi = axios.create({
     baseURL: "https://api.byteapp.tech/api/v1",
     timeout: 5000,
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
-        withCredentials: true,
         "Client-Type": "web",
     },
 })
