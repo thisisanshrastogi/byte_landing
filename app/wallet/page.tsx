@@ -84,11 +84,11 @@ export default function WalletPage() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchWalletBalance();
-  //   const interval = setInterval(fetchWalletBalance, 10000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    fetchWalletBalance();
+    // const interval = setInterval(fetchWalletBalance, 10000);
+    // return () => clearInterval(interval);
+  }, []);
 
   /* -------------------- Payments -------------------- */
   const getPaymentSession = async (amount: number) => {
