@@ -79,7 +79,12 @@ export function Navbar() {
             <img
               src="/byte-logo.png"
               alt="Byte"
-              className="w-20 h-14 object-cover -ml-1 -mb-2"
+              className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden"
+            />
+            <img
+              src="/byte-logo-dark.png"
+              alt="Byte Dark"
+              className="w-24 h-10  object-cover -ml-1  pt-1 px-2 rounded-full hidden dark:block"
             />
           </Link>
 

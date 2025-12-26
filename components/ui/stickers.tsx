@@ -63,7 +63,7 @@ export default function StickersPage() {
         })}
       </div>
 
-      <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-transparent to-primary/90 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-primary/90 dark:from-background/90  via-transparent to-primary/90 dark:to-background/90 pointer-events-none" />
     </div>
   );
 }

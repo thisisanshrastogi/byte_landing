@@ -61,7 +61,12 @@ export default function IntroShutter() {
                 <img
                   src="/byte-logo.png"
                   alt="Byte Logo"
-                  className="w-56 h-28 object-cover mb-4 rounded-xl relative z-20"
+                  className="w-56 h-28 object-cover mb-4 rounded-xl relative z-20 block dark:hidden"
+                />
+                <img
+                  src="/byte-logo-dark.png"
+                  alt="Byte Logo"
+                  className="w-56 h-28 object-cover mb-4 rounded-xl hidden dark:block relative z-20"
                 />
               </motion.div>
             </motion.div>
