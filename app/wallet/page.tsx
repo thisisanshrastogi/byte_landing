@@ -314,7 +314,7 @@ export default function WalletPage() {
                       }}
                       className={`py-2 rounded-[0.8rem] text-sm font-black transition-all
                         ${amount === q.toString()
-                          ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary"
+                          ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary dark:text-primary-foreground"
                           : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"}
                       `}
                     >
