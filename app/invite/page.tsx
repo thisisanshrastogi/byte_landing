@@ -132,9 +132,10 @@ export default function BetaApplicationPage() {
               },
               {
                 icon: Wallet,
-                title: "Free Food Credits",
-                desc: "Get ₹500 in wallet credits to test the payment system.",
+                title: "Zero Convenience Fees",
+                desc: "No platform or service fees during the beta period.",
               },
+
               {
                 icon: Star,
                 title: "Founder Badge",
@@ -167,10 +168,8 @@ export default function BetaApplicationPage() {
       </div>
 
 
-      {/* ---------------- RIGHT SIDE: APPLICATION FORM ---------------- */}
       <div className="w-full lg:w-1/2 flex flex-col items-center p-6 lg:p-24 overflow-y-auto h-screen">
 
-        {/* Navigation Actions */}
         <div className="w-full max-w-md flex justify-between items-center mb-12">
           <Link href="/" className="lg:hidden flex items-center gap-2 text-xl font-black text-[#5C4D45] dark:text-foreground">
             <span className="w-3 h-3 rounded-full bg-[#FF9E75]"></span> Byte
@@ -296,7 +295,7 @@ export default function BetaApplicationPage() {
                   </label>
                   <textarea
                     className={`${clayInset} w-full p-4 h-32 resize-none leading-relaxed`}
-                    placeholder="Blin, I like my vodka alcohol-free."
+                    placeholder="I like my vodka alcohol-free."
                     value={formData.reason}
                     onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                   ></textarea>

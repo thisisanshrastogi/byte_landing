@@ -16,10 +16,18 @@ interface User {
   walletBalance: number;
 }
 
+type RegisterRequestBody = {
+  name: string;
+  email: string;
+  password: string;
+  role: "student";
+};
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  register: (name: string, email: string, password: string, token: string) => Promise<boolean>;
   loading: boolean;
   updateWalletBalance: (newBalance: number) => void;
 }
@@ -63,6 +71,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const register = async (name: string, email: string, password: string, token: string): Promise<boolean> => {
+    try {
+      const registerBody: RegisterRequestBody = {
+        name,
+        email,
+        password,
+        role: "student",
+      };
+      const response = await axi.post(`/auth/signup`, registerBody);
+      if (response.status === 200) {
+        setUser(response.data);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Registration failed:", error);
+      return false;
+    }
+  };
+
   const logout = async () => {
     try {
       const response = await axi.post("/auth/logout");
@@ -82,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, loading, updateWalletBalance }}
+      value={{ user, login, logout, register, loading, updateWalletBalance }}
     >
       {children}
     </AuthContext.Provider>

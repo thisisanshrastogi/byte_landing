@@ -1,12 +1,15 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { motion, Variants } from 'framer-motion';
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Wallet, Zap, Smartphone, ChevronRight, Utensils, CheckCircle2 } from 'lucide-react';
 
 export default function HomePage() {
+  const router = useRouter();
+
 
   // --- CLAY & DARK MODE TOKENS ---
   const clayFloat = "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-secondary dark:shadow-none dark:border-border";
@@ -58,10 +61,11 @@ export default function HomePage() {
 
             <motion.div variants={itemVariants}>
               <Button
+                onClick={() => router.push('/invite')}
                 size="lg"
                 className={`${clayBtnPrimary} h-auto px-8 py-5 text-lg font-black uppercase tracking-wide rounded-[1.5rem] flex items-center gap-2`}
               >
-                Get Started <ChevronRight size={20} strokeWidth={3} />
+                Become a Beta Tester <ChevronRight size={20} strokeWidth={3} />
               </Button>
             </motion.div>
           </motion.div>
