@@ -21,9 +21,66 @@ import {
   Lock,
   RefreshCw,
   Info,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Clock,
+  History,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import axi from "@/lib/axi";
+
+// --- TYPES ---
+type TransactionType = "PAYOUT" | "DEPOSIT";
+type TransactionStatus = "SUCCESS" | "PENDING" | "FAILED";
+
+interface WalletTransaction {
+  id: string;
+  amount: number;
+  transaction_type: TransactionType;
+  transaction_status: TransactionStatus;
+  created_at: string; // ISO String: "2025-12-30T08:45:12Z"
+}
+
+interface WalletProfile {
+  user_id: string;
+  email: string;
+  available_balance: number;
+  reserved_balance: number;
+  previous_transactions: WalletTransaction[];
+}
+
+// --- DUMMY TRANSACTIONS (ISO 8601 Format) ---
+// Note: 'Z' at the end means UTC. JS will convert this to local time.
+const DUMMY_TRANSACTIONS: WalletTransaction[] = [
+  {
+    id: "tx_123456789",
+    amount: 500,
+    transaction_type: "PAYOUT",
+    transaction_status: "SUCCESS",
+    created_at: "2025-12-30T08:45:12Z", // Today
+  },
+  {
+    id: "tx_987654321",
+    amount: 120,
+    transaction_type: "DEPOSIT",
+    transaction_status: "SUCCESS",
+    created_at: "2025-12-29T14:30:00Z", // Yesterday
+  },
+  {
+    id: "tx_456123789",
+    amount: 50,
+    transaction_type: "PAYOUT",
+    transaction_status: "PENDING",
+    created_at: "2025-12-28T09:15:00Z", // 2 days ago
+  },
+  {
+    id: "tx_741852963",
+    amount: 1000,
+    transaction_type: "PAYOUT",
+    transaction_status: "SUCCESS",
+    created_at: "2025-12-25T11:00:00Z", // 5 days ago
+  },
+];
 
 export default function WalletPage() {
   const router = useRouter();
@@ -31,9 +88,12 @@ export default function WalletPage() {
 
   const [amount, setAmount] = useState("");
 
-  const [walletDetails, setWalletDetails] = useState({
-    available: 0,
-    reserved: 0,
+  const [walletProfile, setWalletProfile] = useState<WalletProfile>({
+    user_id: "",
+    email: "",
+    available_balance: 0,
+    reserved_balance: 0,
+    previous_transactions: [],
   });
 
   const [isPaying, setIsPaying] = useState(false);
@@ -74,7 +134,7 @@ export default function WalletPage() {
     },
   };
 
-  /* -------------------- Init Cashfree SDK (ONCE) -------------------- */
+  /* -------------------- Init Cashfree SDK -------------------- */
   useEffect(() => {
     const init = async () => {
       cashfreeRef.current = await load({
@@ -110,11 +170,14 @@ export default function WalletPage() {
   const fetchWalletBalance = async () => {
     try {
       const res = await axi.get("/wallet/balance");
-      const data = res.data;
+      const data: WalletProfile = res.data;
 
-      setWalletDetails({
-        available: data.available_balance,
-        reserved: data.reserved_balance,
+      // If API returns empty transactions, use dummy ones for visual verification
+      const transactionsToShow = data.previous_transactions;
+
+      setWalletProfile({
+        ...data,
+        previous_transactions: transactionsToShow,
       });
 
       const totalBalance = data.available_balance + data.reserved_balance;
@@ -137,7 +200,6 @@ export default function WalletPage() {
   /* -------------------- Payments -------------------- */
   const getPaymentSession = async (amount: number) => {
     const idempotencyKey = getPaymentAttemptId();
-
     const res = await axi.post("/payments/create-payment", {
       order_amount: amount,
       idempotency_key: idempotencyKey,
@@ -151,20 +213,16 @@ export default function WalletPage() {
       setMessageType("error");
       return;
     }
-
     setIsPaying(true);
     setMessage("");
 
     try {
       const sessionId = await getPaymentSession(amount);
-
       await cashfreeRef.current.checkout({
         paymentSessionId: sessionId,
         redirectTarget: "_modal",
       });
-
       await fetchWalletBalance();
-
       clearPaymentAttemptId();
       setMessage("Wallet recharged successfully");
       setMessageType("success");
@@ -178,22 +236,40 @@ export default function WalletPage() {
     }
   };
 
-  /* -------------------- Form -------------------- */
   const handleRecharge = (e: React.FormEvent) => {
     e.preventDefault();
-
     const value = Number(amount);
     if (!value || value <= 0) {
       setMessage("Enter a valid amount");
       setMessageType("error");
       return;
     }
-
     handlePayment(value);
   };
 
   const quickAmounts = [50, 100, 200, 500, 1000];
-  const maskedId = user?.email ? `${user.email}` : "**** **** **** 1234";
+
+  const displayEmail = walletProfile.email || user?.email || "";
+  const maskedId = walletProfile.user_id
+    ? `...${walletProfile.user_id.slice(-8)}`
+    : "****";
+
+  // --- STANDARD ISO DATE FORMATTER ---
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    try {
+      // "2025-12-30T08:45:12Z" works natively here
+      return new Date(dateString).toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch (e) {
+      return dateString;
+    }
+  };
 
   if (loading || !user) return null;
 
@@ -203,301 +279,368 @@ export default function WalletPage() {
 
       <main className="container mx-auto px-4 py-20 mt-20 lg:py-24 min-h-[90vh]">
         <motion.div
-          className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto"
+          className="max-w-5xl mx-auto space-y-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* ---------------- Wallet Card ---------------- */}
-          <motion.div
-            variants={clayPopVariants}
-            className="relative w-full max-w-md mx-auto"
-          >
-            <div className={`${clayCard} overflow-hidden h-full flex flex-col`}>
-              <div className="p-8 space-y-8 flex-1">
-                {/* Header */}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-[#FFF0E6] rounded-[1rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm">
-                      <Wallet className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h3 className={`text-xl ${textHeading}`}>Byte Wallet</h3>
-                      <p
-                        className={`text-xs uppercase tracking-wider ${textBody}`}
-                      >
-                        Digital Payments
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#EAF8E6] rounded-full text-[#4CAF50] dark:bg-green-900/20 dark:text-green-400">
-                    <Shield className="w-3.5 h-3.5" />
-                    <span className="text-xs font-black uppercase tracking-wide">
-                      Secured
-                    </span>
-                  </div>
-                </div>
-
-                {/* Balances Area */}
-                <div className="space-y-4">
-                  {/* Available Balance (Hero) */}
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <p
-                        className={`text-sm font-black uppercase tracking-wide ${textBody}`}
-                      >
-                        Available Balance
-                      </p>
-
-                      {/* Refresh Button */}
-                      <button
-                        onClick={handleRefresh}
-                        disabled={isRefreshing}
-                        className="group p-1.5 rounded-full hover:bg-[#F5EFE8] dark:hover:bg-muted active:scale-95 transition-all outline-none focus:ring-2 focus:ring-[#FF9E75]"
-                        title="Refresh Balance"
-                      >
-                        <motion.div
-                          animate={{ rotate: isRefreshing ? 360 : 0 }}
-                          transition={{
-                            repeat: isRefreshing ? Infinity : 0,
-                            duration: 1,
-                            ease: "linear",
-                          }}
+          {/* ---------------- TOP ROW (Cards) ---------------- */}
+          <div className="grid lg:grid-cols-2 gap-20">
+            {/* ---------------- Wallet Card ---------------- */}
+            <motion.div variants={clayPopVariants} className="w-full">
+              <div
+                className={`${clayCard} overflow-hidden h-full flex flex-col p-6`}
+              >
+                <div className="space-y-8 flex-1">
+                  {/* Header */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-[#FFF0E6] rounded-[1rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm">
+                        <Wallet className="w-7 h-7" />
+                      </div>
+                      <div>
+                        <h3 className={`text-xl ${textHeading}`}>
+                          Byte Wallet
+                        </h3>
+                        <p
+                          className={`text-xs uppercase tracking-wider ${textBody}`}
                         >
-                          <RefreshCw
-                            className={`w-4 h-4 ${
-                              isRefreshing ? "text-[#FF9E75]" : "text-[#9C8C84]"
-                            }`}
-                          />
-                        </motion.div>
-                      </button>
+                          Digital Payments
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex items-baseline gap-3">
-                      <span className={`text-5xl font-black ${textHeading}`}>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#EAF8E6] rounded-full text-[#4CAF50] dark:bg-green-900/20 dark:text-green-400">
+                      <Shield className="w-3.5 h-3.5" />
+                      <span className="text-xs font-black uppercase tracking-wide">
+                        Secured
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Balances Area */}
+                  <div className="space-y-4">
+                    {/* Available Balance (Hero) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <p
+                          className={`text-sm font-black uppercase tracking-wide ${textBody}`}
+                        >
+                          Available Balance
+                        </p>
+
+                        {/* Refresh Button */}
+                        <button
+                          onClick={handleRefresh}
+                          disabled={isRefreshing}
+                          className="group p-1.5 rounded-full hover:bg-[#F5EFE8] dark:hover:bg-muted active:scale-95 transition-all outline-none focus:ring-2 focus:ring-[#FF9E75]"
+                          title="Refresh Balance"
+                        >
+                          <motion.div
+                            animate={{ rotate: isRefreshing ? 360 : 0 }}
+                            transition={{
+                              repeat: isRefreshing ? Infinity : 0,
+                              duration: 1,
+                              ease: "linear",
+                            }}
+                          >
+                            <RefreshCw
+                              className={`w-4 h-4 ${
+                                isRefreshing
+                                  ? "text-[#FF9E75]"
+                                  : "text-[#9C8C84]"
+                              }`}
+                            />
+                          </motion.div>
+                        </button>
+                      </div>
+
+                      <div className="flex items-baseline gap-3">
+                        <span className={`text-5xl font-black ${textHeading}`}>
+                          <CountUp
+                            start={0}
+                            end={walletProfile.available_balance}
+                            duration={1}
+                            separator=","
+                            prefix="₹ "
+                          />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Reserved Balance */}
+                    <div className="flex items-center gap-2 pt-2">
+                      <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#F5EFE8] dark:bg-muted/50 text-[#9C8C84]">
+                        <Lock className="w-3 h-3" />
+                        <span className="text-[10px] uppercase font-black tracking-wider">
+                          Reserved
+                        </span>
+                      </div>
+                      <span
+                        className={`text-lg font-bold text-[#9C8C84] dark:text-muted-foreground opacity-80`}
+                      >
                         <CountUp
                           start={0}
-                          end={walletDetails.available}
+                          end={walletProfile.reserved_balance}
                           duration={1}
                           separator=","
                           prefix="₹ "
                         />
                       </span>
+                      <div className="group relative ml-auto">
+                        <Info className="w-4 h-4 text-[#9C8C84]/50 cursor-help" />
+                        <span className="absolute right-0 bottom-full mb-2 w-40 p-2 bg-[#5C4D45] text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                          Funds temporarily locked for active orders. Released
+                          on order completion or cancellation.
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Reserved Balance (Updated Design: Clean Row) */}
-                  <div className="flex items-center gap-2 pt-2">
-                    <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#F5EFE8] dark:bg-muted/50 text-[#9C8C84]">
-                      <Lock className="w-3 h-3" />
-                      <span className="text-[10px] uppercase font-black tracking-wider">
-                        Reserved
-                      </span>
+                  {/* Account Footer with API Data */}
+                  <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p
+                          className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                        >
+                          Account
+                        </p>
+                        <p
+                          className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}
+                          title={displayEmail}
+                        >
+                          {displayEmail}
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <p
+                          className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                        >
+                          User ID
+                        </p>
+                        <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">
+                          {maskedId}
+                        </p>
+                      </div>
                     </div>
-                    <span
-                      className={`text-lg font-bold text-[#9C8C84] dark:text-muted-foreground opacity-80`}
-                    >
-                      <CountUp
-                        start={0}
-                        end={walletDetails.reserved}
-                        duration={1}
-                        separator=","
-                        prefix="₹ "
-                      />
+
+                    <div className="flex justify-between items-center pt-4 border-t border-[#D6C6BA]/20 dark:border-border">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#FF9E75] rounded-full" />
+                        <span className={`text-xs font-bold ${textBody}`}>
+                          Instant
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#5C4D45] dark:bg-foreground rounded-full" />
+                        <span className={`text-xs font-bold ${textBody}`}>
+                          Secured
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ---------------- Recharge Card ---------------- */}
+            <motion.div
+              variants={clayPopVariants}
+              className={`w-full ${clayCard} p-6`}
+            >
+              <div className="mb-8">
+                <h2
+                  className={`text-2xl flex items-center gap-3 mb-2 ${textHeading}`}
+                >
+                  <div className="w-10 h-10 bg-[#5C4D45] rounded-full flex items-center justify-center text-white dark:bg-primary dark:text-primary-foreground">
+                    <Plus className="w-5 h-5" strokeWidth={3} />
+                  </div>
+                  Recharge Wallet
+                </h2>
+                <p className={`text-sm ${textBody}`}>
+                  Add money to your Byte wallet instantly.
+                </p>
+              </div>
+
+              <form onSubmit={handleRecharge} className="space-y-8">
+                <div className="space-y-3">
+                  <label
+                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                  >
+                    Enter Amount (₹)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9C8C84] font-black text-lg">
+                      ₹
                     </span>
-                    <div className="group relative ml-auto">
-                      <Info className="w-4 h-4 text-[#9C8C84]/50 cursor-help" />
-                      <span className="absolute right-0 bottom-full mb-2 w-32 p-2 bg-[#5C4D45] text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        Funds temporarily locked for active orders.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Account Footer */}
-                {/* <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p
-                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
-                      >
-                        Account
-                      </p>
-                      <p
-                        className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}
-                      >
-                        {user.email}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <p
-                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
-                      >
-                        ID
-                      </p>
-                      <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">
-                        {maskedId}
-                      </p>
-                    </div>
-                  </div>
-                </div> */}
-
-                <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p
-                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
-                      >
-                        Account
-                      </p>
-                      <p
-                        className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}
-                      >
-                        {user.email}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <p
-                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
-                      >
-                        ID
-                      </p>
-                      <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">
-                        {maskedId}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center pt-4 border-t border-[#D6C6BA]/20 dark:border-border">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[#FF9E75] rounded-full" />
-                      <span className={`text-xs font-bold ${textBody}`}>
-                        Instant Payments
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[#5C4D45] dark:bg-foreground rounded-full" />
-                      <span className={`text-xs font-bold ${textBody}`}>
-                        24/7 Support
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ---------------- Recharge Card ---------------- */}
-          <motion.div
-            variants={clayPopVariants}
-            className={`w-full max-w-md mx-auto h-fit ${clayCard} p-8`}
-          >
-            <div className="mb-8">
-              <h2
-                className={`text-2xl flex items-center gap-3 mb-2 ${textHeading}`}
-              >
-                <div className="w-10 h-10 bg-[#5C4D45] rounded-full flex items-center justify-center text-white dark:bg-primary dark:text-primary-foreground">
-                  <Plus className="w-5 h-5" strokeWidth={3} />
-                </div>
-                Recharge Wallet
-              </h2>
-              <p className={`text-sm ${textBody}`}>
-                Add money to your Byte wallet instantly.
-              </p>
-            </div>
-
-            <form onSubmit={handleRecharge} className="space-y-8">
-              <div className="space-y-3">
-                <label
-                  className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
-                >
-                  Enter Amount (₹)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9C8C84] font-black text-lg">
-                    ₹
-                  </span>
-                  <input
-                    type="number"
-                    min={1}
-                    value={amount}
-                    onChange={(e) => {
-                      setAmount(e.target.value);
-                      clearPaymentAttemptId();
-                    }}
-                    className={`w-full pl-8 pr-4 py-5 text-xl font-black ${clayInset}`}
-                    placeholder="0"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <label
-                  className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
-                >
-                  Quick Add
-                </label>
-                <div className="grid grid-cols-5 gap-3">
-                  {quickAmounts.map((q) => (
-                    <button
-                      key={q}
-                      type="button"
-                      onClick={() => {
-                        setAmount(q.toString());
+                    <input
+                      type="number"
+                      min={1}
+                      value={amount}
+                      onChange={(e) => {
+                        setAmount(e.target.value);
                         clearPaymentAttemptId();
                       }}
-                      className={`py-2 rounded-[0.8rem] text-sm font-black transition-all
-                        ${
-                          amount === q.toString()
-                            ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary"
-                            : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"
-                        }
-                      `}
-                    >
-                      ₹{q}
-                    </button>
-                  ))}
+                      className={`w-full pl-8 pr-4 py-5 text-xl font-black ${clayInset}`}
+                      placeholder="0"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {message && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 rounded-[1rem] flex items-center gap-3 font-bold text-sm ${
-                    messageType === "error"
-                      ? "bg-[#FFF0F0] text-[#FF6B6B]"
-                      : "bg-[#EAF8E6] text-[#4CAF50]"
-                  }`}
-                >
-                  {messageType === "error" ? (
-                    <AlertCircle size={18} />
-                  ) : (
-                    <CheckCircle2 size={18} />
-                  )}
-                  {message}
-                </motion.div>
-              )}
+                <div className="space-y-3">
+                  <label
+                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                  >
+                    Quick Add
+                  </label>
+                  <div className="grid grid-cols-5 gap-3">
+                    {quickAmounts.map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => {
+                          setAmount(q.toString());
+                          clearPaymentAttemptId();
+                        }}
+                        className={`py-2 rounded-[0.8rem] text-sm font-black transition-all
+                          ${
+                            amount === q.toString()
+                              ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary"
+                              : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"
+                          }
+                        `}
+                      >
+                        ₹{q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-              <Button
-                type="submit"
-                disabled={isPaying}
-                className={`w-full h-14 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 ${clayBtn} disabled:opacity-70`}
-              >
-                {isPaying ? (
-                  "Processing..."
-                ) : (
-                  <>
-                    Add Money{" "}
-                    <CreditCard className="w-5 h-5" strokeWidth={2.5} />
-                  </>
+                {message && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-4 rounded-[1rem] flex items-center gap-3 font-bold text-sm ${
+                      messageType === "error"
+                        ? "bg-[#FFF0F0] text-[#FF6B6B]"
+                        : "bg-[#EAF8E6] text-[#4CAF50]"
+                    }`}
+                  >
+                    {messageType === "error" ? (
+                      <AlertCircle size={18} />
+                    ) : (
+                      <CheckCircle2 size={18} />
+                    )}
+                    {message}
+                  </motion.div>
                 )}
-              </Button>
-            </form>
+
+                <Button
+                  type="submit"
+                  disabled={isPaying}
+                  className={`w-full h-14 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 ${clayBtn} disabled:opacity-70`}
+                >
+                  {isPaying ? (
+                    "Processing..."
+                  ) : (
+                    <>
+                      Add Money{" "}
+                      <CreditCard className="w-5 h-5" strokeWidth={2.5} />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+          </div>
+
+          {/* ---------------- TRANSACTIONS HISTORY ---------------- */}
+          <motion.div variants={clayPopVariants} className={`${clayCard} p-8`}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-[#EAF8E6] dark:bg-transparent rounded-full flex items-center justify-center text-[#4CAF50]">
+                <History className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className={`text-xl ${textHeading}`}>Recent Activity</h3>
+                <p className={`text-xs font-bold ${textBody}`}>
+                  Your latest transactions
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {walletProfile.previous_transactions.length === 0 ? (
+                <div className="text-center py-8 text-[#9C8C84] opacity-70 italic font-bold">
+                  No transactions yet.
+                </div>
+              ) : (
+                walletProfile.previous_transactions.map((tx) => {
+                  const isCredit = tx.transaction_type === "DEPOSIT";
+                  const isLocked = false;
+
+                  const isSuccess = tx.transaction_status === "SUCCESS";
+
+                  return (
+                    <div
+                      key={tx.id}
+                      className="flex items-center justify-between p-4 rounded-[1.2rem] hover:bg-[#F5EFE8] dark:hover:bg-muted/50 transition-colors border-b border-[#F5EFE8] dark:border-muted/50 dark:rounded-none last:border-0"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center
+                          ${
+                            isCredit
+                              ? "bg-[#EAF8E6] text-[#4CAF50] dark:bg-transparent"
+                              : isLocked
+                              ? "bg-[#F5EFE8] text-[#9C8C84] dark:bg-transparent"
+                              : "bg-[#FFF0F0] text-[#FF6B6B] dark:bg-transparent"
+                          }`}
+                        >
+                          {isCredit ? (
+                            <ArrowDownLeft className="w-5 h-5" />
+                          ) : isLocked ? (
+                            <Lock className="w-4 h-4" />
+                          ) : (
+                            <ArrowUpRight className="w-5 h-5" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-black text-[#5C4D45] dark:text-foreground text-sm uppercase">
+                            {tx.transaction_type}
+                          </p>
+                          <div className="flex items-center gap-1 text-[#9C8C84] text-xs font-bold">
+                            <Clock className="w-3 h-3" />
+                            {formatDate(tx.created_at)}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <p
+                          className={`text-lg font-black ${
+                            isCredit
+                              ? "text-[#4CAF50]"
+                              : isLocked
+                              ? "text-[#9C8C84]"
+                              : "text-[#FF6B6B]"
+                          }`}
+                        >
+                          {isCredit ? "+" : isLocked ? "" : "-"}₹
+                          {tx.amount.toLocaleString()}
+                        </p>
+                        <p
+                          className={`text-[10px] uppercase font-bold tracking-wide ${"text-[#9C8C84] opacity-70"}`}
+                        >
+                          {tx.transaction_status}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </motion.div>
         </motion.div>
       </main>
