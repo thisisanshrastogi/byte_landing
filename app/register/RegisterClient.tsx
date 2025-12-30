@@ -8,215 +8,270 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/auth-context";
 import { motion, Variants } from "framer-motion";
-import { UserPlus, AlertCircle, ArrowRight, Rocket, Lock, Ticket, Star, Zap } from "lucide-react";
+import {
+  UserPlus,
+  AlertCircle,
+  ArrowRight,
+  Rocket,
+  Lock,
+  Ticket,
+  Star,
+  Zap,
+} from "lucide-react";
 
 export default function RegisterPage() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-    const { register } = useAuth();
-    const router = useRouter();
-    const searchParams = useSearchParams();
+  const { register } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    // Get the token. If it's null, this string is empty.
-    const token = searchParams.get("token");
+  // Get the token. If it's null, this string is empty.
+  const token = searchParams.get("token");
 
-    // --- CLAY TOKENS ---
-    const clayInset = "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
-    const clayBtnPrimary = "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
-    const clayBtnSecondary = "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
+  // --- CLAY TOKENS ---
+  const clayInset =
+    "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
+  const clayBtnPrimary =
+    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
+  const clayBtnSecondary =
+    "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
 
-    const textHeading = "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
-    const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
+  const textHeading =
+    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
+  const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
 
-    // --- ANIMATIONS ---
-    const fadeInUp: Variants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
-    };
+  // --- ANIMATIONS ---
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 20 },
+    },
+  };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setIsLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-        try {
-            const success = await register(name, email, password, token || "");
-            if (success) {
-                router.push("/wallet");
-            } else {
-                setError("We couldn’t complete your registration. This invite link is invalid or has expired.");
-            }
-        } catch (error) {
-            setError("An error occurred. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    try {
+      const success = await register(name, email, password, token || "");
+      if (success) {
+        window.location.replace("/login");
+      } else {
+        setError(
+          "We couldn’t complete your registration. This invite link is invalid or has expired."
+        );
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return (
-        <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden">
+  return (
+    <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden">
+      {/* ---------------- LEFT SIDE: VISUAL SHOWCASE ---------------- */}
+      <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-primary/5 flex-col justify-between p-12 lg:p-20 overflow-hidden">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <motion.div
+            animate={{ x: [0, -40, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[-15%] left-[-15%] w-[600px] h-[600px] bg-[#FF9E75]/15 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ x: [0, 40, 0], y: [0, -30, 0], rotate: [0, -10, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FFD166]/15 rounded-full blur-3xl"
+          />
+        </div>
 
-            {/* ---------------- LEFT SIDE: VISUAL SHOWCASE ---------------- */}
-            <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-primary/5 flex-col justify-between p-12 lg:p-20 overflow-hidden">
+        {/* Brand */}
+        <div className="relative z-10">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-foreground"
+          >
+            <span className="w-3 h-3 rounded-full bg-[#FF9E75]"></span> Byte
+          </Link>
+        </div>
 
-                {/* Animated Background Blobs */}
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                    <motion.div
-                        animate={{ x: [0, -40, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
-                        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-[-15%] left-[-15%] w-[600px] h-[600px] bg-[#FF9E75]/15 rounded-full blur-3xl"
-                    />
-                    <motion.div
-                        animate={{ x: [0, 40, 0], y: [0, -30, 0], rotate: [0, -10, 0] }}
-                        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-                        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FFD166]/15 rounded-full blur-3xl"
-                    />
-                </div>
-
-                {/* Brand */}
-                <div className="relative z-10">
-                    <Link href="/" className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-foreground">
-                        <span className="w-3 h-3 rounded-full bg-[#FF9E75]"></span> Byte
-                    </Link>
-                </div>
-
-                {/* Hero Content */}
-                <div className="relative z-10 max-w-lg">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                    >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full mb-8 text-[#FF9E75] font-black text-xs uppercase tracking-wide shadow-sm">
-                            <Rocket size={14} fill="currentColor" /> Join the Revolution
-                        </div>
-                        <h1 className="text-6xl font-black text-[#5C4D45] dark:text-foreground mb-6 leading-[1.1] tracking-tight">
-                            Your hunger,<br />
-                            <span className="text-[#FF9E75]">on your schedule.</span>
-                        </h1>
-                        <p className="text-xl text-[#9C8C84] font-bold leading-relaxed mb-8">
-                            Create an account to join the exclusive closed beta, track your orders in real-time, and experience the future of campus dining.
-                        </p>
-
-                        {/* Updated Visual Trust Badge (Non-Monetary) */}
-                        <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md p-4 rounded-[1.5rem] w-fit">
-                            <div className="w-10 h-10 bg-[#FF9E75] rounded-full flex items-center justify-center text-white shadow-sm">
-                                <Star size={20} fill="currentColor" />
-                            </div>
-                            <div>
-                                <p className="text-xs font-black uppercase text-[#9C8C84]">Beta Access</p>
-                                <p className="text-sm font-black text-[#5C4D45] dark:text-foreground">Priority Status Unlocked</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-
-                <div className="relative z-10">
-                    <p className="text-sm font-bold text-[#9C8C84]">© 2026 Byte Technologies</p>
-                </div>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full mb-8 text-[#FF9E75] font-black text-xs uppercase tracking-wide shadow-sm">
+              <Rocket size={14} fill="currentColor" /> Join the Revolution
             </div>
+            <h1 className="text-6xl font-black text-[#5C4D45] dark:text-foreground mb-6 leading-[1.1] tracking-tight">
+              Your hunger,
+              <br />
+              <span className="text-[#FF9E75]">on your schedule.</span>
+            </h1>
+            <p className="text-xl text-[#9C8C84] font-bold leading-relaxed mb-8">
+              Create an account to join the exclusive closed beta, track your
+              orders in real-time, and experience the future of campus dining.
+            </p>
 
+            {/* Updated Visual Trust Badge (Non-Monetary) */}
+            <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md p-4 rounded-[1.5rem] w-fit">
+              <div className="w-10 h-10 bg-[#FF9E75] rounded-full flex items-center justify-center text-white shadow-sm">
+                <Star size={20} fill="currentColor" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase text-[#9C8C84]">
+                  Beta Access
+                </p>
+                <p className="text-sm font-black text-[#5C4D45] dark:text-foreground">
+                  Priority Status Unlocked
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
-            {/* ---------------- RIGHT SIDE: DYNAMIC CONTENT ---------------- */}
-            <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative overflow-y-auto">
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-[#9C8C84]">
+            © 2026 Byte Technologies
+          </p>
+        </div>
+      </div>
 
-                <div className="absolute top-6 right-6 lg:hidden">
-                    <Link href="/" className="text-sm font-black text-[#9C8C84] hover:text-[#FF9E75]">Home</Link>
+      {/* ---------------- RIGHT SIDE: DYNAMIC CONTENT ---------------- */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative overflow-y-auto">
+        <div className="absolute top-6 right-6 lg:hidden">
+          <Link
+            href="/"
+            className="text-sm font-black text-[#9C8C84] hover:text-[#FF9E75]"
+          >
+            Home
+          </Link>
+        </div>
+
+        <motion.div
+          className="w-full max-w-md my-auto"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+        >
+          {token ? (
+            <>
+              <div className="mb-10">
+                <div className="w-16 h-16 bg-[#FFF0E6] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary mb-6 shadow-sm">
+                  <UserPlus size={32} strokeWidth={3} />
+                </div>
+                <h2 className={`text-4xl ${textHeading} mb-3`}>
+                  Create Account
+                </h2>
+                <p className={`text-lg ${textBody}`}>
+                  Join Byte today and start ordering smarter.
+                </p>
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mb-8"
+                >
+                  <Alert
+                    variant="destructive"
+                    className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4"
+                  >
+                    <AlertCircle size={20} className="mr-3 shrink-0" />
+                    <AlertDescription className="font-bold text-sm">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label
+                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                    htmlFor="name"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className={`w-full px-5 py-5 text-base ${clayInset}`}
+                    placeholder="Gordon Ramsay"
+                    required
+                  />
                 </div>
 
-                <motion.div
-                    className="w-full max-w-md my-auto"
-                    initial="hidden"
-                    animate="visible"
-                    variants={fadeInUp}
+                <div className="space-y-2">
+                  <label
+                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                    htmlFor="email"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`w-full px-5 py-5 text-base ${clayInset}`}
+                    placeholder="name@college.edu"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`w-full px-5 py-5 text-base ${clayInset}`}
+                    placeholder="••••••••"
+                    required
+                    minLength={8}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className={`w-full h-16 rounded-[1.2rem] text-lg font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}
+                  disabled={isLoading}
                 >
-                    {token ? (
-                        <>
-                            <div className="mb-10">
-                                <div className="w-16 h-16 bg-[#FFF0E6] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary mb-6 shadow-sm">
-                                    <UserPlus size={32} strokeWidth={3} />
-                                </div>
-                                <h2 className={`text-4xl ${textHeading} mb-3`}>Create Account</h2>
-                                <p className={`text-lg ${textBody}`}>
-                                    Join Byte today and start ordering smarter.
-                                </p>
-                            </div>
+                  {isLoading ? (
+                    "Creating..."
+                  ) : (
+                    <>
+                      Create Account{" "}
+                      <ArrowRight
+                        size={20}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
+                    </>
+                  )}
+                </Button>
 
-                            {error && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="mb-8"
-                                >
-                                    <Alert variant="destructive" className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4">
-                                        <AlertCircle size={20} className="mr-3 shrink-0" />
-                                        <AlertDescription className="font-bold text-sm">{error}</AlertDescription>
-                                    </Alert>
-                                </motion.div>
-                            )}
-
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="space-y-2">
-                                    <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`} htmlFor="name">
-                                        Full Name
-                                    </label>
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className={`w-full px-5 py-5 text-base ${clayInset}`}
-                                        placeholder="Gordon Ramsay"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`} htmlFor="email">
-                                        Email Address
-                                    </label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className={`w-full px-5 py-5 text-base ${clayInset}`}
-                                        placeholder="name@college.edu"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`} htmlFor="password">
-                                        Password
-                                    </label>
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className={`w-full px-5 py-5 text-base ${clayInset}`}
-                                        placeholder="••••••••"
-                                        required
-                                        minLength={8}
-                                    />
-                                </div>
-
-                                <Button
-                                    type="submit"
-                                    className={`w-full h-16 rounded-[1.2rem] text-lg font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? "Creating..." : (
-                                        <>Create Account <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" /></>
-                                    )}
-                                </Button>
-
-                                {/* <div className="relative my-10">
+                {/* <div className="relative my-10">
                                     <div className="absolute inset-0 flex items-center">
                                         <div className="w-full border-t border-[#E5DCD5] dark:border-border" />
                                     </div>
@@ -250,59 +305,78 @@ export default function RegisterPage() {
                                     </svg>
                                     Google
                                 </Button> */}
-                            </form>
+              </form>
 
-                            <div className="text-center mt-10">
-                                <span className={`text-base ${textBody}`}>
-                                    Already have an account?{" "}
-                                    <Link href="/login" className="text-[#FF9E75] font-black hover:underline dark:text-primary ml-1">
-                                        Sign in
-                                    </Link>
-                                </span>
-                            </div>
+              <div className="text-center mt-10">
+                <span className={`text-base ${textBody}`}>
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="text-[#FF9E75] font-black hover:underline dark:text-primary ml-1"
+                  >
+                    Sign in
+                  </Link>
+                </span>
+              </div>
 
-                            <div className="text-center mt-6">
-                                <p className="text-xs text-[#9C8C84]/60 dark:text-muted-foreground font-bold">
-                                    By registering, you agree to our <Link href="/privacy" className="hover:underline">Privacy Policy</Link> and <Link href="/disclaimer" className="hover:underline">Terms of Service</Link>.
-                                </p>
-                            </div>
-                        </>
-                    ) : (
-                        /* --- SCENARIO B: NO TOKEN (BLOCKER) --- */
-                        <div className="text-center">
-                            <div className="w-20 h-20 bg-[#F5EFE8] dark:bg-secondary rounded-[2rem] flex items-center justify-center text-[#9C8C84] dark:text-muted-foreground mb-8 shadow-inner mx-auto">
-                                <Lock size={40} strokeWidth={2.5} />
-                            </div>
+              <div className="text-center mt-6">
+                <p className="text-xs text-[#9C8C84]/60 dark:text-muted-foreground font-bold">
+                  By registering, you agree to our{" "}
+                  <Link href="/privacy" className="hover:underline">
+                    Privacy Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/disclaimer" className="hover:underline">
+                    Terms of Service
+                  </Link>
+                  .
+                </p>
+              </div>
+            </>
+          ) : (
+            /* --- SCENARIO B: NO TOKEN (BLOCKER) --- */
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#F5EFE8] dark:bg-secondary rounded-[2rem] flex items-center justify-center text-[#9C8C84] dark:text-muted-foreground mb-8 shadow-inner mx-auto">
+                <Lock size={40} strokeWidth={2.5} />
+              </div>
 
-                            <h2 className={`text-4xl ${textHeading} mb-4`}>Invite Required</h2>
+              <h2 className={`text-4xl ${textHeading} mb-4`}>
+                Invite Required
+              </h2>
 
-                            <p className={`text-lg ${textBody} mb-8 leading-relaxed`}>
-                                Byte is currently in <strong>Closed Beta</strong>. We are rolling out access gradually to ensure the best experience for everyone.
-                            </p>
+              <p className={`text-lg ${textBody} mb-8 leading-relaxed`}>
+                Byte is currently in <strong>Closed Beta</strong>. We are
+                rolling out access gradually to ensure the best experience for
+                everyone.
+              </p>
 
-                            <div className="bg-[#FFF0F0] dark:bg-red-900/10 border border-[#FFE4E4] dark:border-red-900/20 p-4 rounded-[1rem] mb-8">
-                                <p className="text-sm font-bold text-[#FF6B6B] dark:text-red-400">
-                                    Registration requires a valid invite token in the URL.
-                                </p>
-                            </div>
+              <div className="bg-[#FFF0F0] dark:bg-red-900/10 border border-[#FFE4E4] dark:border-red-900/20 p-4 rounded-[1rem] mb-8">
+                <p className="text-sm font-bold text-[#FF6B6B] dark:text-red-400">
+                  Registration requires a valid invite token in the URL.
+                </p>
+              </div>
 
-                            <div className="space-y-4 flex flex-col gap-4">
-                                <Link href="/invite">
-                                    <Button className={`w-full h-16 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}>
-                                        <Ticket size={20} /> Apply for Beta Access
-                                    </Button>
-                                </Link>
+              <div className="space-y-4 flex flex-col gap-4">
+                <Link href="/invite">
+                  <Button
+                    className={`w-full h-16 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}
+                  >
+                    <Ticket size={20} /> Apply for Beta Access
+                  </Button>
+                </Link>
 
-                                <Link href="/">
-                                    <Button className={`w-full h-16 rounded-[1.2rem] text-base font-bold flex items-center justify-center gap-2 ${clayBtnSecondary}`}>
-                                        Back to Home
-                                    </Button>
-                                </Link>
-                            </div>
-                        </div>
-                    )}
-                </motion.div>
+                <Link href="/">
+                  <Button
+                    className={`w-full h-16 rounded-[1.2rem] text-base font-bold flex items-center justify-center gap-2 ${clayBtnSecondary}`}
+                  >
+                    Back to Home
+                  </Button>
+                </Link>
+              </div>
             </div>
-        </div>
-    );
+          )}
+        </motion.div>
+      </div>
+    </div>
+  );
 }

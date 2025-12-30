@@ -11,7 +11,17 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
-import { Wallet, Plus, CreditCard, TrendingUp, Shield, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  Wallet,
+  Plus,
+  CreditCard,
+  Shield,
+  AlertCircle,
+  CheckCircle2,
+  Lock,
+  RefreshCw,
+  Info,
+} from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import axi from "@/lib/axi";
 
@@ -20,37 +30,55 @@ export default function WalletPage() {
   const { user, loading, updateWalletBalance } = useAuth();
 
   const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(0);
+
+  const [walletDetails, setWalletDetails] = useState({
+    available: 0,
+    reserved: 0,
+  });
+
   const [isPaying, setIsPaying] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
 
   const cashfreeRef = useRef<any>(null);
 
   // --- CLAY TOKENS ---
-  const clayCard = "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-card dark:border-border dark:shadow-none";
-  const clayInset = "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
-  const clayBtn = "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
+  const clayCard =
+    "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-card dark:border-border dark:shadow-none";
+  const clayInset =
+    "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
+  const clayBtn =
+    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
 
-  const textHeading = "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
+  const textHeading =
+    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
   const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
 
   // --- ANIMATION VARIANTS ---
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+    },
   };
 
   const clayPopVariants: Variants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 15 } },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 120, damping: 15 },
+    },
   };
 
   /* -------------------- Init Cashfree SDK (ONCE) -------------------- */
   useEffect(() => {
     const init = async () => {
       cashfreeRef.current = await load({
-        mode: "production",
+        mode: "sandbox",
       });
     };
     init();
@@ -83,21 +111,27 @@ export default function WalletPage() {
     try {
       const res = await axi.get("/wallet/balance");
       const data = res.data;
-      const newBalance = data.available_balance + data.reserved_balance;
 
-      if (newBalance !== balance) {
-        setBalance(newBalance);
-        updateWalletBalance(newBalance);
-      }
+      setWalletDetails({
+        available: data.available_balance,
+        reserved: data.reserved_balance,
+      });
+
+      const totalBalance = data.available_balance + data.reserved_balance;
+      updateWalletBalance(totalBalance);
     } catch (err) {
       console.error("Failed to fetch wallet balance", err);
     }
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchWalletBalance();
+    setTimeout(() => setIsRefreshing(false), 800);
+  };
+
   useEffect(() => {
     fetchWalletBalance();
-    // const interval = setInterval(fetchWalletBalance, 10000);
-    // return () => clearInterval(interval);
   }, []);
 
   /* -------------------- Payments -------------------- */
@@ -159,9 +193,7 @@ export default function WalletPage() {
   };
 
   const quickAmounts = [50, 100, 200, 500, 1000];
-  const maskedId = user?.email
-    ? `**** **** **** ${user.email.slice(-4)}`
-    : "**** **** **** 1234";
+  const maskedId = user?.email ? `${user.email}` : "**** **** **** 1234";
 
   if (loading || !user) return null;
 
@@ -181,9 +213,9 @@ export default function WalletPage() {
             variants={clayPopVariants}
             className="relative w-full max-w-md mx-auto"
           >
-            {/* Using Clay Card style instead of Card component */}
             <div className={`${clayCard} overflow-hidden h-full flex flex-col`}>
               <div className="p-8 space-y-8 flex-1">
+                {/* Header */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-[#FFF0E6] rounded-[1rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm">
@@ -191,7 +223,9 @@ export default function WalletPage() {
                     </div>
                     <div>
                       <h3 className={`text-xl ${textHeading}`}>Byte Wallet</h3>
-                      <p className={`text-xs uppercase tracking-wider ${textBody}`}>
+                      <p
+                        className={`text-xs uppercase tracking-wider ${textBody}`}
+                      >
                         Digital Payments
                       </p>
                     </div>
@@ -205,43 +239,135 @@ export default function WalletPage() {
                   </div>
                 </div>
 
-                <div>
-                  <p className={`text-sm font-black uppercase tracking-wide mb-1 ${textBody}`}>
-                    Available Balance
-                  </p>
-                  <div className="flex items-baseline gap-3">
-                    <span className={`text-5xl font-black ${textHeading}`}>
+                {/* Balances Area */}
+                <div className="space-y-4">
+                  {/* Available Balance (Hero) */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <p
+                        className={`text-sm font-black uppercase tracking-wide ${textBody}`}
+                      >
+                        Available Balance
+                      </p>
+
+                      {/* Refresh Button */}
+                      <button
+                        onClick={handleRefresh}
+                        disabled={isRefreshing}
+                        className="group p-1.5 rounded-full hover:bg-[#F5EFE8] dark:hover:bg-muted active:scale-95 transition-all outline-none focus:ring-2 focus:ring-[#FF9E75]"
+                        title="Refresh Balance"
+                      >
+                        <motion.div
+                          animate={{ rotate: isRefreshing ? 360 : 0 }}
+                          transition={{
+                            repeat: isRefreshing ? Infinity : 0,
+                            duration: 1,
+                            ease: "linear",
+                          }}
+                        >
+                          <RefreshCw
+                            className={`w-4 h-4 ${
+                              isRefreshing ? "text-[#FF9E75]" : "text-[#9C8C84]"
+                            }`}
+                          />
+                        </motion.div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-baseline gap-3">
+                      <span className={`text-5xl font-black ${textHeading}`}>
+                        <CountUp
+                          start={0}
+                          end={walletDetails.available}
+                          duration={1}
+                          separator=","
+                          prefix="₹ "
+                        />
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Reserved Balance (Updated Design: Clean Row) */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#F5EFE8] dark:bg-muted/50 text-[#9C8C84]">
+                      <Lock className="w-3 h-3" />
+                      <span className="text-[10px] uppercase font-black tracking-wider">
+                        Reserved
+                      </span>
+                    </div>
+                    <span
+                      className={`text-lg font-bold text-[#9C8C84] dark:text-muted-foreground opacity-80`}
+                    >
                       <CountUp
                         start={0}
-                        end={balance}
+                        end={walletDetails.reserved}
                         duration={1}
                         separator=","
                         prefix="₹ "
                       />
                     </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2 text-[#FF9E75] dark:text-primary">
-                    <TrendingUp className="w-4 h-4" />
-                    <span className="text-xs font-black uppercase tracking-wide">Active</span>
+                    <div className="group relative ml-auto">
+                      <Info className="w-4 h-4 text-[#9C8C84]/50 cursor-help" />
+                      <span className="absolute right-0 bottom-full mb-2 w-32 p-2 bg-[#5C4D45] text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        Funds temporarily locked for active orders.
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
+                {/* Account Footer */}
+                {/* <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}>
+                      <p
+                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                      >
                         Account
                       </p>
-                      <p className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}>
+                      <p
+                        className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}
+                      >
                         {user.email}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <p className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}>
+                      <p
+                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                      >
                         ID
                       </p>
-                      <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">{maskedId}</p>
+                      <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">
+                        {maskedId}
+                      </p>
+                    </div>
+                  </div>
+                </div> */}
+
+                <div className="bg-[#F5EFE8] dark:bg-muted/50 rounded-[1.5rem] p-6 space-y-4 mt-auto">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p
+                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                      >
+                        Account
+                      </p>
+                      <p
+                        className={`text-sm font-black truncate max-w-40 text-[#5C4D45] dark:text-foreground`}
+                      >
+                        {user.email}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p
+                        className={`text-xs uppercase tracking-wide mb-1 opacity-70 ${textBody}`}
+                      >
+                        ID
+                      </p>
+                      <p className="text-sm font-black font-mono text-[#5C4D45] dark:text-foreground">
+                        {maskedId}
+                      </p>
                     </div>
                   </div>
 
@@ -270,22 +396,30 @@ export default function WalletPage() {
             className={`w-full max-w-md mx-auto h-fit ${clayCard} p-8`}
           >
             <div className="mb-8">
-              <h2 className={`text-2xl flex items-center gap-3 mb-2 ${textHeading}`}>
+              <h2
+                className={`text-2xl flex items-center gap-3 mb-2 ${textHeading}`}
+              >
                 <div className="w-10 h-10 bg-[#5C4D45] rounded-full flex items-center justify-center text-white dark:bg-primary dark:text-primary-foreground">
                   <Plus className="w-5 h-5" strokeWidth={3} />
                 </div>
                 Recharge Wallet
               </h2>
-              <p className={`text-sm ${textBody}`}>Add money to your Byte wallet instantly.</p>
+              <p className={`text-sm ${textBody}`}>
+                Add money to your Byte wallet instantly.
+              </p>
             </div>
 
             <form onSubmit={handleRecharge} className="space-y-8">
               <div className="space-y-3">
-                <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}>
+                <label
+                  className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                >
                   Enter Amount (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9C8C84] font-black text-lg">₹</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9C8C84] font-black text-lg">
+                    ₹
+                  </span>
                   <input
                     type="number"
                     min={1}
@@ -302,7 +436,11 @@ export default function WalletPage() {
               </div>
 
               <div className="space-y-3">
-                <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}>Quick Add</label>
+                <label
+                  className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                >
+                  Quick Add
+                </label>
                 <div className="grid grid-cols-5 gap-3">
                   {quickAmounts.map((q) => (
                     <button
@@ -313,9 +451,11 @@ export default function WalletPage() {
                         clearPaymentAttemptId();
                       }}
                       className={`py-2 rounded-[0.8rem] text-sm font-black transition-all
-                        ${amount === q.toString()
-                          ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary"
-                          : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"}
+                        ${
+                          amount === q.toString()
+                            ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary"
+                            : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"
+                        }
                       `}
                     >
                       ₹{q}
@@ -328,12 +468,17 @@ export default function WalletPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 rounded-[1rem] flex items-center gap-3 font-bold text-sm ${messageType === "error"
-                    ? "bg-[#FFF0F0] text-[#FF6B6B]"
-                    : "bg-[#EAF8E6] text-[#4CAF50]"
-                    }`}
+                  className={`p-4 rounded-[1rem] flex items-center gap-3 font-bold text-sm ${
+                    messageType === "error"
+                      ? "bg-[#FFF0F0] text-[#FF6B6B]"
+                      : "bg-[#EAF8E6] text-[#4CAF50]"
+                  }`}
                 >
-                  {messageType === "error" ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+                  {messageType === "error" ? (
+                    <AlertCircle size={18} />
+                  ) : (
+                    <CheckCircle2 size={18} />
+                  )}
                   {message}
                 </motion.div>
               )}
@@ -347,7 +492,8 @@ export default function WalletPage() {
                   "Processing..."
                 ) : (
                   <>
-                    Add Money <CreditCard className="w-5 h-5" strokeWidth={2.5} />
+                    Add Money{" "}
+                    <CreditCard className="w-5 h-5" strokeWidth={2.5} />
                   </>
                 )}
               </Button>
