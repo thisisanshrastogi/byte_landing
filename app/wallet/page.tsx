@@ -138,7 +138,7 @@ export default function WalletPage() {
   useEffect(() => {
     const init = async () => {
       cashfreeRef.current = await load({
-        mode: "sandbox",
+        mode: "production",
       });
     };
     init();
