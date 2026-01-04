@@ -27,7 +27,13 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  register: (name: string, email: string, password: string, token: string) => Promise<boolean>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    token: string
+  ) => Promise<boolean>;
+  resetPassword: (token: string, newPassword: string) => Promise<boolean>;
   loading: boolean;
   updateWalletBalance: (newBalance: number) => void;
 }
@@ -71,7 +77,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string, token: string): Promise<boolean> => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    token: string
+  ): Promise<boolean> => {
     try {
       const registerBody: RegisterRequestBody = {
         name,
@@ -79,9 +90,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         role: "student",
       };
-      const response = await axi.post(`/auth/signup?token=${token}`, registerBody);
+      const response = await axi.post(
+        `/auth/signup?token=${token}`,
+        registerBody
+      );
       if (response.status === 200) {
-        setUser(response.data);
+        // setUser(response.data);
         return true;
       }
       return false;
@@ -89,6 +103,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Registration failed:", error);
       return false;
     }
+  };
+
+  const resetPassword = async (
+    token: string,
+    newPassword: string
+  ): Promise<boolean> => {
+    try {
+      const response = await axi.post("/auth/reset-password", {
+        token,
+        new_password: newPassword,
+      });
+      if (response.status === 200) {
+        return true;
+      }
+    } catch (error) {
+      console.error("Password reset failed:", error);
+      return false;
+    }
+    return false;
   };
 
   const logout = async () => {
@@ -110,7 +143,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, register, loading, updateWalletBalance }}
+      value={{
+        user,
+        login,
+        logout,
+        register,
+        resetPassword,
+        loading,
+        updateWalletBalance,
+      }}
     >
       {children}
     </AuthContext.Provider>
