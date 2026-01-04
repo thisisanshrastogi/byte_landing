@@ -206,10 +206,10 @@ export default function ReturnPage() {
               <p className={textBody}>
                 Need to report an issue? Contact us at{' '}
                 <a
-                  href="mailto:thisisanshrastogi@gmail.com"
+                  href="mailto:support@byteapp.tech"
                   className="text-[#FF9E75] font-black hover:underline dark:text-primary"
                 >
-                  thisisanshrastogi@gmail.com
+                  support@byteapp.tech
                 </a>
               </p>
             </motion.section>

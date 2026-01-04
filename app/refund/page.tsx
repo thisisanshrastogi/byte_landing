@@ -155,10 +155,10 @@ export default function RefundPage() {
                     For refund requests or questions about this policy, please contact us at:
                   </p>
                   <a
-                    href="mailto:thisisanshrastogi@gmail.com"
+                    href="mailto:support@byteapp.tech"
                     className="text-[#FF9E75] font-black hover:underline break-all dark:text-primary text-lg"
                   >
-                    thisisanshrastogi@gmail.com
+                    support@byteapp.tech
                   </a>
                 </div>
               </div>
