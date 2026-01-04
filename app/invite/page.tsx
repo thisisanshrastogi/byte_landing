@@ -125,23 +125,22 @@ export default function BetaApplicationPage() {
           {/* Benefits Cards */}
           <div className="space-y-6">
             {[
-              {
-                icon: Zap,
-                title: "Skip the Line",
-                desc: "Beta users get priority order status at canteens.",
-              },
-              {
-                icon: Wallet,
-                title: "Zero Convenience Fees",
-                desc: "No platform or service fees during the beta period.",
-              },
-
-              {
-                icon: Star,
-                title: "Founder Badge",
-                desc: "Exclusive profile badge for early adopters.",
-              },
-            ].map((item, i) => (
+                {
+                  icon: Wallet,
+                  title: "Zero Convenience Fees",
+                  desc: "No platform or service fees during the beta period.",
+                },
+                {
+                  icon: ArrowRight,
+                  title: "Exclusive Early Access",
+                  desc: "Beta users get early access to features before they are available to the public.",
+                },
+                {
+                  icon: Zap,
+                  title: "Be the First to Skip the Line",
+                  desc: "Be among the first to enjoy zero waiting at canteens during the beta phase.",
+                },
+              ].map((item, i) => (
               <motion.div
                 key={i}
                 variants={fadeInUp}
