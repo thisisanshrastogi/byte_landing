@@ -160,10 +160,10 @@ export default function DisclaimerPage() {
               <p className={textBody}>
                 Have questions about this disclaimer? Contact us at{' '}
                 <a
-                  href="mailto:thisisanshrastogi@gmail.com"
+                  href="mailto:support@byteapp.tech"
                   className="text-[#FF9E75] font-black hover:underline dark:text-primary"
                 >
-                  thisisanshrastogi@gmail.com
+                  support@byteapp.tech
                 </a>
               </p>
             </motion.section>

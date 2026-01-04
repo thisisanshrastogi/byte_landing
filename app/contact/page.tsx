@@ -96,10 +96,10 @@ export default function ContactPage() {
                 For general questions, account issues, or technical support.
               </p>
               <a
-                href="mailto:thisisanshrastogi@gmail.com"
+                href="mailto:support@byteapp.tech"
                 className="text-[#FF9E75] font-black hover:underline break-all dark:text-primary transition-colors"
               >
-                thisisanshrastogi@gmail.com
+                support@byteapp.tech
               </a>
             </motion.div>
 
@@ -119,10 +119,10 @@ export default function ContactPage() {
                 Interested in partnering with Byte or bringing us to your campus?
               </p>
               <a
-                href="mailto:thisisanshrastogi@gmail.com"
+                href="mailto:support@byteapp.tech"
                 className="text-[#FF9E75] font-black hover:underline break-all dark:text-primary transition-colors"
               >
-                thisisanshrastogi@gmail.com
+                support@byteapp.tech
               </a>
             </motion.div>
           </div>

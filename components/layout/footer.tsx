@@ -34,10 +34,10 @@ export function Footer() {
             <div className={`text-xs sm:text-sm font-bold ${textBase}`}>
               Contact:{" "}
               <a
-                href="mailto:hello@thisisanshrastogi@gmail.com"
+                href="mailto:hello@support@byteapp.tech"
                 className={`text-[#FF9E75] hover:text-white dark:text-primary dark:hover:underline transition-colors`}
               >
-                thisisanshrastogi@gmail.com
+                support@byteapp.tech
               </a>
             </div>
           </div>
