@@ -34,12 +34,13 @@ export default function MeetTeamSection() {
       name: "Ansh Rastogi",
       role: "Backend Chef",
       bio: "The architect behind the infrastructure. Orchestrating the API and ensuring the kitchen runs without a hitch.",
-      color: "text-[#FF8A5B]",
-      bg: "bg-[#FFF1E8]", // warm peach clay
+      // Warm Clay/Terracotta - ties directly to your main brand color
+      color: "text-[#D68C75]",
+      bg: "bg-[#FFF0EB]",
       icon: <Terminal size={18} />,
       image: "https://avatars.githubusercontent.com/u/138712510?v=4",
-      github: "",
-      linkedin: "",
+      github: "https://github.com/thisisanshrastogi",
+      linkedin: "https://www.linkedin.com/in/thisisanshrastogi/",
       x: "",
     },
     {
@@ -47,8 +48,9 @@ export default function MeetTeamSection() {
       name: "Mathew Manachery",
       role: "Vendor Ops Chef",
       bio: "Bridging the gap between the kitchen and the cloud. Building the tools that power our food partners.",
-      color: "text-[#7A9E8E]",
-      bg: "bg-[#F3F8F6]", // sage clay
+      // Dried Basil/Sage - an organic, earthy green that isn't "digital"
+      color: "text-[#9AA88E]",
+      bg: "bg-[#F2F5F0]",
       icon: <Store size={18} />,
       image: "https://avatars.githubusercontent.com/u/69890484?v=4",
       github: "",
@@ -60,8 +62,9 @@ export default function MeetTeamSection() {
       name: "Abhinav V S",
       role: "Web Experience Chef",
       bio: "Crafting the digital storefront. Ensuring our landing experience is as buttery smooth as the food.",
-      color: "text-[#6B86A6]",
-      bg: "bg-[#F2F6FA]", // dusty blue porcelain
+      // Toasted Wheat/Gold - warm and inviting for the "frontend"
+      color: "text-[#C2A878]",
+      bg: "bg-[#FBF8F0]",
       icon: <Monitor size={18} />,
       image: "https://avatars.githubusercontent.com/u/68746325?v=4",
       github: "",
@@ -73,8 +76,9 @@ export default function MeetTeamSection() {
       name: "Arjun Manjunath",
       role: "Mobile App Chef",
       bio: "The wizard behind the mobile experience. Turning caffeine into Flutter code.",
-      color: "text-[#8A7FB8]",
-      bg: "bg-[#F4F2FA]", // muted lavender clay
+      // Warm Stone/Taupe - neutral and grounded, avoids the "purple" cliché
+      color: "text-[#A89F99]",
+      bg: "bg-[#F4F2F0]",
       icon: <Smartphone size={18} />,
       image: "https://avatars.githubusercontent.com/u/133084134?v=4",
       github: "https://www.github.com/arjunmnath",
