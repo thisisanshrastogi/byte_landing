@@ -12,6 +12,7 @@ import {
   Store,
   Terminal,
 } from "lucide-react";
+import { bg } from "date-fns/locale";
 
 export default function MeetTeamSection() {
   const clayBg = "bg-[#FFFBF7]";
@@ -33,7 +34,8 @@ export default function MeetTeamSection() {
       name: "Ansh Rastogi",
       role: "Backend Chef",
       bio: "The architect behind the infrastructure. Orchestrating the API and ensuring the kitchen runs without a hitch.",
-      color: "text-[#FF9E75] bg-[#FFF0E6]",
+      color: "text-[#FF8A5B]",
+      bg: "bg-[#FFF1E8]", // warm peach clay
       icon: <Terminal size={18} />,
       image: "https://avatars.githubusercontent.com/u/138712510?v=4",
       github: "",
@@ -45,7 +47,8 @@ export default function MeetTeamSection() {
       name: "Mathew Manachery",
       role: "Vendor Ops Chef",
       bio: "Bridging the gap between the kitchen and the cloud. Building the tools that power our food partners.",
-      color: "text-[#81C784] bg-[#F1F8E9]",
+      color: "text-[#7A9E8E]",
+      bg: "bg-[#F3F8F6]", // sage clay
       icon: <Store size={18} />,
       image: "https://avatars.githubusercontent.com/u/69890484?v=4",
       github: "",
@@ -57,7 +60,8 @@ export default function MeetTeamSection() {
       name: "Abhinav V S",
       role: "Web Experience Chef",
       bio: "Crafting the digital storefront. Ensuring our landing experience is as buttery smooth as the food.",
-      color: "text-[#64B5F6] bg-[#E3F2FD]",
+      color: "text-[#6B86A6]",
+      bg: "bg-[#F2F6FA]", // dusty blue porcelain
       icon: <Monitor size={18} />,
       image: "https://avatars.githubusercontent.com/u/68746325?v=4",
       github: "",
@@ -69,7 +73,8 @@ export default function MeetTeamSection() {
       name: "Arjun Manjunath",
       role: "Mobile App Chef",
       bio: "The wizard behind the mobile experience. Turning caffeine into Flutter code.",
-      color: "text-[#9575CD] bg-[#EDE7F6]",
+      color: "text-[#8A7FB8]",
+      bg: "bg-[#F4F2FA]", // muted lavender clay
       icon: <Smartphone size={18} />,
       image: "https://avatars.githubusercontent.com/u/133084134?v=4",
       github: "https://www.github.com/arjunmnath",
@@ -162,7 +167,7 @@ export default function MeetTeamSection() {
                       window.open(
                         member.github,
                         "_blank",
-                        "noopener,noreferrer",
+                        "noopener,noreferrer"
                       )
                     }
                   >
@@ -174,7 +179,7 @@ export default function MeetTeamSection() {
                       window.open(
                         member.linkedin,
                         "_blank",
-                        "noopener,noreferrer",
+                        "noopener,noreferrer"
                       )
                     }
                   >
