@@ -62,6 +62,14 @@ export function Footer() {
                   </li>
                 ),
               )}
+              <li key="meet_our_team">
+                <Link
+                  href="/team"
+                  className={`text-sm font-bold ${textBase} ${hoverLink}`}
+                >
+                  Meet Our Team
+                </Link>
+              </li>
               <li key="join_beta_testing">
                 <Link
                   href="/invite"
