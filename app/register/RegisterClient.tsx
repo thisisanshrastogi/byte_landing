@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import TermsCheckbox from "./TermsCheckbox.jsx";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -24,6 +25,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
@@ -66,7 +68,7 @@ export default function RegisterPage() {
         window.location.replace("/login");
       } else {
         setError(
-          "We couldn’t complete your registration. This invite link is invalid or has expired."
+          "We couldn’t complete your registration. This invite link is invalid or has expired.",
         );
       }
     } catch (error) {
@@ -252,11 +254,11 @@ export default function RegisterPage() {
                     minLength={8}
                   />
                 </div>
-
+                <TermsCheckbox isChecked={agreed} onChange={setAgreed} />
                 <Button
                   type="submit"
                   className={`w-full h-16 rounded-[1.2rem] text-lg font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}
-                  disabled={isLoading}
+                  disabled={isLoading || !agreed}
                 >
                   {isLoading ? (
                     "Creating..."
@@ -319,19 +321,19 @@ export default function RegisterPage() {
                 </span>
               </div>
 
-              <div className="text-center mt-6">
-                <p className="text-xs text-[#9C8C84]/60 dark:text-muted-foreground font-bold">
-                  By registering, you agree to our{" "}
-                  <Link href="/privacy" className="hover:underline">
-                    Privacy Policy
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/disclaimer" className="hover:underline">
-                    Terms of Service
-                  </Link>
-                  .
-                </p>
-              </div>
+              {/* <div className="text-center mt-6"> */}
+              {/*   <p className="text-xs text-[#9C8C84]/60 dark:text-muted-foreground font-bold"> */}
+              {/*     By registering, you agree to our{" "} */}
+              {/*     <Link href="/privacy" className="hover:underline"> */}
+              {/*       Privacy Policy */}
+              {/*     </Link>{" "} */}
+              {/*     and{" "} */}
+              {/*     <Link href="/disclaimer" className="hover:underline"> */}
+              {/*       Terms of Service */}
+              {/*     </Link> */}
+              {/*     . */}
+              {/*   </p> */}
+              {/* </div> */}
             </>
           ) : (
             /* --- SCENARIO B: NO TOKEN (BLOCKER) --- */
