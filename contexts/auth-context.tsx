@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async () => {
     try {
       const response = await axi.get("/auth/me");
-      setUser(response.data);
+      setUser(response.data.data);
     } catch (error) {
       console.error("Auth check failed:", error);
     } finally {
