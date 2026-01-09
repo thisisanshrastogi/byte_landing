@@ -232,7 +232,7 @@ export function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className={`block rounded-[1rem] px-4 py-3 font-bold transition-colors ${
                       pathname === path
-                        ? "bg-[#FFF0E6] text-[#FF9E75]"
+                        ? "bg-[#FFF0E6] text-[#FF9E75] dark:bg-accent/50 dark:text-primary"
                         : "text-[#5C4D45] hover:bg-[#F5EFE8] dark:text-foreground dark:hover:bg-accent"
                     }`}
                   >

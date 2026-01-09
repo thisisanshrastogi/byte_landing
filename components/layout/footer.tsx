@@ -10,7 +10,9 @@ export function Footer() {
     "hover:text-white transition-colors dark:hover:text-primary";
 
   return (
-    <footer className={`${footerBg} border-t py-12 sm:py-16 font-sans`}>
+    <footer
+      className={`${footerBg} relative z-10 border-t py-12 sm:py-16 font-sans`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           {/* Brand Column */}
@@ -54,13 +56,16 @@ export function Footer() {
                 (item) => (
                   <li key={item}>
                     <Link
-                      href={`/${item.toLowerCase().replace(" policy", "").replace(" ", "-")}`}
+                      href={`/${item
+                        .toLowerCase()
+                        .replace(" policy", "")
+                        .replace(" ", "-")}`}
                       className={`text-sm font-bold ${textBase} ${hoverLink}`}
                     >
                       {item}
                     </Link>
                   </li>
-                ),
+                )
               )}
               <li key="meet_our_team">
                 <Link

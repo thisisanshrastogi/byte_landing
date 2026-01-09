@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import axi from "@/lib/axi";
+import { BackgroundElements } from "@/components/background-element";
 
 // --- TYPES ---
 type TransactionType = "PAYOUT" | "DEPOSIT";
@@ -276,8 +277,8 @@ export default function WalletPage() {
   return (
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans">
       <Navbar />
-
-      <main className="container mx-auto px-4 py-20 mt-20 lg:py-24 min-h-[90vh]">
+      <BackgroundElements />
+      <main className=" relative z-10 container mx-auto px-4 py-20 mt-20 lg:py-24 min-h-[90vh]">
         <motion.div
           className="max-w-5xl mx-auto space-y-8"
           variants={containerVariants}

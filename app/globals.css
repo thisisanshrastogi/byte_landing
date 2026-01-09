@@ -50,8 +50,8 @@
   --card-foreground: oklch(0.985 0 0); /* Light Peach for dark mode card text */
   --popover: oklch(0.145 0 0); /* Dark Teal for dark mode popovers */
   --popover-foreground: oklch(0.985 0 0); /* Light Peach for dark mode popover text */
-  --primary: #ff9e75; /* Soft Coral remains same for dark mode */
-  --primary-foreground: oklch(0.205 0 0); /* Dark Teal for button text */
+  --primary: #ff7c50; /* Soft Coral remains same for dark mode */
+  --primary-foreground: oklch(14.958% 0.00002 271.152); /* Dark Teal for button text */
   --secondary: oklch(0.269 0 0); /* Muted Green remains same */
   --secondary-foreground: oklch(0.985 0 0); /* Dark Teal for secondary button text */
   --muted: oklch(0.269 0 0); /* Light Gray for muted elements */
@@ -129,6 +129,18 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  ::selection {
+    background-color: #FF9E75; /* Soft Coral */
+    color: #ffffff;
+  }
+
+  /* Dark Mode Overrides */
+  /* If you use class-based dark mode (standard in Next.js) */
+  .dark ::selection {
+    background-color: #FF9E75; 
+    color: #52463f; /* Dark Coffee text for contrast */
+  }
 }
 
 /* View Transition coords */
@@ -158,4 +170,9 @@
   to {
     clip-path: circle(150% at var(--vt-x) var(--vt-y));
   }
+}
+
+
+button:hover{
+  cursor: pointer;
 }

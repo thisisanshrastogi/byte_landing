@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Mail, Briefcase, Send } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import PhoneSimulator from "@/components/dummy/phone";
+import { BackgroundElements } from "@/components/background-element";
 
 export default function ContactPage() {
   // --- CLAY TOKENS ---
@@ -60,8 +61,9 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-x-hidden">
       <Navbar />
+      <BackgroundElements />
 
-      <main className="py-20 mt-20 lg:py-24">
+      <main className="py-20 mt-20 lg:py-24 z-10 relative">
         <motion.div
           className="max-w-4xl mx-auto px-6 lg:px-8"
           variants={containerVariants}
@@ -226,8 +228,6 @@ export default function ContactPage() {
       </main>
 
       <Footer />
-
-      <PhoneSimulator />
     </div>
   );
 }

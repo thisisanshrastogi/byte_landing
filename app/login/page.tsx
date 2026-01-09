@@ -23,17 +23,25 @@ export default function LoginPage() {
 
   // --- CLAY TOKENS ---
   // Using a cleaner card style for the split layout
-  const clayInset = "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
-  const clayBtnPrimary = "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
-  const clayBtnSecondary = "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
+  const clayInset =
+    "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
+  const clayBtnPrimary =
+    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
+  const clayBtnSecondary =
+    "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
 
-  const textHeading = "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
+  const textHeading =
+    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
   const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
 
   // --- ANIMATIONS ---
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 20 },
+    },
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,10 +65,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden">
-
       {/* ---------------- LEFT SIDE: VISUAL SHOWCASE (Laptop+) ---------------- */}
       <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-primary/5 flex-col justify-between p-12 lg:p-20 overflow-hidden">
-
         {/* Animated Blobs Background */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           <motion.div
@@ -77,7 +83,10 @@ export default function LoginPage() {
 
         {/* Brand */}
         <div className="relative z-10">
-          <Link href="/" className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-foreground">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-foreground"
+          >
             <span className="w-3 h-3 rounded-full bg-[#FF9E75]"></span> Byte
           </Link>
         </div>
@@ -89,15 +98,17 @@ export default function LoginPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full mb-8 text-[#FF9E75] font-black text-xs uppercase tracking-wide shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-white/95 dark:text-black backdrop-blur-sm rounded-full mb-8 text-[#FF9E75] font-black text-xs uppercase tracking-wide shadow-sm">
               <Star size={14} fill="currentColor" /> The #1 Campus Food App
             </div>
             <h1 className="text-6xl font-black text-[#5C4D45] dark:text-foreground mb-6 leading-[1.1] tracking-tight">
-              Skip the line,<br />
+              Skip the line,
+              <br />
               <span className="text-[#FF9E75]">Enjoy the time.</span>
             </h1>
             <p className="text-xl text-[#9C8C84] font-bold leading-relaxed mb-8">
-              Join thousands of students ordering from their favorite campus canteens instantly. No cash, no waiting.
+              Join thousands of students ordering from their favorite campus
+              canteens instantly. No cash, no waiting.
             </p>
 
             {/* Visual Stats / Trust */}
@@ -118,17 +129,22 @@ export default function LoginPage() {
 
         {/* Footer Link */}
         <div className="relative z-10">
-          <p className="text-sm font-bold text-[#9C8C84]">© 2025 Byte Technologies</p>
+          <p className="text-sm font-bold text-[#9C8C84]">
+            © 2025 Byte Technologies
+          </p>
         </div>
       </div>
 
-
       {/* ---------------- RIGHT SIDE: LOGIN FORM ---------------- */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative">
-
         {/* Mobile Nav Toggle (Simplified) */}
         <div className="absolute top-6 right-6 lg:hidden">
-          <Link href="/" className="text-sm font-black text-[#9C8C84] hover:text-[#FF9E75]">Back to Home</Link>
+          <Link
+            href="/"
+            className="text-sm font-black text-[#9C8C84] hover:text-[#FF9E75]"
+          >
+            Back to Home
+          </Link>
         </div>
 
         <motion.div
@@ -154,16 +170,24 @@ export default function LoginPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="mb-8"
             >
-              <Alert variant="destructive" className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4">
+              <Alert
+                variant="destructive"
+                className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4"
+              >
                 <AlertCircle size={20} className="mr-3 shrink-0" />
-                <AlertDescription className="font-bold text-sm">{error}</AlertDescription>
+                <AlertDescription className="font-bold text-sm">
+                  {error}
+                </AlertDescription>
               </Alert>
             </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`} htmlFor="email">
+              <label
+                className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
+                htmlFor="email"
+              >
                 Email Address
               </label>
               <input
@@ -178,10 +202,16 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
-                <label className={`block text-xs font-black uppercase tracking-wide ${textBody}`} htmlFor="password">
+                <label
+                  className={`block text-xs font-black uppercase tracking-wide ${textBody}`}
+                  htmlFor="password"
+                >
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-xs font-black text-[#FF9E75] hover:underline dark:text-primary">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-black text-[#FF9E75] hover:underline dark:text-primary"
+                >
                   Forgot Password?
                 </Link>
               </div>
@@ -201,8 +231,16 @@ export default function LoginPage() {
               className={`w-full h-16 rounded-[1.2rem] text-lg font-black uppercase tracking-wide flex items-center justify-center gap-2 group ${clayBtnPrimary}`}
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : (
-                <>Sign In <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" /></>
+              {isLoading ? (
+                "Signing in..."
+              ) : (
+                <>
+                  Sign In{" "}
+                  <ArrowRight
+                    size={20}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </>
               )}
             </Button>
           </form>
@@ -212,7 +250,9 @@ export default function LoginPage() {
               <div className="w-full border-t border-[#E5DCD5] dark:border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-[#FFFBF7] dark:bg-background px-4 font-black uppercase tracking-widest text-[#D6C6BA]">Or continue with</span>
+              <span className="bg-[#FFFBF7] dark:bg-background px-4 font-black uppercase tracking-widest text-[#D6C6BA]">
+                Or continue with
+              </span>
             </div>
           </div>
 
@@ -245,7 +285,10 @@ export default function LoginPage() {
           <div className="text-center mt-10">
             <span className={`text-base ${textBody}`}>
               New to Byte?{" "}
-              <Link href="/register" className="text-[#FF9E75] font-black hover:underline dark:text-primary ml-1">
+              <Link
+                href="/register"
+                className="text-[#FF9E75] font-black hover:underline dark:text-primary ml-1"
+              >
                 Create an account
               </Link>
             </span>

@@ -28,9 +28,42 @@ import {
   HelpCircle,
   MessageCircle,
   User,
+  Hourglass,
+  Flame,
+  Megaphone,
+  Clock7,
+  FlameKindling,
+  Heater,
 } from "lucide-react";
 import PhoneSimulator from "@/components/dummy/phone";
+import { BackgroundElements } from "@/components/background-element";
 
+const problems = [
+  {
+    icon: Megaphone,
+    title: "Cafeteria Chaos",
+    desc: "No token system means shouting names, missed orders, and a chaotic environment for everyone.",
+    // Icon: Mocha/Cocoa
+    color: "text-[#5D4037] dark:text-[#E7DCD6]", // Cocoa
+    accent: "bg-[#EFEBE9]",
+  },
+  {
+    icon: Heater,
+    title: "Kitchen Meltdowns",
+    desc: "Vendors get hit by 500 orders in 10 minutes. Without prep time, quality drops and panic sets in.",
+    // Icon: Burnt Orange (Primary)
+    color: "text-[#EA580C] ", // Vibrant Clay Orange
+    accent: "bg-[#FFF7ED]",
+  },
+  {
+    icon: Clock7,
+    title: "The 15-Minute Wait",
+    desc: "Breaks are only 20 minutes long. Students spend 75% of that time just standing in a queue.",
+    // Icon: Caramel/Gold
+    color: "text-[#57534E] dark:text-[#E7E5E4]", // Warm Grey
+    accent: "bg-[#FAFAF9]",
+  },
+];
 const faqs = [
   {
     q: "Is my money safe?",
@@ -61,13 +94,13 @@ const THEME = {
     "bg-[#F5EFE8] dark:bg-[#0a0a0a] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]",
   // Buttons
   btnPrimary:
-    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 active:scale-95 transition-all",
+    "bg-[#FF9E75] dark:bg-[#ff7c50] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] dark:shadow-none hover:bg-[#FF9E75]/90 active:scale-95 transition-all",
   btnSecondary:
     "bg-[#FFFEFD] dark:bg-[#1a1a1a] text-[#5C4D45] dark:text-[#E0E0E0] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-none border border-[#fffefd] hover:border-[#E5DCD5] dark:border-white/10 hover:bg-[#E5DCD5] active:scale-95 transition-all",
   // Typography Colors
   textDark: "text-[#5C4D45] dark:text-[#EDEDED]",
   textSoft: "text-[#9C8C84] dark:text-[#A1A1AA]",
-  brand: "text-[#FF9E75]",
+  brand: "text-[#FF9E75] dark:text-[#ff7c50]",
 };
 
 // --- COMPONENT: SECTION HEADING ---
@@ -117,7 +150,10 @@ const AnalyticsGraph = () => {
           <p className="text-[10px] uppercase font-black tracking-widest text-[#D6C6BA]">
             Real-time Sales
           </p>
-          <TrendingUp size={14} className="text-[#FF9E75]" />
+          <TrendingUp
+            size={14}
+            className="text-[#FF9E75] dark:text-[#ff7c50]"
+          />
         </div>
         {[
           { name: "Spicy Wrap", count: "142", pct: "90%" },
@@ -271,7 +307,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
     >
       <div className="flex justify-between items-center">
         <h4
-          className={`text-base font-black ${THEME.textDark} group-hover:text-[#FF9E75] transition-colors pr-6`}
+          className={`text-base font-black ${THEME.textDark} group-hover:text-[#FF9E75] dark:text-[#ff7c50] transition-colors pr-6`}
         >
           {q}
         </h4>
@@ -303,75 +339,6 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
   );
 };
 
-// const ClayAccordionItem = ({ question, answer, isOpen, onClick }) => {
-//   return (
-//     <motion.div
-//       layout
-//       initial={{ opacity: 0, y: 20 }}
-//       whileInView={{ opacity: 1, y: 0 }}
-//       transition={{ duration: 0.4 }}
-//       className={`group rounded-[2.5rem] overflow-hidden transition-all duration-300 border border-white
-//         ${isOpen ? "bg-[#FFFBF7] z-10" : "bg-[#FFFBF7] hover:bg-[#FDFDFD]"}
-//         shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)]`}
-//     >
-//       <motion.button
-//         layout="position"
-//         onClick={onClick}
-//         className="w-full p-8 flex items-center justify-between text-left outline-none cursor-pointer"
-//       >
-//         <span
-//           className={`text-xl md:text-2xl font-black tracking-tight transition-colors duration-300
-//           ${
-//             isOpen
-//               ? "text-[#FF9E75]"
-//               : "text-[#5C4D45] group-hover:text-[#FF9E75]/80"
-//           }`}
-//         >
-//           {question}
-//         </span>
-
-//         {/* Toggle Icon: Larger for desktop */}
-//         <div
-//           className={`flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 ml-4
-//           ${
-//             isOpen
-//               ? "bg-[#FF9E75] text-white shadow-[inset_2px_2px_6px_rgba(0,0,0,0.1)] rotate-180"
-//               : "bg-[#F5EFE8] text-[#5C4D45] shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)]"
-//           }`}
-//         >
-//           {isOpen ? (
-//             <Minus size={24} strokeWidth={3} />
-//           ) : (
-//             <Plus size={24} strokeWidth={3} />
-//           )}
-//         </div>
-//       </motion.button>
-
-//       <AnimatePresence initial={false}>
-//         {isOpen && (
-//           <motion.div
-//             initial={{ height: 0, opacity: 0 }}
-//             animate={{ height: "auto", opacity: 1 }}
-//             exit={{ height: 0, opacity: 0 }}
-//             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-//           >
-//             <div className="px-8 pb-8">
-//               {/* DEEP INSET WELL: Large padding for desktop readability */}
-//               <div
-//                 className="bg-[#F5EFE8] rounded-[1.5rem] p-8
-//                 shadow-[inset_6px_6px_12px_rgba(204,190,178,0.4),_inset_-6px_-6px_12px_rgba(255,255,255,0.8)]"
-//               >
-//                 <p className="text-[#9C8C84] text-lg leading-relaxed font-medium">
-//                   {answer}
-//                 </p>
-//               </div>
-//             </div>
-//           </motion.div>
-//         )}
-//       </AnimatePresence>
-//     </motion.div>
-//   );
-// };
 const CompactAccordionItem = ({
   question,
   answer,
@@ -390,34 +357,42 @@ const CompactAccordionItem = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.3 }}
-      className={`group rounded-[1.5rem] overflow-hidden transition-all duration-300 border border-white
-        ${isOpen ? "bg-[#FFFBF7] z-10" : "bg-[#FFFBF7] hover:bg-[#FAF9F6]"}
-        shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]`}
+      className={`group rounded-[1.5rem] overflow-hidden transition-all duration-300 border border-white dark:border-[#2A2A2A]
+        ${
+          isOpen
+            ? "bg-[#FFFBF7] dark:bg-[#1E1E1E] z-10"
+            : "bg-[#FFFBF7] dark:bg-[#1E1E1E] hover:bg-[#FAF9F6] dark:hover:bg-[#252525]"
+        }
+        
+        /* LIGHT MODE SHADOWS: Soft Blur */
+        shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]
+        
+        /* DARK MODE SHADOWS: Deep Drop + Rim Light */
+        dark:shadow-[6px_6px_15px_rgba(0,0,0,0.5),_-2px_-2px_10px_rgba(255,255,255,0.05)]`}
     >
       <motion.button
         layout="position"
         onClick={onClick}
         className="w-full px-6 py-5 flex items-center justify-between text-left outline-none cursor-pointer"
       >
-        {/* Tighter Text Size */}
         <span
           className={`text-lg font-black tracking-tight transition-colors duration-300 pr-4
           ${
             isOpen
-              ? "text-[#FF9E75]"
-              : "text-[#5C4D45] group-hover:text-[#5C4D45]/80"
+              ? "text-[#FF9E75] dark:text-[#ff7c50]"
+              : "text-[#5C4D45] dark:text-[#E0E0E0] group-hover:text-[#5C4D45]/80 dark:group-hover:text-white"
           }`}
         >
           {question}
         </span>
 
-        {/* Smaller Toggle Icon (40px vs 56px) */}
+        {/* Toggle Icon: Adapts to dark mode clay */}
         <div
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
           ${
             isOpen
-              ? "bg-[#FF9E75] text-white shadow-inner rotate-180"
-              : "bg-[#F5EFE8] text-[#5C4D45] shadow-[4px_4px_8px_rgba(214,198,186,0.4),_-2px_-2px_6px_rgba(255,255,255,0.8)]"
+              ? "bg-[#FF9E75] text-white rotate-180 shadow-inner"
+              : "bg-[#F5EFE8] dark:bg-[#2A2A2A] text-[#5C4D45] dark:text-[#A0A0A0] shadow-[4px_4px_8px_rgba(214,198,186,0.4),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_8px_rgba(0,0,0,0.5),inset_1px_1px_2px_rgba(255,255,255,0.05)]"
           }`}
         >
           {isOpen ? (
@@ -437,12 +412,15 @@ const CompactAccordionItem = ({
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
             <div className="px-6 pb-6 pt-0">
-              {/* Sleeker Inset Well */}
+              {/* DEEP INSET: Handles both light and dark backgrounds */}
               <div
-                className="bg-[#F5EFE8] rounded-xl p-5 
-                shadow-[inset_4px_4px_8px_rgba(204,190,178,0.3),_inset_-4px_-4px_8px_rgba(255,255,255,0.7)]"
+                className="bg-[#F5EFE8] dark:bg-[#151515] rounded-xl p-5 
+                /* LIGHT INSET */
+                shadow-[inset_4px_4px_8px_rgba(204,190,178,0.3),_inset_-4px_-4px_8px_rgba(255,255,255,0.7)]
+                /* DARK INSET */
+                dark:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.8),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
               >
-                <p className="text-[#9C8C84] text-sm leading-relaxed font-medium">
+                <p className="text-[#9C8C84] dark:text-[#888888] text-sm leading-relaxed font-medium">
                   {answer}
                 </p>
               </div>
@@ -476,17 +454,18 @@ export default function LandingPage() {
       <Navbar />
 
       {/* --- BACKGROUND BLOBS (Subtle & Warm) --- */}
+      <BackgroundElements />
 
-      <main className="relative z-10 pt-32 pb-20 px-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <main className="relative z-10 pt-20 pb-20 px-4 md:px-10">
+        <div className="max-w-7xl mx-auto px-2 lg:px-8">
           {/* --- HERO SECTION --- */}
-          <section className="grid lg:grid-cols-2 gap-12 lg:gap-0 items-center mb-32">
+          <section className="grid lg:grid-cols-2 gap-12 lg:gap-0 items-center mb-20 lg:mb-32">
             {/* Left Content */}
             <motion.div
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-              className="text-left flex flex-col items-start relative z-10 lg:pr-12"
+              className="text-left flex flex-col items-start relative z-10 lg:pr-12 mt-4 md:"
             >
               {/* Badge */}
               <motion.div
@@ -505,7 +484,7 @@ export default function LandingPage() {
               {/* Title */}
               <motion.h1
                 variants={fadeInUp}
-                className={`text-5xl sm:text-6xl md:text-7xl font-black ${THEME.textDark} leading-[1.15] tracking-tight mb-6`}
+                className={`text-4xl sm:text-5xl md:text-7xl font-black ${THEME.textDark} leading-[1.15] tracking-tight mb-6`}
               >
                 Skip the line. <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7043]">
@@ -516,7 +495,7 @@ export default function LandingPage() {
               {/* Body Text (Reduced Size) */}
               <motion.p
                 variants={fadeInUp}
-                className={`text-lg ${THEME.textSoft} font-medium mb-10 max-w-md leading-relaxed`}
+                className={`text-base md:text-lg ${THEME.textSoft} font-medium mb-10 max-w-md leading-relaxed`}
               >
                 Byte lets students pre-order food and skip queues, while helping
                 vendors prepare smarter using real-time demand analytics.
@@ -529,13 +508,13 @@ export default function LandingPage() {
               >
                 <button
                   onClick={() => router.push("/invite")}
-                  className={`${THEME.btnPrimary} h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                  className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                 >
                   <Smartphone size={18} /> Become a Tester
                 </button>
                 <button
                   onClick={() => router.push("/invite")}
-                  className={`${THEME.btnSecondary} h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                  className={`${THEME.btnSecondary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                 >
                   <Store size={18} /> Partner as Vendor
                 </button>
@@ -547,7 +526,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="flex justify-center lg:justify-end relative w-full"
+              className="flex justify-center lg:justify-end relative w-full mt-10 lg:mt-0"
             >
               {/* Phone Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] -z-10 blur-3xl"></div>
@@ -556,52 +535,57 @@ export default function LandingPage() {
           </section>
 
           {/* --- PROBLEM SECTION --- */}
-          <section className="mb-32">
-            <SectionHeading
-              title="Short breaks. Long queues."
-              subtitle="Campus food rush isn’t about payments — it’s about timing."
-              align="center"
-            />
+          <section className="mb-20 lg:mb-32">
+            <div className="text-center mb-12 lg:mb-16">
+              <h2
+                className={`text-3xl md:text-5xl font-black ${THEME.textDark} mb-4 tracking-tight`}
+              >
+                Short breaks.{" "}
+                <span className="text-[#FF9E75] dark:text-[#ff7c50]">
+                  Long queues.
+                </span>
+              </h2>
+              <p
+                className={`text-base md:text-lg font-medium ${THEME.textSoft} max-w-2xl mx-auto`}
+              >
+                Campus food rush isn’t about payments — it’s about timing. We
+                solve the chaos between the bell ringing and your first bite.
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: Clock,
-                  title: "Wasted Time",
-                  desc: "15 mins of a 20 min break is spent standing in line.",
-                  color: "text-red-400",
-                  bg: "bg-red-50",
-                },
-                {
-                  icon: Zap,
-                  title: "Vendor Stress",
-                  desc: "Kitchens get overwhelmed by sudden spikes.",
-                  color: "text-orange-400",
-                  bg: "bg-orange-50",
-                },
-                {
-                  icon: Users,
-                  title: "Crowd Chaos",
-                  desc: "No queue management leads to shouting and confusion.",
-                  color: "text-yellow-500",
-                  bg: "bg-yellow-50",
-                },
-              ].map((item, i) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {problems.map((item, i) => (
                 <motion.div
-                  whileHover={{ y: -5 }}
                   key={i}
-                  className={`p-8 rounded-[2.5rem] ${THEME.card} flex flex-col items-start`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className={`p-8 rounded-[2.5rem] ${THEME.card} flex flex-col items-start relative overflow-hidden group`}
                 >
+                  {/* Soft Gradient Blob at Bottom
                   <div
-                    className={`w-14 h-14 rounded-2xl ${THEME.cardInset} flex items-center justify-center mb-6 ${item.color}`}
+                    className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-[60px] opacity-20 ${item.accent} group-hover:opacity-40 transition-opacity duration-500`}
+                  ></div> */}
+                  {/* Icon Inset Well */}
+                  <div
+                    className={`w-16 h-16 rounded-2xl ${THEME.cardInset} flex items-center justify-center mb-6 relative z-10`}
                   >
-                    <item.icon size={26} strokeWidth={2.5} />
+                    <item.icon
+                      size={32}
+                      strokeWidth={2.5}
+                      className={item.color}
+                    />
                   </div>
-                  <h3 className={`text-xl font-black ${THEME.textDark} mb-3`}>
+                  {/* Content */}
+                  <h3
+                    className={`text-2xl font-black ${THEME.textDark} mb-3 relative z-10 leading-tight`}
+                  >
                     {item.title}
                   </h3>
                   <p
-                    className={`text-sm font-medium ${THEME.textSoft} leading-relaxed`}
+                    className={`text-sm font-medium ${THEME.textSoft} leading-relaxed relative z-10`}
                   >
                     {item.desc}
                   </p>
@@ -611,16 +595,16 @@ export default function LandingPage() {
           </section>
 
           {/* --- BENTO GRID FEATURES --- */}
-          <section className="mb-32">
+          <section className="mb-20 lg:mb-32">
             <SectionHeading title="Why Byte is Different." align="center" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[280px]">
               {/* Feature 1: Pre-Orders (Wide) */}
               <div
                 className={`md:col-span-2 ${THEME.card} rounded-[3rem] p-10 flex flex-col justify-center relative overflow-hidden group`}
               >
                 <div className="relative z-10 max-w-md">
-                  <div className="w-12 h-12 bg-[#FFF0E6] dark:bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] mb-6">
+                  <div className="w-12 h-12 bg-[#FFF0E6] dark:bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-6">
                     <CalendarClock size={24} />
                   </div>
                   <h3
@@ -632,15 +616,15 @@ export default function LandingPage() {
                     Students order early. Vendors know exactly what to prepare.
                   </p>
                 </div>
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#FFE0B2] dark:bg-[#FF9E75] rounded-full blur-[80px] opacity-30 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-30 group-hover:scale-110 transition-transform duration-700"></div>
               </div>
 
               {/* Feature 2: Analytics (Tall) */}
               <div
-                className={`md:col-span-1 md:row-span-2 ${footerBg} dark:border dark:border-white/10 rounded-[3rem] p-8 flex flex-col relative overflow-hidden shadow-xl text-white`}
+                className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 rounded-[3rem] p-8 flex flex-col relative overflow-hidden shadow-xl text-white`}
               >
                 <div className="relative z-10 w-full h-full flex flex-col">
-                  <div className="w-12 h-12 absolute right-0 bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] mb-4">
+                  <div className="w-12 h-12 absolute right-0 bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-4">
                     <BarChart3 size={24} />
                   </div>
                   <h3 className="text-2xl font-black mb-1">Cook with Data</h3>
@@ -656,7 +640,10 @@ export default function LandingPage() {
               <div
                 className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
               >
-                <ShieldCheck size={32} className="text-[#FF9E75] mb-4" />
+                <ShieldCheck
+                  size={32}
+                  className="text-[#FF9E75] dark:text-[#ff7c50] mb-4"
+                />
                 <h3 className={`text-xl font-black ${THEME.textDark} mb-2`}>
                   Bank-Grade Wallet
                 </h3>
@@ -669,7 +656,10 @@ export default function LandingPage() {
               <div
                 className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
               >
-                <Leaf size={32} className="text-[#FF9E75] mb-4" />
+                <Leaf
+                  size={32}
+                  className="text-[#FF9E75] dark:text-[#ff7c50] mb-4"
+                />
                 <h3 className={`text-xl font-black ${THEME.textDark} mb-2`}>
                   Zero Food Waste
                 </h3>
@@ -699,7 +689,7 @@ export default function LandingPage() {
                   key={i}
                   className={`p-8 rounded-[2.5rem] ${THEME.card} relative`}
                 >
-                  <Quote size={32} className="text-[#FF9E75]/30 mb-6" />
+                  <Quote size={32} className="text-[#FF9E75] dark:text-[#ff7c50]/30 mb-6" />
                   <p
                     className={`text-lg font-bold ${THEME.textDark} mb-6 leading-relaxed`}
                   >
@@ -713,7 +703,7 @@ export default function LandingPage() {
                       >
                         {t.user}
                       </p>
-                      <div className="flex text-[#FF9E75] mt-1 gap-0.5">
+                      <div className="flex text-[#FF9E75] dark:text-[#ff7c50] mt-1 gap-0.5">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star key={s} size={10} fill="currentColor" />
                         ))}
@@ -726,23 +716,25 @@ export default function LandingPage() {
           </section> */}
 
           {/* --- FAQ --- */}
-          <section className=" w-full bg-[#FFFBF7] dark:bg-transparent py-20 px-6 md:px-12 flex justify-center font-sans">
-            <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <section className=" w-full bg-transparent dark:bg-transparent py-12 md:py-20 px-2 md:px-12 flex justify-center font-sans">
+            <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               {/* --- LEFT SIDE: ENHANCED VISUAL --- */}
-              <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col   gap-4">
+              <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col gap-4">
                 {/* Subtle Icon Badge to anchor the design */}
                 {/* <div
-                  className="w-12 h-12 rounded-2xl bg-[#FFFBF7] flex items-center justify-center text-[#FF9E75] mb-2
+                  className="w-12 h-12 rounded-2xl bg-[#FFFBF7] flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-2
             shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]"
                 >
                   <HelpCircle size={24} strokeWidth={2.5} />
                 </div> */}
 
-                <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-black tracking-tight leading-none">
+                <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-black tracking-tight leading-[1.1]">
                   Common <br />{" "}
-                  <span className="text-[#FF9E75]">Questions.</span>
+                  <span className="text-[#FF9E75] dark:text-[#ff7c50]">
+                    Questions.
+                  </span>
                 </h2>
-                <p className="text-[#9C8C84] text-md font-medium leading-relaxed mt-8 max-w-xs">
+                <p className="text-[#9C8C84] text-md font-medium leading-relaxed mt-4 md:mt-8 max-w-xs">
                   Quick answers to questions you might have about Byte's
                   security, features, and reliability.
                 </p>
@@ -766,22 +758,22 @@ export default function LandingPage() {
           {/* --- FINAL CTA --- */}
           <section className="text-center pb-12">
             <div
-              className={`p-12 md:p-16 rounded-[3.5rem] ${THEME.card} relative overflow-hidden`}
+              className={`p-10 md:p-16 rounded-[3.5rem] ${THEME.card} relative overflow-hidden`}
             >
               {/* Decorative Blur */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF9E75]/10 blur-[80px] rounded-full"></div>
 
               <div className="relative z-10 max-w-3xl mx-auto">
-                <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] font-black text-[10px] uppercase tracking-widest mb-6">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] dark:text-[#ff7c50] font-black text-[10px] uppercase tracking-widest mb-6">
                   Join the movement
                 </span>
                 <h2
-                  className={`text-4xl md:text-5xl font-black ${THEME.textDark} mb-6 tracking-tight leading-[1.15]`}
+                  className={`text-3xl md:text-6xl font-black ${THEME.textDark} mb-6 tracking-tight leading-[1.25]`}
                 >
                   Built for students. <br /> Designed for vendors.
                 </h2>
                 <p
-                  className={`text-lg font-medium ${THEME.textSoft} mb-10 max-w-lg mx-auto`}
+                  className={`text-base md:text-lg font-medium ${THEME.textSoft} mb-10 max-w-lg mx-auto`}
                 >
                   Whether you run a campus kitchen or rush between classes, Byte
                   is the upgrade you've been waiting for.
