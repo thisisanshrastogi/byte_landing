@@ -50,7 +50,7 @@
   --card-foreground: oklch(0.985 0 0); /* Light Peach for dark mode card text */
   --popover: oklch(0.145 0 0); /* Dark Teal for dark mode popovers */
   --popover-foreground: oklch(0.985 0 0); /* Light Peach for dark mode popover text */
-  --primary: oklch(0.985 0 0); /* Soft Coral remains same for dark mode */
+  --primary: #ff9e75; /* Soft Coral remains same for dark mode */
   --primary-foreground: oklch(0.205 0 0); /* Dark Teal for button text */
   --secondary: oklch(0.269 0 0); /* Muted Green remains same */
   --secondary-foreground: oklch(0.985 0 0); /* Dark Teal for secondary button text */
