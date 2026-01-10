@@ -84,7 +84,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
               className={`${clayInset} p-4 flex items-center justify-between mb-4`}
             >
               <span className="text-2xl font-black text-[#5C4D45] tracking-tight">
-                $142.50
+                ₹1000
               </span>
               <div className="w-2 h-2 bg-[#FF9E75] rounded-full animate-pulse"></div>
             </div>
@@ -98,7 +98,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
                     <ArrowDownLeft size={10} strokeWidth={3} />
                   </div>
                   <span className="text-xs font-black text-[#5C4D45]">
-                    $120.00
+                    $850
                   </span>
                 </div>
               </div>
@@ -112,7 +112,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
                     <Lock size={10} strokeWidth={3} />
                   </div>
                   <span className="text-xs font-black text-[#5C4D45]">
-                    $22.50
+                    ₹150
                   </span>
                 </div>
               </div>
