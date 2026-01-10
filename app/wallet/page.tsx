@@ -219,14 +219,18 @@ export default function WalletPage() {
 
     try {
       const sessionId = await getPaymentSession(amount);
-      await cashfreeRef.current.checkout({
+      const result = await cashfreeRef.current.checkout({
         paymentSessionId: sessionId,
         redirectTarget: "_modal",
       });
       await fetchWalletBalance();
       clearPaymentAttemptId();
-      setMessage("Wallet recharged successfully");
-      setMessageType("success");
+
+      console.log(result);
+      if (result.status === "SUCCESS") {
+        setMessage("Wallet recharged successfully");
+        setMessageType("success");
+      }
     } catch (err) {
       console.error(err);
       clearPaymentAttemptId();

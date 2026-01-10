@@ -3,26 +3,44 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { motion, Variants } from "framer-motion";
-import { Shield, Lock, Eye, Share2, Server, UserCheck, FileText } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  Eye,
+  Share2,
+  Server,
+  UserCheck,
+  FileText,
+} from "lucide-react";
 
 export default function PrivacyPage() {
-
   // --- CLAY TOKENS ---
-  const clayCard = "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-card dark:border-border dark:shadow-none";
-  const textHeading = "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
-  const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold leading-relaxed";
+  const clayCard =
+    "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-card dark:border-border dark:shadow-none";
+  const textHeading =
+    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
+  const textBody =
+    "text-[#9C8C84] dark:text-muted-foreground font-bold leading-relaxed";
 
-  const iconBox = "w-12 h-12 rounded-[1rem] flex items-center justify-center mb-4 bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm";
+  const iconBox =
+    "w-12 h-12 rounded-[1rem] flex items-center justify-center mb-4 bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm";
 
   // --- ANIMATION ---
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    },
   };
 
   const itemUpVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 20 } },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100, damping: 20 },
+    },
   };
 
   const sections = [
@@ -32,13 +50,18 @@ export default function PrivacyPage() {
       content: (
         <>
           <p className="mb-4">
-            We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This may include your name, email address, phone number, and payment information.
+            We collect information you provide directly to us, such as when you
+            create an account, make a purchase, or contact us for support. This
+            may include your name, email address, phone number, and payment
+            information.
           </p>
           <p>
-            We also automatically collect certain information about your device and usage of our service, including your IP address, browser type, operating system, and app usage patterns.
+            We also automatically collect certain information about your device
+            and usage of our service, including your IP address, browser type,
+            operating system, and app usage patterns.
           </p>
         </>
-      )
+      ),
     },
     {
       icon: Server,
@@ -55,7 +78,7 @@ export default function PrivacyPage() {
             <li>Detect and prevent fraudulent transactions</li>
           </ul>
         </>
-      )
+      ),
     },
     {
       icon: Share2,
@@ -63,7 +86,9 @@ export default function PrivacyPage() {
       content: (
         <>
           <p className="mb-4">
-            We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy. We may share your information with:
+            We do not sell, trade, or otherwise transfer your personal
+            information to third parties without your consent, except as
+            described in this policy. We may share your information with:
           </p>
           <ul className="list-disc pl-5 space-y-2">
             <li>Campus food vendors to fulfill your orders</li>
@@ -72,16 +97,19 @@ export default function PrivacyPage() {
             <li>Law enforcement when required by law</li>
           </ul>
         </>
-      )
+      ),
     },
     {
       icon: Lock,
       title: "Data Security",
       content: (
         <p>
-          We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes encryption of sensitive data and regular security assessments.
+          We implement appropriate security measures to protect your personal
+          information against unauthorized access, alteration, disclosure, or
+          destruction. This includes encryption of sensitive data and regular
+          security assessments.
         </p>
-      )
+      ),
     },
     {
       icon: UserCheck,
@@ -96,15 +124,15 @@ export default function PrivacyPage() {
             <li>Request a copy of your data</li>
           </ul>
         </>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans">
       <Navbar />
 
-      <main className="py-20 mt-20 lg:py-24">
+      <main className="py-20 mt-10 lg:py-24">
         <motion.div
           className="max-w-4xl mx-auto px-6 lg:px-8"
           variants={containerVariants}
@@ -116,7 +144,9 @@ export default function PrivacyPage() {
             <div className="inline-block px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-black text-xs uppercase tracking-wider mb-6 shadow-sm border border-[#F5EFE8] dark:border-border">
               Last updated: December 2025
             </div>
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl mb-6 ${textHeading}`}>
+            <h1
+              className={`text-4xl md:text-5xl lg:text-6xl mb-6 ${textHeading}`}
+            >
               Privacy Policy
             </h1>
             <p className={`text-xl max-w-2xl mx-auto ${textBody}`}>
@@ -162,11 +192,10 @@ export default function PrivacyPage() {
                   </div>
                 </div>
                 <div>
-                  <h2 className={`text-2xl mb-4 ${textHeading}`}>
-                    Contact Us
-                  </h2>
+                  <h2 className={`text-2xl mb-4 ${textHeading}`}>Contact Us</h2>
                   <p className={`text-sm md:text-base mb-2 ${textBody}`}>
-                    If you have any questions about this Privacy Policy, please contact us at:
+                    If you have any questions about this Privacy Policy, please
+                    contact us at:
                   </p>
                   <a
                     href="mailto:support@byteapp.tech"
@@ -178,7 +207,6 @@ export default function PrivacyPage() {
               </div>
             </motion.section>
           </div>
-
         </motion.div>
       </main>
 

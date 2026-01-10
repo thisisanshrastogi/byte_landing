@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import PhoneSimulator from "@/components/dummy/phone";
 import { BackgroundElements } from "@/components/background-element";
+import useIsMobile from "@/components/mobile-detector";
 
 const problems = [
   {
@@ -112,31 +113,52 @@ const SectionHeading = ({
   title: string;
   subtitle?: string;
   align?: "left" | "center";
-}) => (
-  <div className={`mb-12 ${align === "center" ? "text-center" : "text-left"}`}>
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className={`text-3xl md:text-5xl font-black ${THEME.textDark} tracking-tight mb-4`}
+}) => {
+  const viewportMotion = useViewportMotion();
+
+  return (
+    <div
+      className={`mb-12 ${align === "center" ? "text-center" : "text-left"}`}
     >
-      {title}
-    </motion.h2>
-    {subtitle && (
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className={`text-base md:text-lg font-medium ${
-          THEME.textSoft
-        } max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
+      <motion.h2
+        initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+        whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
+        viewport={viewportMotion.viewport ?? { once: true }}
+        className={`text-3xl md:text-5xl font-black ${THEME.textDark} tracking-tight mb-4`}
       >
-        {subtitle}
-      </motion.p>
-    )}
-  </div>
-);
+        {title}
+      </motion.h2>
+      {subtitle && (
+        <motion.p
+          initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+          whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
+          viewport={viewportMotion.viewport ?? { once: true }}
+          transition={{ delay: 0.1 }}
+          className={`text-base md:text-lg font-medium ${
+            THEME.textSoft
+          } max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
+        >
+          {subtitle}
+        </motion.p>
+      )}
+    </div>
+  );
+};
+
+function useViewportMotion() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return {
+      initial: false,
+      animate: { opacity: 1, y: 0 },
+      whileInView: undefined,
+      viewport: undefined,
+    };
+  }
+
+  return {};
+}
 
 // --- COMPONENT: ANALYTICS GRAPH (Soft Pills) ---
 const AnalyticsGraph = () => {
@@ -180,6 +202,7 @@ const AnalyticsGraph = () => {
   );
 };
 const BetterAnalyticsGraph = () => {
+  const viewportMotion = useViewportMotion();
   // SVG Path Data for the smooth wave
   // We use two paths: one for the line (stroke) and one for the filled area (fill)
   const width = 100;
@@ -240,8 +263,8 @@ const BetterAnalyticsGraph = () => {
           <motion.path
             d={areaData}
             fill="url(#gradientFill)"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={viewportMotion.initial ?? { opacity: 0, y: 10 }}
+            whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
             transition={{ duration: 1.5 }}
           />
 
@@ -252,8 +275,8 @@ const BetterAnalyticsGraph = () => {
             stroke="#FF9E75"
             strokeWidth="1.5"
             strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
+            initial={viewportMotion.initial ?? { pathLength: 0 }}
+            whileInView={viewportMotion.whileInView ?? { pathLength: 1 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             style={{
               filter: "drop-shadow(0px 0px 4px rgba(255, 158, 117, 0.6))",
@@ -263,8 +286,8 @@ const BetterAnalyticsGraph = () => {
 
         {/* Live "Cursor" Dot (Positioned Absolutely based on path peak) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={viewportMotion.initial ?? { opacity: 0, scale: 0 }}
+          whileInView={viewportMotion.whileInView ?? { opacity: 1, scale: 1 }}
           transition={{ delay: 1.8 }}
           className="absolute right-[20%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
         >
@@ -299,6 +322,7 @@ const LiveAppDemo = () => {
 
 // --- COMPONENT: FAQ ITEM ---
 const FaqItem = ({ q, a }: { q: string; a: string }) => {
+  const viewportMotion = useViewportMotion();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
@@ -322,8 +346,8 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            initial={viewportMotion.initial ?? { height: 0, opacity: 0 }}
+            animate={viewportMotion.animate ?? { height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
@@ -350,12 +374,13 @@ const CompactAccordionItem = ({
   isOpen: boolean;
   onClick: () => void;
 }) => {
+  const viewportMotion = useViewportMotion();
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      initial={viewportMotion.initial ?? { opacity: 0, y: 10 }}
+      whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
+      viewport={viewportMotion.viewport ?? { once: true }}
       transition={{ duration: 0.3 }}
       className={`group rounded-[1.5rem] overflow-hidden transition-all duration-300 border border-white dark:border-[#2A2A2A]
         ${
@@ -406,8 +431,8 @@ const CompactAccordionItem = ({
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            initial={viewportMotion.initial ?? { height: 0, opacity: 0 }}
+            animate={viewportMotion.animate ?? { height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
@@ -432,6 +457,7 @@ const CompactAccordionItem = ({
   );
 };
 export default function LandingPage() {
+  const viewportMotion = useViewportMotion();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -557,9 +583,9 @@ export default function LandingPage() {
               {problems.map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+                  whileInView={viewportMotion.animate ?? { opacity: 1, y: 0 }}
+                  viewport={viewportMotion.viewport ?? { once: true }}
                   transition={{ delay: i * 0.1 }}
                   whileHover={{ y: -8 }}
                   className={`p-8 rounded-[2.5rem] ${THEME.card} flex flex-col items-start relative overflow-hidden group`}

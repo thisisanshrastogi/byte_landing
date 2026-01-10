@@ -55,7 +55,7 @@ export default function AboutPage() {
       <Navbar />
       <BackgroundElements />
 
-      <main className="relative z-10 py-20 mt-20 lg:py-28">
+      <main className="relative z-10 py-20 mt-10 lg:py-28">
         <motion.div
           className="max-w-5xl mx-auto px-6 lg:px-8"
           variants={containerVariants}
