@@ -16,7 +16,7 @@ export default function MotionGate({
     return (
       <MotionConfig reducedMotion="always">
         <AnimatePresence initial={false}>
-          {isMobile && <IntroShutter />}
+          {!isMobile && <IntroShutter />}
           <ClientProviders>{children}</ClientProviders>
         </AnimatePresence>
       </MotionConfig>
