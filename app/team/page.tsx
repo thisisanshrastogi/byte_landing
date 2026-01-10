@@ -41,7 +41,6 @@ export default function MeetTeamSection() {
       image: "https://avatars.githubusercontent.com/u/138712510?v=4",
       github: "https://github.com/thisisanshrastogi",
       linkedin: "https://www.linkedin.com/in/thisisanshrastogi/",
-      x: "",
     },
     {
       id: 2,
@@ -53,9 +52,8 @@ export default function MeetTeamSection() {
       bg: "bg-[#F2F5F0] dark:bg-[#9AA88E]/10",
       icon: <Store size={18} />,
       image: "https://avatars.githubusercontent.com/u/69890484?v=4",
-      github: "",
-      linkedin: "",
-      x: "",
+      github: "https://github.com/mathew2103",
+      linkedin: "https://www.linkedin.com/in/mathewmanachery/",
     },
     {
       id: 3,
@@ -69,7 +67,6 @@ export default function MeetTeamSection() {
       image: "https://avatars.githubusercontent.com/u/68746325?v=4",
       github: "",
       linkedin: "",
-      x: "",
     },
     {
       id: 4,
@@ -83,7 +80,6 @@ export default function MeetTeamSection() {
       image: "https://avatars.githubusercontent.com/u/133084134?v=4",
       github: "https://www.github.com/arjunmnath",
       linkedin: "https://www.linkedin.com/in/arjunmnath/",
-      x: "",
     },
   ];
 
@@ -189,14 +185,7 @@ export default function MeetTeamSection() {
                   >
                     <Linkedin size={16} strokeWidth={2.5} />
                   </button>
-                  <button
-                    className={socialBtn}
-                    onClick={() =>
-                      window.open(member.x, "_blank", "noopener,noreferrer")
-                    }
-                  >
-                    <Twitter size={16} strokeWidth={2.5} />
-                  </button>
+                 
                 </div>
               </motion.div>
             ))}
