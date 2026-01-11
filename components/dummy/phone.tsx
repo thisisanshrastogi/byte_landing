@@ -27,6 +27,7 @@ const SCREEN_DEPTH = {
 import type { Variants } from "framer-motion";
 import useIsMobile from "../mobile-detector";
 import { set } from "date-fns";
+import { start } from "repl";
 
 const slideVariants: Variants = {
   enter: (direction: number) => ({
@@ -74,11 +75,13 @@ const PhoneSimulator = () => {
 
   // --- COMPONENT: THE "STUDENT LOCK SCREEN" ---
   const StudentLockScreen = () => {
+    // Format: 12:30
     const currentTime = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
     });
+    // Format: Monday, January 12
     const currentDate = new Date().toLocaleDateString([], {
       weekday: "long",
       month: "long",
@@ -86,82 +89,88 @@ const PhoneSimulator = () => {
     });
 
     return (
-      <div className="w-full h-full flex flex-col p-6 bg-[#FFFBF7] relative overflow-hidden">
-        {/* Animated Background Pulse (Subtle) */}
+      <div className="w-full h-full flex flex-col p-6 bg-[#FFFBF7] relative overflow-hidden font-sans">
+        {/* --- BACKGROUND AMBIENCE --- */}
+        {/* A soft warm gradient moving gently */}
         <motion.div
-          animate={{ opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#FF9E75]/20 to-transparent pointer-events-none"
+          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-20 -left-20 w-[150%] h-[60%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] pointer-events-none blur-3xl"
         />
 
-        {/* 1. Lock Screen Header (Time/Date) */}
-        <div className="mt-12 text-center z-10">
-          <h2 className="text-6xl font-black text-[#5C4D45]/20 tracking-tighter select-none">
+        {/* --- 1. HEADER (Time & Date) --- */}
+        <div className="mt-14 text-center z-10">
+          <h2 className="text-7xl font-black text-[#5C4D45]/15 tracking-tighter select-none mix-blend-multiply">
             {currentTime}
           </h2>
-          <p className="text-[#9C8C84] font-bold text-xs uppercase tracking-widest mt-1">
+          <p className="text-[#9C8C84] font-black text-[10px] uppercase tracking-[0.2em] mt-2">
             {currentDate}
           </p>
         </div>
 
-        {/* 2. The Notification (The "Why" - Visual Hook) */}
+        {/* --- 2. THE NOTIFICATION (Improved: Stacked Card Style) --- */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-8 mx-auto w-full max-w-[260px] relative z-10"
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          className="mt-10 mx-auto w-full max-w-[280px] relative z-10 group cursor-pointer"
+          onClick={() => navigate("home")}
         >
-          {/* Notification Card */}
-          <div
-            className="bg-[#FFFBF7] p-5 rounded-[1.5rem] shadow-[8px_8px_16px_rgba(214,198,186,0.6),_-4px_-4px_12px_rgba(255,255,255,1)] border border-white relative overflow-hidden group cursor-pointer"
-            onClick={() => navigate("home")}
-          >
-            {/* Header */}
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-[#FF9E75] rounded-lg flex items-center justify-center text-white shadow-sm">
-                  <ShoppingBag size={12} fill="currentColor" />
+          {/* The "Stack" Effect (Card underneath) */}
+          {/* <div className="absolute top-3 left-4 right-4 h-full bg-white/60 rounded-[2rem] shadow-sm -z-10 scale-95 transition-transform duration-300 group-hover:translate-y-1"></div> */}
+
+          {/* Main Card */}
+          <div className="bg-[#FFFBF7]/95 backdrop-blur-md p-5 rounded-[2rem] shadow-[10px_10px_30px_rgba(214,198,186,0.5),_-5px_-5px_15px_rgba(255,255,255,0.8)] border border-white transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-98">
+            {/* Header Row */}
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 bg-[#FF9E75] rounded-xl flex items-center justify-center text-white shadow-[2px_2px_5px_rgba(255,158,117,0.4)]">
+                  <ShoppingBag size={14} strokeWidth={3} />
                 </div>
-                <span className="text-[10px] font-black uppercase text-[#9C8C84] tracking-wider">
-                  Byte App
-                </span>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-[#9C8C84] tracking-wider leading-none">
+                    Byte
+                  </p>
+                  <p className="text-[9px] font-bold text-[#D6C6BA] leading-none mt-0.5">
+                    now
+                  </p>
+                </div>
               </div>
-              <span className="text-[9px] font-bold text-[#D6C6BA]">Now</span>
             </div>
 
-            {/* Content */}
-            <h3 className="text-lg font-black text-[#5C4D45] leading-tight mb-1">
-              Order Ready! 🍔
-            </h3>
-            <p className="text-sm font-bold text-[#9C8C84] leading-snug">
-              Skip the line. Your Spicy Wrap is waiting at the counter.
-            </p>
-
-            {/* Decor line */}
-            <div className="absolute left-0 bottom-0 h-1 bg-[#FF9E75] w-full transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+            {/* Content Row */}
+            <div className="pl-1">
+              <h3 className="text-xl font-black text-[#5C4D45] leading-none mb-2 tracking-tight">
+                Order Ready! <span className="text-xl">🍔</span>
+              </h3>
+              <p className="text-sm font-bold text-[#9C8C84] leading-relaxed">
+                Skip the line. Your{" "}
+                <span className="text-[#FF9E75]">Spicy Wrap</span> is waiting at
+                the counter.
+              </p>
+            </div>
           </div>
         </motion.div>
 
-        {/* 3. Bottom Action (Unlock) */}
-        <div className="mt-auto mb-4 z-10">
+        {/* --- 3. BOTTOM ACTION (Clay Button) --- */}
+        <div className="mt-auto mb-6 z-10 px-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate("home")}
-            className="w-full h-16 bg-[#ece7e1] hover:bg-[#e0d9d1] rounded-full  flex items-center justify-between p-2 relative overflow-hidden"
+            className="w-full h-16 rounded-[1.5rem] bg-[#FF9E75] flex items-center justify-center relative overflow-hidden shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-4px_-4px_8px_rgba(255,255,255,1)] active:shadow-inner transition-all"
           >
-            {/* Shimmer Effect */}
-            {/* <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] animate-[shimmer_2s_infinite]"></div> */}
+            {/* Glossy Reflection (Top) */}
+            <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
 
-            {/* <div className="w-12 h-12 bg-white rounded-xl shadow-[2px_2px_5px_rgba(214,198,186,0.5)] flex items-center justify-center text-[#FF9E75] relative z-10">
-              <ChevronRight size={24} strokeWidth={3} />
-            </div> */}
-
-            <span className="absolute left-0 right-0 text-center text-xs font-black uppercase tracking-widest text-[#9C8C84]/90 pointer-events-none">
+            <span className="text-white text-sm font-black uppercase tracking-widest flex items-center gap-3 relative z-10 pl-1">
               Tap to Pickup
+              <div className="bg-white/20 p-1.5 rounded-full">
+                <ChevronRight size={16} strokeWidth={4} />
+              </div>
             </span>
           </motion.button>
         </div>
-        {/* 3. Bottom Action (IMPROVED SLIDER) */}
       </div>
     );
   };
@@ -214,10 +223,11 @@ const PhoneSimulator = () => {
   const shakeVariants = {
     idle: { rotate: 0 },
     shaking: {
-      rotate: [-0.5, 0.5, -0.5, 0.5, 0],
+      rotate: [-1.5, 0.5, -1.5, 0.5, 0],
       transition: {
+        startDelay: 0,
         repeat: Infinity,
-        repeatDelay: 3,
+        repeatDelay: 2,
         duration: 0.2,
         // ease: [0.42, 0, 0.58, 1], // cubic-bezier for easeInOut
       },
@@ -231,6 +241,16 @@ const PhoneSimulator = () => {
       setScreen("home");
     }
   }, [isPhone]);
+
+  useEffect(() => {
+    if (screen !== "locked") return;
+
+    const timer = setTimeout(() => {
+      navigate("home");
+    }, 7000); // 7 seconds
+
+    return () => clearTimeout(timer); // cleanup on unmount / screen change
+  }, [screen]);
 
   return (
     <div className="w-full md:w-fit h-full mt-6 flex items-center justify-center px-4 font-sans relative">
