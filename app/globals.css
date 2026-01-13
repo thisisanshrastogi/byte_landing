@@ -151,50 +151,18 @@
 /* --------------------------------------------------
    View Transitions: Theme Reveal Animation
 -------------------------------------------------- */
-
-/* Disable animations on mobile / touch devices */
-@media (pointer: coarse), (max-width: 768px) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
-    clip-path: none !important;
-  }
-}
-
-/* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
-    clip-path: none !important;
-  }
-}
-
-/* Kill default browser fade */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
 }
 
-/* Animate ONLY the new theme */
 ::view-transition-new(root) {
   clip-path: circle(0% at var(--vt-x) var(--vt-y));
   animation: theme-reveal 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Old theme stays static */
-::view-transition-old(root) {
-  animation: none;
-}
-
-/* Reveal animation */
 @keyframes theme-reveal {
   to {
     clip-path: circle(150% at var(--vt-x) var(--vt-y));
   }
-}
-
-/* Pointer affordance */
-button:not(:disabled):hover {
-  cursor: pointer;
 }

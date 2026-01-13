@@ -58,7 +58,8 @@ export default function WalletPage() {
   const [amount, setAmount] = useState("");
 
   const numAmount = parseFloat(amount) || 0;
-  const gatewayFee = numAmount * 0.03;
+  // fee percentage
+  const gatewayFee = numAmount * 0;
   const totalPayable = numAmount + gatewayFee;
   const showReceipt = numAmount > 0;
 

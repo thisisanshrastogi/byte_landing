@@ -1,32 +1,33 @@
 "use client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
+import useIsMobile from "./mobile-detector";
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
+  const isMobile = useIsMobile();
+
+  const next = theme === "light" ? "dark" : "light";
 
   function handleToggle(e: React.MouseEvent<HTMLButtonElement>) {
+    // 🚫 Mobile = NO View Transition
+    if (!document.startViewTransition || isMobile) {
+      setTheme(next);
+      return;
+    }
+
     const x = e.clientX;
     const y = e.clientY;
 
-    // Pass click position to CSS
     document.documentElement.style.setProperty("--vt-x", `${x}px`);
     document.documentElement.style.setProperty("--vt-y", `${y}px`);
-    // View Transitions API with fallback
-    // @ts-ignore
-    if (document.startViewTransition) {
-      // @ts-ignore
-      document.startViewTransition(() => {
-        setTheme(next);
-      });
-    } else {
-      setTheme(next);
-    }
-  }
 
-  const next = theme === "light" ? "dark" : "light";
+    // @ts-ignore
+    document.startViewTransition(() => {
+      setTheme(next);
+    });
+  }
 
   return (
     <Button
