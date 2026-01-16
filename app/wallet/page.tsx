@@ -494,7 +494,7 @@ export default function WalletPage() {
                 </div>
 
                 {/* --- SMOOTH FEE RECEIPT --- */}
-                <AnimatePresence mode="sync">
+                {/* <AnimatePresence mode="sync">
                   {showReceipt && (
                     <motion.div
                       initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -527,7 +527,6 @@ export default function WalletPage() {
                           </span>
                         </div>
 
-                        {/* Divider */}
                         <div className="w-full border-t-2 border-dashed border-[#D6C6BA]/30 dark:border-white/10 my-1"></div>
 
                         <div className="flex justify-between items-center text-sm font-black text-[#5C4D45] dark:text-white pt-1">
@@ -537,7 +536,7 @@ export default function WalletPage() {
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
+                </AnimatePresence> */}
 
                 {/* --- SUBMIT BUTTON --- */}
                 <motion.button
