@@ -520,7 +520,7 @@ export default function WalletPage() {
 
                         <div className="flex justify-between items-center text-xs font-bold text-[#9C8C84]">
                           <div className="flex items-center gap-1.5">
-                            <span>Payment Gateway Fee* (3%)</span>
+                            <span>Payment Gateway Fee* {gatewayFee}</span>
                           </div>
                           <span className="text-[#FF9E75]">
                             + ₹{gatewayFee.toFixed(2)}
