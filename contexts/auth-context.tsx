@@ -4,8 +4,8 @@ import axi from "@/lib/axi";
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
   type ReactNode,
 } from "react";
 
@@ -25,17 +25,18 @@ type RegisterRequestBody = {
 
 interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   register: (
     name: string,
     email: string,
     password: string,
-    token: string
+    token: string,
   ) => Promise<boolean>;
   resetPassword: (token: string, newPassword: string) => Promise<boolean>;
-  loading: boolean;
   updateWalletBalance: (newBalance: number) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,36 +45,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if user is logged in on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  // 🔑 Single source of truth
+  const refreshUser = async () => {
     try {
-      const response = await axi.get("/auth/me");
-      setUser(response.data.data);
-    } catch (error) {
-      console.error("Auth check failed:", error);
-    } finally {
-      setLoading(false);
+      const res = await axi.get("/auth/me");
+      setUser(res.data.data);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setUser(null);
+      }
     }
   };
 
+  // 🔁 Run once on app load
+  useEffect(() => {
+    (async () => {
+      await refreshUser();
+      setLoading(false);
+    })();
+  }, []);
+
+  // 🔐 Login → cookies set → rehydrate via /me
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await axi.post("/auth/login", {
-        email,
-        password,
-      });
-      if (response.status === 200) {
-        setUser(response.data);
+      const res = await axi.post("/auth/login", { email, password });
+      if (res.status === 200) {
+        await refreshUser();
         return true;
       }
       return false;
-    } catch (error) {
-      console.error("Login failed:", error);
+    } catch {
       return false;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await axi.post("/auth/logout");
+    } finally {
+      setUser(null);
     }
   };
 
@@ -81,76 +91,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string,
     email: string,
     password: string,
-    token: string
+    token: string,
   ): Promise<boolean> => {
     try {
-      const registerBody: RegisterRequestBody = {
+      const body: RegisterRequestBody = {
         name,
         email,
         password,
         role: "student",
       };
-      const response = await axi.post(
-        `/auth/signup?token=${token}`,
-        registerBody
-      );
-      if (response.status === 200) {
-        // setUser(response.data);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Registration failed:", error);
+      const res = await axi.post(`/auth/signup?token=${token}`, body);
+      return res.status === 200;
+    } catch {
       return false;
     }
   };
 
   const resetPassword = async (
     token: string,
-    newPassword: string
+    newPassword: string,
   ): Promise<boolean> => {
     try {
-      const response = await axi.post("/auth/reset-password", {
+      const res = await axi.post("/auth/reset-password", {
         token,
         new_password: newPassword,
       });
-      if (response.status === 200) {
-        return true;
-      }
-    } catch (error) {
-      console.error("Password reset failed:", error);
+      return res.status === 200;
+    } catch {
       return false;
-    }
-    return false;
-  };
-
-  const logout = async () => {
-    try {
-      const response = await axi.post("/auth/logout");
-      if (response.status === 200) {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
     }
   };
 
   const updateWalletBalance = (newBalance: number) => {
-    if (user) {
-      setUser({ ...user, walletBalance: newBalance });
-    }
+    setUser((prev) => (prev ? { ...prev, walletBalance: newBalance } : prev));
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
         logout,
         register,
         resetPassword,
-        loading,
         updateWalletBalance,
+        refreshUser,
       }}
     >
       {children}
@@ -159,9 +145,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context;
+  return ctx;
 }

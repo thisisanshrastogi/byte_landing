@@ -63,7 +63,7 @@ export default function AboutPage() {
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center  min-h-screen"
+            className="text-center  h-screen py-10 md:py-2"
           >
             <motion.div
               variants={fadeInUp}
@@ -75,7 +75,7 @@ export default function AboutPage() {
 
             <motion.h1
               variants={fadeInUp}
-              className={`text-5xl md:text-7xl mb-8 ${textHeading} max-w-4xl mx-auto leading-[1.1]`}
+              className={`text-5xl md:text-7xl mb-8 ${textHeading} max-w-4xl mx-auto mt-10 leading-[1.2]`}
             >
               Your break belongs to you, <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7E47]">
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
             <motion.p
               variants={fadeInUp}
-              className={`text-xl md:text-xl max-w-2xl mx-auto ${textBody}`}
+              className={`text-xl md:text-xl max-w-2xl mt-10 md:mt-0 mx-auto ${textBody}`}
             >
               Byte optimizes campus dining by eliminating queues for students
               and maximizing throughput for vendors.
@@ -167,7 +167,7 @@ export default function AboutPage() {
                 </p>
               </div>
               {/* Decorative Element behind */}
-              <div className="absolute top-8 left-8 w-full h-full rounded-[2.5rem] bg-[#FF9E75]/20 -z-10" />
+              <div className="absolute top-2 left-2 w-full h-full rounded-[2.5rem] bg-[#FF9E75]/20 -z-10" />
             </motion.div>
           </motion.div>
 

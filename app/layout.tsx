@@ -6,12 +6,13 @@ import ClientProviders from "@/components/ClientProvider";
 import IntroShutter from "@/components/ui/intro-shutter";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import MotionGate from "@/components/motion-gate";
+import "@/lib/axiClient";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-montserrat",
-  weight: ["400", "600", "700", "900"],
+  weight: ["400", "600", "700", "900"], 
 });
 
 const modak = Modak({
