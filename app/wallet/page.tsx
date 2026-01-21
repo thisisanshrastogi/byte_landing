@@ -594,8 +594,8 @@ export default function WalletPage() {
                             isCredit
                               ? "bg-[#EAF8E6] text-[#4CAF50] dark:bg-transparent"
                               : isLocked
-                              ? "bg-[#F5EFE8] text-[#9C8C84] dark:bg-transparent"
-                              : "bg-[#FFF0F0] text-[#FF6B6B] dark:bg-transparent"
+                                ? "bg-[#F5EFE8] text-[#9C8C84] dark:bg-transparent"
+                                : "bg-[#FFF0F0] text-[#FF6B6B] dark:bg-transparent"
                           }`}
                         >
                           {isCredit ? (
@@ -623,8 +623,8 @@ export default function WalletPage() {
                             isCredit
                               ? "text-[#4CAF50]"
                               : isLocked
-                              ? "text-[#9C8C84]"
-                              : "text-[#FF6B6B]"
+                                ? "text-[#9C8C84]"
+                                : "text-[#FF6B6B]"
                           }`}
                         >
                           {isCredit ? "+" : isLocked ? "" : "-"}₹

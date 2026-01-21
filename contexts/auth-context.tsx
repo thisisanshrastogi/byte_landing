@@ -1,6 +1,7 @@
 "use client";
 
 import axi from "@/lib/axi";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -44,25 +45,38 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshFailed, setRefreshFailed] = useState(false);
 
-  // 🔑 Single source of truth
+  const pathname = usePathname();
+
+  const isPublicRoute = pathname.startsWith("/login");
+
+  useEffect(() => {
+    if (isPublicRoute) {
+      setLoading(false);
+      return;
+    }
+
+    refreshUser();
+  }, [pathname]);
+
   const refreshUser = async () => {
     try {
-      const res = await axi.get("/auth/me");
-      setUser(res.data.data);
+      const { data } = await axi.get("/auth/me");
+      setUser(data);
     } catch (err: any) {
       if (err.response?.status === 401) {
         setUser(null);
+        setRefreshFailed(true);
       }
+    } finally {
+      setLoading(false);
     }
   };
-  // 🔁 Run once on app load
   useEffect(() => {
-    (async () => {
-      await refreshUser();
-      setLoading(false);
-    })();
-  }, []);
+    if (refreshFailed) return;
+    refreshUser();
+  }, [refreshFailed]);
 
   // 🔐 Login → cookies set → rehydrate via /me
   const login = async (email: string, password: string): Promise<boolean> => {
