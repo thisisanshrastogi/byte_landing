@@ -56,7 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
   };
-
   // 🔁 Run once on app load
   useEffect(() => {
     (async () => {

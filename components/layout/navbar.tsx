@@ -21,6 +21,8 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const { user, logout, loading } = useAuth();
   const pathname = usePathname();
+  console.log("User", user);
+  console.log("loading", loading);
 
   // --- CLAY TOKENS ---
   // Glassmorphic Clay Container
