@@ -130,7 +130,7 @@ export default function LoginPage() {
         {/* Footer Link */}
         <div className="relative z-10">
           <p className="text-sm font-bold text-[#9C8C84]">
-            © 2025 Byte Technologies
+            © {new Date().getFullYear()} Byte Technologies
           </p>
         </div>
       </div>

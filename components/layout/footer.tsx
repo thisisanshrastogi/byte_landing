@@ -52,7 +52,7 @@ export function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-3">
-              {["About", "Contact", "Privacy Policy", "Refund Policy"].map(
+              {["About", "Contact"].map(
                 (item) => (
                   <li key={item}>
                     <Link
@@ -102,13 +102,19 @@ export function Footer() {
               Legal
             </h4>
             <ul className="space-y-3">
-              {["Return Policy", "Disclaimer"].map((item) => (
-                <li key={item}>
+              {[
+                { name: "Terms and Conditions", href: "/terms" },
+                { name: "Privacy Policy", href: "/privacy" },
+                { name: "Refund Policy", href: "/refund" },
+                { name: "Return Policy", href: "/return" },
+                { name: "Disclaimer", href: "/disclaimer" },
+              ].map((item) => (
+                <li key={item.name}>
                   <Link
-                    href={`/${item.toLowerCase().replace(" policy", "")}`}
+                    href={item.href}
                     className={`text-sm font-bold ${textBase} ${hoverLink}`}
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}

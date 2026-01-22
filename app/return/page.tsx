@@ -40,7 +40,7 @@ export default function ReturnPage() {
           {/* Header */}
           <motion.div variants={itemUpVariants} className="text-center mb-16">
             <div className="inline-block px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-black text-xs uppercase tracking-wider mb-6 shadow-sm border border-[#F5EFE8] dark:border-border">
-              Last updated: December 2025
+              Last updated: January 2026
             </div>
             <h1 className={`text-4xl md:text-5xl lg:text-6xl mb-6 ${textHeading}`}>
               Return Policy
