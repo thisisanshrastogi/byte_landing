@@ -11,9 +11,12 @@ import {
 } from "react";
 
 interface User {
-  id: string;
-  email: string;
-  name: string;
+  data: {
+    id: string;
+    email: string;
+    name: string;
+  };
+
   walletBalance: number;
 }
 

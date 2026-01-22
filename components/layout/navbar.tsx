@@ -137,7 +137,7 @@ export function Navbar() {
                           </div>
                           {/* Fallback for empty name */}
                           <span className="text-sm truncate max-w-[100px]">
-                            {user.name || "User"}
+                            {user.data.name || "User"}
                           </span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -150,11 +150,11 @@ export function Navbar() {
                           <div className="flex flex-col space-y-1">
                             {/* Fallback for empty name */}
                             <p className={`text-sm ${textBrand} truncate`}>
-                              {user.name || "User"}
+                              {user.data.name || "User"}
                             </p>
                             {/* Fallback for empty email */}
                             <p className="text-xs text-[#9C8C84] font-bold truncate">
-                              {user.email || "No email linked"}
+                              {user.data.email || "No email linked"}
                             </p>
                           </div>
                         </DropdownMenuLabel>
@@ -258,7 +258,7 @@ export function Navbar() {
                     <div className="flex items-center justify-between">
                       <span>Wallet</span>
                       <span className="text-xs bg-[#EAF8E6] text-[#4CAF50] px-2 py-1 rounded-md dark:bg-muted dark:text-muted-foreground">
-                        ₹{user.walletBalance?.toFixed(0) || "0"}
+                        ₹{user.walletBalance?.toFixed(2) || "0"}
                       </span>
                     </div>
                   </Link>
