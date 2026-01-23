@@ -226,7 +226,7 @@ export default function WalletPage() {
 
   const quickAmounts = [50, 100, 200, 500, 1000];
 
-  const displayEmail = walletProfile.email || user?.email || "";
+  const displayEmail = walletProfile.email || user?.data.email || "";
   const maskedId = walletProfile.user_id
     ? `...${walletProfile.user_id.slice(-8)}`
     : "****";
