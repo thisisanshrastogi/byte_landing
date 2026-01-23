@@ -7,11 +7,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/auth-context";
-import { Navbar } from "@/components/layout/navbar";
-// import { Footer } from "@/components/layout/footer"; // Footer often removed from split layouts for cleanliness
-import { signIn } from "next-auth/react";
 import { motion, Variants } from "framer-motion";
-import { LogIn, AlertCircle, ArrowRight, Star } from "lucide-react";
+import {
+  LogIn,
+  AlertCircle,
+  ArrowRight,
+  Star,
+  ChevronLeft,
+  Mail,
+  Home,
+} from "lucide-react";
 import GoogleLoginButton from "@/components/googleLoginButton";
 
 export default function LoginPage() {
@@ -23,17 +28,15 @@ export default function LoginPage() {
   const router = useRouter();
 
   // --- CLAY TOKENS ---
-  // Using a cleaner card style for the split layout
   const clayInset =
-    "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-muted dark:shadow-none dark:text-foreground";
+    "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none outline-none text-[#5C4D45] font-bold placeholder-[#B0A69E] focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] transition-all dark:bg-muted dark:shadow-none dark:text-foreground dark:focus:ring-2 dark:focus:ring-primary";
+
   const clayBtnPrimary =
-    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
-  const clayBtnSecondary =
-    "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
+    "bg-[#FF9E75] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-[#FF9E75] dark:text-[#2C2420] dark:shadow-[6px_6px_12px_rgba(0,0,0,0.4),_-2px_-2px_6px_rgba(255,255,255,0.05)] dark:bg-primary";
 
   const textHeading =
-    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
-  const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
+    "text-[#5C4D45] dark:text-[#F5EFE8] font-black tracking-tight";
+  const textBody = "text-[#9C8C84] dark:text-[#D6C6BA] font-bold";
 
   // --- ANIMATIONS ---
   const fadeInUp: Variants = {
@@ -65,20 +68,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden">
-      {/* ---------------- LEFT SIDE: VISUAL SHOWCASE (Laptop+) ---------------- */}
-      <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-primary/5 flex-col justify-start gap-10 p-12 lg:p-20 overflow-hidden">
-        {/* Animated Blobs Background */}
+    <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-[#120F0D] selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden transition-colors duration-500">
+      {/* ---------------- LEFT SIDE: VISUAL SHOWCASE ---------------- */}
+      <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-[#181411] flex-col justify-between p-12 lg:p-20 overflow-hidden transition-colors duration-500 border-r border-[#EBE0D6] dark:border-[#2C2420]">
+        {/* Animated Background Blobs */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           <motion.div
             animate={{ x: [0, 50, 0], y: [0, 30, 0], rotate: [0, 10, 0] }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FF9E75]/20 rounded-full blur-3xl"
+            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FF9E75]/15 dark:bg-[#FF9E75]/5 rounded-full blur-3xl"
           />
           <motion.div
             animate={{ x: [0, -30, 0], y: [0, 50, 0], scale: [1, 1.1, 1] }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#FFD166]/20 rounded-full blur-3xl"
+            className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#FFD166]/15 dark:bg-[#FF9E75]/5 rounded-full blur-3xl"
           />
         </div>
 
@@ -86,9 +89,10 @@ export default function LoginPage() {
         <div className="relative z-10">
           <Link
             href="/"
-            className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-foreground"
+            className="flex items-center gap-2 text-2xl font-black text-[#5C4D45] dark:text-[#F5EFE8]"
           >
-            <span className="w-3 h-3 rounded-full bg-[#FF9E75]"></span> Byte
+            <span className="w-3 h-3 rounded-full bg-[#FF9E75] shadow-[0_0_12px_rgba(255,158,117,0.6)]"></span>{" "}
+            Byte
           </Link>
         </div>
 
@@ -99,81 +103,98 @@ export default function LoginPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-white/95 dark:text-black backdrop-blur-sm rounded-full mb-8 text-[#FF9E75] font-black text-xs uppercase tracking-wide shadow-sm">
+            {/* Tag / Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-[#2C2420]/60 backdrop-blur-sm border border-white/40 dark:border-[#3E342F] rounded-full mb-8 text-[#FF9E75] dark:text-primary font-black text-xs uppercase tracking-wide shadow-sm">
               <Star size={14} fill="currentColor" /> The #1 Campus Food App
             </div>
-            <h1 className="text-6xl font-black text-[#5C4D45] dark:text-foreground mb-6 leading-[1.1] tracking-tight">
+
+            <h1 className="text-6xl font-black text-[#5C4D45] dark:text-[#F5EFE8] mb-6 leading-[1.1] tracking-tight drop-shadow-sm">
               Skip the line,
               <br />
-              <span className="text-[#FF9E75]">Enjoy the time.</span>
+              <span className="text-[#FF9E75] dark:text-primary drop-shadow-[0_4px_20px_rgba(255,158,117,0.3)]">
+                Enjoy the time.
+              </span>
             </h1>
-            <p className="text-xl text-[#9C8C84] font-bold leading-relaxed mb-8">
+            <p className="text-xl text-[#9C8C84] dark:text-[#B0A69E] font-bold leading-relaxed mb-8">
               Join thousands of students ordering from their favorite campus
               canteens instantly. No cash, no waiting.
             </p>
-
-            {/* Visual Stats / Trust */}
-            {/* <div className="flex items-center gap-4">
-              <div className="flex -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className={`w-12 h-12 rounded-full border-4 border-[#FFF0E6] bg-[#F5EFE8] flex items-center justify-center text-xs font-bold text-[#9C8C84] shadow-sm z-${5 - i}`}>
-                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} alt="Avatar" className="w-full h-full" />
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm font-bold text-[#5C4D45] dark:text-foreground">
-                <span className="text-[#FF9E75]">5,000+</span> students<br />ordering daily
-              </div>
-            </div> */}
           </motion.div>
         </div>
 
         {/* Footer Link */}
         <div className="relative z-10">
-          <p className="text-sm font-bold text-[#9C8C84]">
-            © {new Date().getFullYear()} Byte Technologies
+          <p className="text-sm font-bold text-[#9C8C84] dark:text-[#5C4D45]">
+            © 2026 Byte Technologies
           </p>
         </div>
       </div>
 
       {/* ---------------- RIGHT SIDE: LOGIN FORM ---------------- */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative">
-        {/* Mobile Nav Toggle (Simplified) */}
-        <div className="absolute top-6 right-6 lg:hidden">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative bg-[#FFFBF7] dark:bg-[#120F0D] transition-colors duration-500">
+        {/* === BACK TO HOME NAVIGATION === */}
+        <Link
+          href="/"
+          className="flex items-center md:hidden gap-2 text-2xl font-black text-[#5C4D45] dark:text-[#F5EFE8]"
+        ></Link>
+        <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-20">
           <Link
             href="/"
-            className="text-sm font-black text-[#9C8C84] hover:text-[#FF9E75]"
+            className="flex bg-white dark:bg-[#1E1915] items-center gap-2 px-4 py-2 rounded-full font-bold text-[#9C8C84] hover:text-[#FF9E75] hover:bg-[#F5EFE8] dark:text-[#887A72] dark:hover:text-[#E6DCD5] dark:hover:bg-[#1E1915] transition-all"
           >
-            Back to Home
+            <Home size={20} />
+
+            <span className="hidden sm:inline">Back to Home</span>
           </Link>
         </div>
 
         <motion.div
-          className="w-full max-w-md"
+          className="w-full max-w-md my-auto pt-10 lg:pt-0"
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
         >
           {/* Header */}
-          <div className="mb-10">
-            <div className="w-16 h-16 bg-[#FFF0E6] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] dark:bg-primary/10 dark:text-primary mb-6 shadow-sm">
-              <LogIn size={32} strokeWidth={3} />
-            </div>
+          <div className="mb-8 text-center lg:text-left py-4">
+            {/* <div className="w-16 h-16 bg-[#FFF0E6] dark:bg-[#1E1915] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] mb-6 shadow-sm mx-auto lg:mx-0">
+              <LogIn size={20} strokeWidth={3} />
+            </div> */}
             <h2 className={`text-4xl ${textHeading} mb-3`}>Welcome Back!</h2>
             <p className={`text-lg ${textBody}`}>
-              Sign in to manage your wallet, view orders, and grab a bite.
+              Sign in to manage your wallet and view orders.
             </p>
           </div>
 
+          {/* 1. GOOGLE LOGIN (PRIORITY) */}
+          <div className="mb-8">
+            <GoogleLoginButton
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+          </div>
+
+          {/* 2. DIVIDER */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#E5DCD5] dark:border-[#2C2420]" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-[#FFFBF7] dark:bg-[#120F0D] px-4 font-black uppercase tracking-widest text-[#D6C6BA] dark:text-[#5C4D45]">
+                Or via email
+              </span>
+            </div>
+          </div>
+
+          {/* 3. EMAIL FORM */}
           {error && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mb-8"
+              className="mb-6"
             >
               <Alert
                 variant="destructive"
-                className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4"
+                className="bg-[#FFF0F0] dark:bg-[#2C1515] border-none text-[#FF6B6B] dark:text-[#FF8080] rounded-[1rem] flex items-center p-4"
               >
                 <AlertCircle size={20} className="mr-3 shrink-0" />
                 <AlertDescription className="font-bold text-sm">
@@ -191,16 +212,22 @@ export default function LoginPage() {
               >
                 Email Address
               </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`w-full px-5 py-5 text-base ${clayInset}`}
-                placeholder="name@college.edu"
-                required
-              />
+              <div className="relative">
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`w-full pl-5 pr-5 py-5 text-base ${clayInset}`}
+                  placeholder="name@college.edu"
+                  required
+                />
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 text-[#D6C6BA] pointer-events-none">
+                  <Mail size={18} />
+                </div>
+              </div>
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
                 <label
@@ -245,22 +272,6 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
-
-          <div className="relative my-10">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E5DCD5] dark:border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-[#FFFBF7] dark:bg-background px-4 font-black uppercase tracking-widest text-[#D6C6BA]">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <GoogleLoginButton
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-          />
 
           <div className="text-center mt-10">
             <span className={`text-base ${textBody}`}>

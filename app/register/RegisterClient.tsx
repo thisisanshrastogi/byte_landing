@@ -5,9 +5,17 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, Variants } from "framer-motion";
-import { Rocket, Lock, Ticket, Star, CheckCircle2 } from "lucide-react";
-// import axi from "@/lib/axi"; // Keep your imports
-// import { useGoogleLogin } from "@react-oauth/google"; // Keep your imports
+import {
+  Rocket,
+  Lock,
+  Ticket,
+  Star,
+  CheckCircle2,
+  ChevronLeft,
+  Home,
+} from "lucide-react";
+// import axi from "@/lib/axi";
+// import { useGoogleLogin } from "@react-oauth/google";
 import GoogleLoginButton from "@/components/googleLoginButton";
 
 export default function RegisterPage() {
@@ -17,7 +25,6 @@ export default function RegisterPage() {
   const router = useRouter();
 
   // --- CLAY TOKENS ---
-  // Updated for better dark mode visibility
   const clayInset =
     "bg-[#F5EFE8] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] rounded-[1rem] border-none text-[#5C4D45] placeholder-[#B0A69E] focus:ring-0 focus:outline-none transition-all focus:shadow-[inset_6px_6px_12px_rgba(204,190,178,0.6),_inset_-6px_-6px_12px_rgba(255,255,255,1)] dark:bg-[#1E1915] dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.4),_inset_-2px_-2px_4px_rgba(255,255,255,0.05)] dark:text-[#E6DCD5] dark:placeholder-[#5C4D45]";
 
@@ -124,8 +131,24 @@ export default function RegisterPage() {
 
       {/* ---------------- RIGHT SIDE: DYNAMIC CONTENT ---------------- */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-24 relative overflow-y-auto bg-[#FFFBF7] dark:bg-[#120F0D] transition-colors duration-500">
+        {/* === ADDED: Mobile Header for Navigation === */}
+        <Link
+          href="/"
+          className="flex items-center md:hidden gap-2 text-2xl font-black text-[#5C4D45] dark:text-[#F5EFE8]"
+        ></Link>
+        <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-20">
+          <Link
+            href="/"
+            className="flex bg-white dark:bg-[#1E1915] items-center gap-2 px-4 py-2 rounded-full font-bold text-[#9C8C84] hover:text-[#FF9E75] hover:bg-[#F5EFE8] dark:text-[#887A72] dark:hover:text-[#E6DCD5] dark:hover:bg-[#1E1915] transition-all"
+          >
+            <Home size={20} />
+
+            <span className="hidden sm:inline">Back to Home</span>
+          </Link>
+        </div>
+
         <motion.div
-          className="w-full max-w-md my-auto"
+          className="w-full max-w-md my-auto pt-16 lg:pt-0" // Added pt-16 for mobile header clearance
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
@@ -143,23 +166,13 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            {/* Verified Token Badge */}
-            {/* <div className="bg-[#E6F4EA] dark:bg-[#132619] border border-[#CEEAD6] dark:border-[#1E3A27] p-4 rounded-[1rem] mb-8 flex items-center gap-3">
-              <CheckCircle2
-                size={20}
-                className="text-[#34A853] dark:text-[#4ADE80]"
-              />
-              <span className="text-sm font-bold text-[#34A853] dark:text-[#4ADE80]">
-                Invite code applied successfully
-              </span>
-            </div> */}
-
             <GoogleLoginButton
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />
-            <div className="text-center mt-8">
-              <span className={`text-base ${textBody}`}>
+
+            <div className="text-center mt-8 space-y-4">
+              <span className={`block text-base ${textBody}`}>
                 Already have an account?{" "}
                 <Link
                   href="/login"
@@ -168,6 +181,14 @@ export default function RegisterPage() {
                   Sign in
                 </Link>
               </span>
+
+              {/* === ADDED: Back to Home Link for All Screens === */}
+              {/* <Link
+                href="/"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#9C8C84] hover:text-[#FF9E75] dark:text-[#887A72] dark:hover:text-primary transition-colors"
+              >
+                <ChevronLeft size={16} /> Back to Home
+              </Link> */}
             </div>
           </>
         </motion.div>

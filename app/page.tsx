@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Navbar } from "@/components/layout/navbar";
@@ -34,37 +34,37 @@ import {
   Clock7,
   FlameKindling,
   Heater,
+  LogIn,
 } from "lucide-react";
 import PhoneSimulator from "@/components/dummy/phone";
 import { BackgroundElements } from "@/components/background-element";
 import useIsMobile from "@/components/mobile-detector";
 
+// --- EXISTING DATA & CONSTANTS (Unchanged) ---
 const problems = [
   {
     icon: Megaphone,
     title: "Cafeteria Chaos",
     desc: "No token system means shouting names, missed orders, and a chaotic environment for everyone.",
-    // Icon: Mocha/Cocoa
-    color: "text-[#5D4037] dark:text-[#E7DCD6]", // Cocoa
+    color: "text-[#5D4037] dark:text-[#E7DCD6]",
     accent: "bg-[#EFEBE9]",
   },
   {
     icon: Heater,
     title: "Kitchen Meltdowns",
     desc: "Vendors get hit by 500 orders in 10 minutes. Without prep time, quality drops and panic sets in.",
-    // Icon: Burnt Orange (Primary)
-    color: "text-[#EA580C] ", // Vibrant Clay Orange
+    color: "text-[#EA580C] ",
     accent: "bg-[#FFF7ED]",
   },
   {
     icon: Clock7,
     title: "The 15-Minute Wait",
     desc: "Breaks are only 20 minutes long. Students spend 75% of that time just standing in a queue.",
-    // Icon: Caramel/Gold
-    color: "text-[#57534E] dark:text-[#E7E5E4]", // Warm Grey
+    color: "text-[#57534E] dark:text-[#E7E5E4]",
     accent: "bg-[#FAFAF9]",
   },
 ];
+
 const faqs = [
   {
     q: "Is my money safe?",
@@ -82,29 +82,75 @@ const faqs = [
 
 const footerBg =
   "bg-[#5C4D45] border-[#6B5A50] dark:bg-card dark:border-border";
-// --- THEME TOKENS (Strict Clay Design Language) ---
+
 const THEME = {
   bg: "bg-[#FFFBF7] dark:bg-[#050505] transition-colors duration-500",
-  // The Classic Floating Clay Card
   card: "bg-[#FFFBF7] dark:bg-[#121212] shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:shadow-none border border-white dark:border-white/10",
-  // Interactive Hover State
   cardHover:
     "hover:-translate-y-1 hover:shadow-[12px_12px_24px_rgba(214,198,186,0.6),_-6px_-6px_16px_rgba(255,255,255,0.9)] transition-all duration-300 ease-out",
-  // Pressed/Inset State
   cardInset:
     "bg-[#F5EFE8] dark:bg-[#0a0a0a] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]",
-  // Buttons
   btnPrimary:
     "bg-[#FF9E75] dark:bg-[#ff7c50] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] dark:shadow-none hover:bg-[#FF9E75]/90 active:scale-95 transition-all",
   btnSecondary:
     "bg-[#FFFEFD] dark:bg-[#1a1a1a] text-[#5C4D45] dark:text-[#E0E0E0] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-none border border-[#fffefd] hover:border-[#E5DCD5] dark:border-white/10 hover:bg-[#E5DCD5] active:scale-95 transition-all",
-  // Typography Colors
   textDark: "text-[#5C4D45] dark:text-[#EDEDED]",
   textSoft: "text-[#9C8C84] dark:text-[#A1A1AA]",
   brand: "text-[#FF9E75] dark:text-[#ff7c50]",
 };
 
-// --- COMPONENT: SECTION HEADING ---
+// --- NEW COMPONENT: MOBILE STICKY NAV ---
+const MobileStickyNav = () => {
+  const router = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Delay appearance slightly so it doesn't clash with hero animation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          className="fixed bottom-6 inset-x-4 z-50 md:hidden flex justify-center"
+        >
+          {/* Claymorphism Floating Dock 
+             - Frosted Glass Background
+             - Soft Shadow
+          */}
+          <div className="w-full max-w-sm bg-white/80 dark:bg-[#1E1E1E]/90 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12),_0_2px_8px_rgba(0,0,0,0.05)] rounded-[2rem] p-2 flex gap-2 items-center">
+            {/* Login Button (Ghost/Secondary) */}
+            <button
+              onClick={() => router.push("/register")}
+              className="flex-1 h-10 rounded-[1.5rem] font-bold text-[#5C4D45] dark:text-[#E0E0E0] hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm flex items-center justify-center gap-2"
+            >
+              Sign Up
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-[#E5DCD5] dark:bg-white/10" />
+
+            {/* Sign Up Button (Primary Clay) */}
+            <button
+              onClick={() => router.push("/login")}
+              className="flex-1 h-10 rounded-[1.5rem] bg-[#FF9E75] dark:bg-[#ff7c50] text-white font-black uppercase text-xs tracking-wider shadow-[4px_4px_10px_rgba(255,158,117,0.4)] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              Login
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// --- HELPER COMPONENTS (Unchanged) ---
 const SectionHeading = ({
   title,
   subtitle,
@@ -134,9 +180,7 @@ const SectionHeading = ({
           whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
           viewport={viewportMotion.viewport ?? { once: true }}
           transition={{ delay: 0.1 }}
-          className={`text-base md:text-lg font-medium ${
-            THEME.textSoft
-          } max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
+          className={`text-base md:text-lg font-medium ${THEME.textSoft} max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
         >
           {subtitle}
         </motion.p>
@@ -147,7 +191,6 @@ const SectionHeading = ({
 
 function useViewportMotion() {
   const isMobile = useIsMobile();
-
   if (isMobile) {
     return {
       initial: false,
@@ -156,17 +199,13 @@ function useViewportMotion() {
       viewport: undefined,
     };
   }
-
   return {};
 }
 
-// --- COMPONENT: ANALYTICS GRAPH (Soft Pills) ---
+// --- ANALYTICS GRAPH COMPONENTS (Unchanged) ---
 const AnalyticsGraph = () => {
   return (
     <div className="w-full mt-auto pt-4">
-      {/* Graph Bars */}
-
-      {/* Stats List */}
       <div className="space-y-3">
         <div className="flex justify-between items-end border-b border-white/10 pb-2">
           <p className="text-[10px] uppercase font-black tracking-widest text-[#D6C6BA]">
@@ -186,7 +225,6 @@ const AnalyticsGraph = () => {
               <span>{item.name}</span>
               <span className="opacity-60">{item.count} sold</span>
             </div>
-            {/* Custom Progress Bar */}
             <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden shadow-inner">
               <motion.div
                 initial={{ width: 0 }}
@@ -201,18 +239,16 @@ const AnalyticsGraph = () => {
     </div>
   );
 };
+
 const BetterAnalyticsGraph = () => {
   const viewportMotion = useViewportMotion();
-  // SVG Path Data for the smooth wave
-  // We use two paths: one for the line (stroke) and one for the filled area (fill)
   const width = 100;
   const height = 40;
   const pathData = "M0 30 C 20 20, 30 5, 50 15 S 80 30, 100 10";
-  const areaData = `${pathData} V 50 H 0 Z`; // Closes the path at the bottom
+  const areaData = `${pathData} V 50 H 0 Z`;
 
   return (
     <div className="w-full mt-10 flex flex-col gap-4">
-      {/* 1. Header with 'Big Number' and Sparkline Badge */}
       <div className="flex justify-between items-end px-1">
         <div>
           <p className="text-[#D6C6BA] text-[10px] font-black uppercase tracking-widest mb-1">
@@ -231,17 +267,12 @@ const BetterAnalyticsGraph = () => {
           +18%
         </div>
       </div>
-
-      {/* 2. THE LIQUID CHART */}
       <div className="relative h-32 w-full bg-black/20 rounded-2xl border border-white/5 overflow-hidden shadow-[inset_2px_2px_6px_rgba(0,0,0,0.4)]">
-        {/* Grid Lines (Faint Background) */}
         <div className="absolute inset-0 flex flex-col justify-between py-4 px-4 opacity-10 pointer-events-none">
           <div className="w-full h-px bg-white border-dashed border-t border-white" />
           <div className="w-full h-px bg-white border-dashed border-t border-white" />
           <div className="w-full h-px bg-white border-dashed border-t border-white" />
         </div>
-
-        {/* SVG Graph */}
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full h-full absolute bottom-0 left-0"
@@ -252,14 +283,11 @@ const BetterAnalyticsGraph = () => {
               <stop offset="0%" stopColor="#FF9E75" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#FF9E75" stopOpacity="0" />
             </linearGradient>
-            {/* Glow Filter for the Line */}
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="1" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
-
-          {/* Animated Area Fill */}
           <motion.path
             d={areaData}
             fill="url(#gradientFill)"
@@ -267,8 +295,6 @@ const BetterAnalyticsGraph = () => {
             whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
             transition={{ duration: 1.5 }}
           />
-
-          {/* Animated Line Stroke */}
           <motion.path
             d={pathData}
             fill="none"
@@ -283,86 +309,23 @@ const BetterAnalyticsGraph = () => {
             }}
           />
         </svg>
-
-        {/* Live "Cursor" Dot (Positioned Absolutely based on path peak) */}
         <motion.div
           initial={viewportMotion.initial ?? { opacity: 0, scale: 0 }}
           whileInView={viewportMotion.whileInView ?? { opacity: 1, scale: 1 }}
           transition={{ delay: 1.8 }}
           className="absolute right-[20%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
         >
-          {/* The Dot */}
           <div className="w-4 h-4 rounded-full bg-[#FF9E75] border-[3px] border-[#5C4D45] shadow-[0_0_10px_#FF9E75]" />
-
-          {/* The Tooltip Pill */}
           <div className="px-2 py-1 bg-[#FF9E75] text-[#5C4D45] text-[9px] font-black rounded-full shadow-lg whitespace-nowrap">
             Peak: 12 PM
           </div>
         </motion.div>
       </div>
-
-      {/* 3. X-Axis Labels */}
-      <div className="flex justify-between px-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
-        <span>Mon</span>
-        <span>Tue</span>
-        <span>Wed</span>
-        <span>Thu</span>
-        <span>Fri</span>
-        <span>Sat</span>
-        <span>Sun</span>
-      </div>
     </div>
   );
 };
 
-// --- COMPONENT: PHONE DEMO (Right Aligned) ---
-const LiveAppDemo = () => {
-  return <PhoneSimulator />;
-};
-
-// --- COMPONENT: FAQ ITEM ---
-const FaqItem = ({ q, a }: { q: string; a: string }) => {
-  const viewportMotion = useViewportMotion();
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div
-      className={`p-6 rounded-[2rem] ${THEME.card} cursor-pointer group relative overflow-hidden`}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div className="flex justify-between items-center">
-        <h4
-          className={`text-base font-black ${THEME.textDark} group-hover:text-[#FF9E75] dark:text-[#ff7c50] transition-colors pr-6`}
-        >
-          {q}
-        </h4>
-        <div
-          className={`w-8 h-8 rounded-full bg-[#F5EFE8] dark:bg-white/5 flex items-center justify-center transition-transform duration-300 ${
-            isOpen ? "rotate-180 bg-[#FF9E75] text-white" : "text-[#9C8C84]"
-          }`}
-        >
-          <ChevronDown size={18} />
-        </div>
-      </div>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={viewportMotion.initial ?? { height: 0, opacity: 0 }}
-            animate={viewportMotion.animate ?? { height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
-          >
-            <p
-              className={`text-sm ${THEME.textSoft} font-medium mt-4 leading-relaxed max-w-xl`}
-            >
-              {a}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
+// --- FAQ ITEM COMPONENT (Unchanged) ---
 const CompactAccordionItem = ({
   question,
   answer,
@@ -383,16 +346,8 @@ const CompactAccordionItem = ({
       viewport={viewportMotion.viewport ?? { once: true }}
       transition={{ duration: 0.3 }}
       className={`group rounded-[1.5rem] overflow-hidden transition-all duration-300 border border-white dark:border-[#2A2A2A]
-        ${
-          isOpen
-            ? "bg-[#FFFBF7] dark:bg-[#1E1E1E] z-10"
-            : "bg-[#FFFBF7] dark:bg-[#1E1E1E] hover:bg-[#FAF9F6] dark:hover:bg-[#252525]"
-        }
-        
-        /* LIGHT MODE SHADOWS: Soft Blur */
+        ${isOpen ? "bg-[#FFFBF7] dark:bg-[#1E1E1E] z-10" : "bg-[#FFFBF7] dark:bg-[#1E1E1E] hover:bg-[#FAF9F6] dark:hover:bg-[#252525]"}
         shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]
-        
-        /* DARK MODE SHADOWS: Deep Drop + Rim Light */
         dark:shadow-[6px_6px_15px_rgba(0,0,0,0.5),_-2px_-2px_10px_rgba(255,255,255,0.05)]`}
     >
       <motion.button
@@ -402,16 +357,10 @@ const CompactAccordionItem = ({
       >
         <span
           className={`text-lg font-black tracking-tight transition-colors duration-300 pr-4
-          ${
-            isOpen
-              ? "text-[#FF9E75] dark:text-[#ff7c50]"
-              : "text-[#5C4D45] dark:text-[#E0E0E0] group-hover:text-[#5C4D45]/80 dark:group-hover:text-white"
-          }`}
+          ${isOpen ? "text-[#FF9E75] dark:text-[#ff7c50]" : "text-[#5C4D45] dark:text-[#E0E0E0] group-hover:text-[#5C4D45]/80 dark:group-hover:text-white"}`}
         >
           {question}
         </span>
-
-        {/* Toggle Icon: Adapts to dark mode clay */}
         <div
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
           ${
@@ -437,12 +386,9 @@ const CompactAccordionItem = ({
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
             <div className="px-6 pb-6 pt-0">
-              {/* DEEP INSET: Handles both light and dark backgrounds */}
               <div
                 className="bg-[#F5EFE8] dark:bg-[#151515] rounded-xl p-5 
-                /* LIGHT INSET */
                 shadow-[inset_4px_4px_8px_rgba(204,190,178,0.3),_inset_-4px_-4px_8px_rgba(255,255,255,0.7)]
-                /* DARK INSET */
                 dark:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.8),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
               >
                 <p className="text-[#9C8C84] dark:text-[#888888] text-sm leading-relaxed font-medium">
@@ -456,6 +402,8 @@ const CompactAccordionItem = ({
     </motion.div>
   );
 };
+
+// --- MAIN PAGE COMPONENT ---
 export default function LandingPage() {
   const viewportMotion = useViewportMotion();
   const router = useRouter();
@@ -479,21 +427,20 @@ export default function LandingPage() {
     >
       <Navbar />
 
-      {/* --- BACKGROUND BLOBS (Subtle & Warm) --- */}
+      {/* ADDED: Mobile Sticky Nav for easy access to Login/Signup */}
+      <MobileStickyNav />
       <BackgroundElements />
 
       <main className="relative z-10 pt-20 pb-20 px-4 md:px-10">
         <div className="max-w-7xl mx-auto px-2 lg:px-8">
           {/* --- HERO SECTION --- */}
           <section className="grid lg:grid-cols-2 gap-12 lg:gap-0 items-center mb-20 lg:mb-32">
-            {/* Left Content */}
             <motion.div
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
               className="text-left flex flex-col items-start relative z-10 lg:pr-12 mt-10"
             >
-              {/* Badge */}
               <motion.div
                 variants={fadeInUp}
                 className={`inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-full border border-white/50 dark:border-white/10 shadow-sm mb-8`}
@@ -507,7 +454,6 @@ export default function LandingPage() {
                 </span>
               </motion.div>
 
-              {/* Title */}
               <motion.h1
                 variants={fadeInUp}
                 className={`text-4xl sm:text-5xl md:text-7xl font-black ${THEME.textDark} leading-[1.15] tracking-tight mb-6`}
@@ -518,7 +464,6 @@ export default function LandingPage() {
                 </span>
               </motion.h1>
 
-              {/* Body Text (Reduced Size) */}
               <motion.p
                 variants={fadeInUp}
                 className={`text-base md:text-lg ${THEME.textSoft} font-medium mb-10 max-w-md leading-relaxed`}
@@ -527,7 +472,6 @@ export default function LandingPage() {
                 vendors prepare smarter using real-time demand analytics.
               </motion.p>
 
-              {/* Buttons */}
               <motion.div
                 variants={fadeInUp}
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
@@ -547,16 +491,14 @@ export default function LandingPage() {
               </motion.div>
             </motion.div>
 
-            {/* Right Phone Demo (Aligned Right on Desktop) */}
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
               className="flex justify-center lg:justify-end relative w-full mt-10 lg:mt-0"
             >
-              {/* Phone Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] -z-10 blur-3xl"></div>
-              <LiveAppDemo />
+              <PhoneSimulator />
             </motion.div>
           </section>
 
@@ -590,11 +532,6 @@ export default function LandingPage() {
                   whileHover={{ y: -8 }}
                   className={`p-8 rounded-[2.5rem] ${THEME.card} flex flex-col items-start relative overflow-hidden group`}
                 >
-                  {/* Soft Gradient Blob at Bottom
-                  <div
-                    className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-[60px] opacity-20 ${item.accent} group-hover:opacity-40 transition-opacity duration-500`}
-                  ></div> */}
-                  {/* Icon Inset Well */}
                   <div
                     className={`w-16 h-16 rounded-2xl ${THEME.cardInset} flex items-center justify-center mb-6 relative z-10`}
                   >
@@ -604,7 +541,6 @@ export default function LandingPage() {
                       className={item.color}
                     />
                   </div>
-                  {/* Content */}
                   <h3
                     className={`text-2xl font-black ${THEME.textDark} mb-3 relative z-10 leading-tight`}
                   >
@@ -623,9 +559,7 @@ export default function LandingPage() {
           {/* --- BENTO GRID FEATURES --- */}
           <section className="mb-20 lg:mb-32">
             <SectionHeading title="Why Byte is Different." align="center" />
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[280px]">
-              {/* Feature 1: Pre-Orders (Wide) */}
               <div
                 className={`md:col-span-2 ${THEME.card} rounded-[3rem] p-10 flex flex-col justify-center relative overflow-hidden group`}
               >
@@ -645,7 +579,6 @@ export default function LandingPage() {
                 <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-30 group-hover:scale-110 transition-transform duration-700"></div>
               </div>
 
-              {/* Feature 2: Analytics (Tall) */}
               <div
                 className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 rounded-[3rem] p-8 flex flex-col relative overflow-hidden shadow-xl text-white`}
               >
@@ -662,7 +595,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Feature 3: Security */}
               <div
                 className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
               >
@@ -678,7 +610,6 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              {/* Feature 4: Waste */}
               <div
                 className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
               >
@@ -696,64 +627,10 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* --- SOCIAL PROOF --- */}
-          {/* <section className="mb-32">
-            <SectionHeading title="Real Impact." align="left" />
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  text: "I actually get time to eat now instead of standing in line for 20 minutes.",
-                  user: "Student, Engineering Dept",
-                },
-                {
-                  text: "Peak hours are smoother and my food wastage has gone down significantly.",
-                  user: "Vendor, Main Canteen",
-                },
-              ].map((t, i) => (
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  key={i}
-                  className={`p-8 rounded-[2.5rem] ${THEME.card} relative`}
-                >
-                  <Quote size={32} className="text-[#FF9E75] dark:text-[#ff7c50]/30 mb-6" />
-                  <p
-                    className={`text-lg font-bold ${THEME.textDark} mb-6 leading-relaxed`}
-                  >
-                    "{t.text}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#E5DCD5] dark:bg-white/10"></div>
-                    <div>
-                      <p
-                        className={`text-xs font-black uppercase tracking-wider ${THEME.textDark}`}
-                      >
-                        {t.user}
-                      </p>
-                      <div className="flex text-[#FF9E75] dark:text-[#ff7c50] mt-1 gap-0.5">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} size={10} fill="currentColor" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </section> */}
-
           {/* --- FAQ --- */}
           <section className=" w-full bg-transparent dark:bg-transparent py-12 md:py-20 px-2 md:px-12 flex justify-center font-sans">
             <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              {/* --- LEFT SIDE: ENHANCED VISUAL --- */}
               <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col gap-4">
-                {/* Subtle Icon Badge to anchor the design */}
-                {/* <div
-                  className="w-12 h-12 rounded-2xl bg-[#FFFBF7] flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-2
-            shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]"
-                >
-                  <HelpCircle size={24} strokeWidth={2.5} />
-                </div> */}
-
                 <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-black tracking-tight leading-[1.1]">
                   Common <br />{" "}
                   <span className="text-[#FF9E75] dark:text-[#ff7c50]">
@@ -765,8 +642,6 @@ export default function LandingPage() {
                   security, features, and reliability.
                 </p>
               </div>
-
-              {/* --- RIGHT SIDE: COMPACT ACCORDION --- */}
               <div className="lg:col-span-8 flex flex-col gap-4">
                 {faqs.map((item, index) => (
                   <CompactAccordionItem
@@ -786,9 +661,7 @@ export default function LandingPage() {
             <div
               className={`p-10 md:p-16 rounded-[3.5rem] ${THEME.card} relative overflow-hidden`}
             >
-              {/* Decorative Blur */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF9E75]/10 blur-[80px] rounded-full"></div>
-
               <div className="relative z-10 max-w-3xl mx-auto">
                 <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] dark:text-[#ff7c50] font-black text-[10px] uppercase tracking-widest mb-6">
                   Join the movement
@@ -804,7 +677,6 @@ export default function LandingPage() {
                   Whether you run a campus kitchen or rush between classes, Byte
                   is the upgrade you've been waiting for.
                 </p>
-
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <button
                     onClick={() => router.push("/invite")}
@@ -824,7 +696,6 @@ export default function LandingPage() {
           </section>
         </div>
       </main>
-
       <Footer />
     </div>
   );
