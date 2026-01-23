@@ -6,12 +6,21 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Smartphone, ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
+import {
+  Smartphone,
+  ArrowRight,
+  ShieldCheck,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
+import axi from "@/lib/axi";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function VerifyPhonePage() {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -24,24 +33,52 @@ export default function VerifyPhonePage() {
     "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
   const textBody = "text-[#9C8C84] dark:text-muted-foreground font-bold";
 
+  const validatePhoneNumber = (number: string) => {
+    if (number.length !== 10) return false;
+    if (!/^\d{10}$/.test(number)) return false;
+
+    return true; // Indian phone number length
+  };
+
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validatePhoneNumber(phoneNumber)) {
+      setError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+    const inPhoneNumber = "+91" + phoneNumber; // Append country code for India
+
     setIsLoading(true);
-    // TODO: Call API to send OTP to `phoneNumber`
-    setTimeout(() => {
+    try {
+      const resp = await axi.post("/auth/send-otp", {
+        phone_number: inPhoneNumber,
+      });
+      // TODO: Call API to send OTP to `phoneNumber`
+      setError(null);
       setIsLoading(false);
       setStep("otp");
-    }, 1000);
+    } catch (error) {
+      setIsLoading(false);
+      setError("Failed to send OTP. Please try again.");
+    }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Call API to verify OTP
-    setTimeout(() => {
+    try {
+      const resp = await axi.post("/auth/verify-otp", {
+        otp: otp,
+      });
+
+      await axi.post("/auth/refresh");
+      router.push("/");
+    } catch (error) {
       setIsLoading(false);
-      router.push("/dashboard"); // Or wherever you go after full auth
-    }, 1000);
+      setError("Failed to verify OTP. Please try again.");
+      return;
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -95,6 +132,23 @@ export default function VerifyPhonePage() {
                 <p className={`text-lg ${textBody} mb-8`}>
                   Please enter your mobile number to verify your account.
                 </p>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mb-8"
+                  >
+                    <Alert
+                      variant="destructive"
+                      className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4"
+                    >
+                      <AlertCircle size={20} className="mr-3 shrink-0" />
+                      <AlertDescription className="font-bold text-sm">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
 
                 <form onSubmit={handleSendOtp} className="space-y-6">
                   <div className="space-y-2">
@@ -110,7 +164,7 @@ export default function VerifyPhonePage() {
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       className={`w-full px-5 py-5 text-base ${clayInset}`}
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="Enter 10-digit number"
                       required
                     />
                   </div>
@@ -138,6 +192,27 @@ export default function VerifyPhonePage() {
                 <p className={`text-lg ${textBody} mb-8`}>
                   We sent a verification code to <strong>{phoneNumber}</strong>.
                 </p>
+                <div className="text-accent-foreground/70 text-center m-4 text-md">
+                  {" "}
+                  The Default OTP is 123456
+                </div>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mb-8"
+                  >
+                    <Alert
+                      variant="destructive"
+                      className="bg-[#FFF0F0] border-none text-[#FF6B6B] rounded-[1rem] flex items-center p-4"
+                    >
+                      <AlertCircle size={20} className="mr-3 shrink-0" />
+                      <AlertDescription className="font-bold text-sm">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
 
                 <form onSubmit={handleVerifyOtp} className="space-y-6">
                   <div className="space-y-2">

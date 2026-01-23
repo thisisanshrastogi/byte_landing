@@ -63,7 +63,7 @@ export default function AboutPage() {
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center  h-screen py-10 md:py-2"
+            className="text-center  h-[90vh] py-10 md:py-2"
           >
             <motion.div
               variants={fadeInUp}
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
             <motion.p
               variants={fadeInUp}
-              className={`text-xl md:text-xl max-w-2xl mt-10 md:mt-0 mx-auto ${textBody}`}
+              className={`text-xl md:text-xl max-w-2xl mt-20 md:mt-0 mx-auto ${textBody}`}
             >
               Byte optimizes campus dining by eliminating queues for students
               and maximizing throughput for vendors.

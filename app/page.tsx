@@ -491,7 +491,7 @@ export default function LandingPage() {
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-              className="text-left flex flex-col items-start relative z-10 lg:pr-12 mt-4 md:"
+              className="text-left flex flex-col items-start relative z-10 lg:pr-12 mt-10"
             >
               {/* Badge */}
               <motion.div

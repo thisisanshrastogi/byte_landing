@@ -26,7 +26,7 @@ export default function MotionGate({
   // Desktop: no restrictions
   return (
     <>
-      <IntroShutter />
+      {/* <IntroShutter /> */}
       <ClientProviders>{children}</ClientProviders>
     </>
   );

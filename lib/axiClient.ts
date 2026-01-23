@@ -11,7 +11,7 @@ type QueueItem = {
 let failedQueue: QueueItem[] = [];
 
 const processQueue = (error: any = null) => {
-  failedQueue.forEach(promise => {
+  failedQueue.forEach((promise) => {
     if (error) promise.reject(error);
     else promise.resolve();
   });
@@ -19,9 +19,20 @@ const processQueue = (error: any = null) => {
 };
 
 axi.interceptors.response.use(
-  response => response,
-  async error => {
+  (response) => response,
+  async (error) => {
     const originalRequest = error.config;
+
+    // Handle phone verification required
+    if (error.response?.status === 428) {
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname;
+        if (!path.startsWith("/verify-phone")) {
+          window.location.href = "/verify-phone";
+        }
+      }
+      return Promise.reject(error);
+    }
 
     // Not an auth error
     if (!error.response || error.response.status !== 401) {
@@ -57,7 +68,7 @@ axi.interceptors.response.use(
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );
 
 export default axi;

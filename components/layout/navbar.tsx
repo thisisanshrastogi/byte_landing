@@ -27,7 +27,7 @@ export function Navbar() {
   // --- CLAY TOKENS ---
   // Glassmorphic Clay Container
   const navGlass =
-    "bg-[#FFFBF7]/90 backdrop-blur-md border border-[#F5EFE8] shadow-[8px_8px_16px_rgba(214,198,186,0.25),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:bg-card/80 dark:border-border dark:shadow-none";
+    "bg-[#FFFBF7] backdrop-blur-md border border-[#F5EFE8] shadow-[8px_8px_16px_rgba(214,198,186,0.25),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:bg-card/80 dark:border-border dark:shadow-none";
 
   const textBrand =
     "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
@@ -75,18 +75,18 @@ export function Navbar() {
         `}
       >
         {/* Main Bar */}
-        <div className="flex h-16 items-center justify-between px-6 md:px-8">
+        <div className="flex h-16 items-center justify-between px-6 md:px-8 ">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <img
               src="/byte-logo.png"
               alt="Byte"
-              className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden"
+              className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden "
             />
             <img
               src="/byte-logo-dark.png"
               alt="Byte Dark"
-              className="w-24 h-10  object-cover -ml-1  pt-1 px-2 rounded-full hidden dark:block"
+              className="w-24 h-10  object-cover -ml-2  pt-1 mt-1 px-2 rounded-full hidden dark:block"
             />
           </Link>
 
