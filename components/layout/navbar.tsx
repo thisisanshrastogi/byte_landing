@@ -13,7 +13,15 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/contexts/auth-context";
-import { User, Wallet, LogOut, Menu, X, ArrowUpRight } from "lucide-react";
+import {
+  User,
+  Wallet,
+  LogOut,
+  Menu,
+  X,
+  ArrowUpRight,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Navbar() {
@@ -183,7 +191,18 @@ export function Navbar() {
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator className="bg-[#F5EFE8] dark:bg-border my-2" />
-
+                        <DropdownMenuItem
+                          asChild
+                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent"
+                        >
+                          <Link
+                            href="/profile"
+                            className="flex items-center gap-2"
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span>Settings</span>
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={logout}
                           className="rounded-[1rem] focus:bg-[#FFF0E0] text-[#FF6B6B] focus:text-[#FF6B6B] cursor-pointer p-3 font-bold flex items-center gap-2 dark:focus:bg-destructive/10"
@@ -241,7 +260,7 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden px-2 pb-2">
             <div className="rounded-[1.5rem] bg-[#FFFBF7] dark:bg-card border border-[#F5EFE8] dark:border-border shadow-inner p-2 space-y-1">
-              {["Home", "About", "Contact"].map((label) => {
+              {["Home", "About", "Contact", "Profile"].map((label) => {
                 const path = label === "Home" ? "/" : `/${label.toLowerCase()}`;
                 return (
                   <Link

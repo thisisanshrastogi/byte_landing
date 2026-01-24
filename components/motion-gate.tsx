@@ -4,6 +4,7 @@ import { AnimatePresence, MotionConfig } from "framer-motion";
 import useIsMobile from "./mobile-detector";
 import IntroShutter from "./ui/intro-shutter";
 import ClientProviders from "./ClientProvider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function MotionGate({
   children,
@@ -15,9 +16,13 @@ export default function MotionGate({
   if (isMobile) {
     return (
       <MotionConfig reducedMotion="always">
-        <AnimatePresence initial={false}>
-          {!isMobile && <IntroShutter />}
-          <ClientProviders>{children}</ClientProviders>
+        <AnimatePresence initial={false} mode="wait">
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+          >
+            {/* {!isMobile && <IntroShutter />} */}
+            <ClientProviders>{children}</ClientProviders>
+          </GoogleOAuthProvider>
         </AnimatePresence>
       </MotionConfig>
     );
@@ -27,7 +32,9 @@ export default function MotionGate({
   return (
     <>
       {/* <IntroShutter /> */}
-      <ClientProviders>{children}</ClientProviders>
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+        <ClientProviders>{children}</ClientProviders>
+      </GoogleOAuthProvider>
     </>
   );
 }

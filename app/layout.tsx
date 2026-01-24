@@ -7,7 +7,6 @@ import IntroShutter from "@/components/ui/intro-shutter";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import MotionGate from "@/components/motion-gate";
 import "@/lib/axiClient";
-import Providers from "./provider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -47,9 +46,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans">
-        <Providers>
           <MotionGate>{children}</MotionGate>
-        </Providers>
       </body>
     </html>
   );
