@@ -39,6 +39,7 @@ import {
 import PhoneSimulator from "@/components/dummy/phone";
 import { BackgroundElements } from "@/components/background-element";
 import useIsMobile from "@/components/mobile-detector";
+import { useAuth } from "@/contexts/auth-context";
 
 // --- EXISTING DATA & CONSTANTS (Unchanged) ---
 const problems = [
@@ -102,13 +103,23 @@ const THEME = {
 // --- NEW COMPONENT: MOBILE STICKY NAV ---
 const MobileStickyNav = () => {
   const router = useRouter();
+
+  const { user, loading } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
   // Delay appearance slightly so it doesn't clash with hero animation
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setIsVisible(true), 800);
+  //   return () => clearTimeout(timer);
+  // }, []);
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!loading && user) {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [user, router, loading]);
 
   return (
     <AnimatePresence>
@@ -583,7 +594,7 @@ export default function LandingPage() {
                 className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 rounded-[3rem] p-8 flex flex-col relative overflow-hidden shadow-xl text-white`}
               >
                 <div className="relative z-10 w-full h-full flex flex-col">
-                  <div className="w-12 h-12 absolute right-0 bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-4">
+                  <div className="w-12 h-12 absolute right-0 bg-white/10 rounded-xl hidden md:flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-4">
                     <BarChart3 size={24} />
                   </div>
                   <h3 className="text-2xl font-black mb-1">Cook with Data</h3>

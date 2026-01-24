@@ -59,7 +59,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
         >
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
-        <h1 className="text-base font-black text-[#5C4D45] tracking-wide">
+        <h1 className="text-base font-black text-[#5C4D45] tracking-wide py-4">
           My Wallet
         </h1>
         <button

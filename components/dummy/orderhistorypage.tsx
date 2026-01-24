@@ -96,7 +96,7 @@ const ClayOrderHistory = ({ onBack }: { onBack: () => void }) => {
         >
           <ChevronLeft size={20} strokeWidth={3} />
         </button>
-        <h1 className="text-lg font-black text-[#5C4D45] tracking-wide">
+        <h1 className="text-lg font-black text-[#5C4D45] tracking-wide py-4">
           Past Orders
         </h1>
         <div className="w-10"></div>

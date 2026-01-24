@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loading, user } = useAuth();
   const router = useRouter();
 
   // --- CLAY TOKENS ---
@@ -66,6 +66,11 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-[#120F0D] selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden transition-colors duration-500">

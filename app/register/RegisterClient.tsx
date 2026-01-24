@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,11 @@ import {
 // import axi from "@/lib/axi";
 // import { useGoogleLogin } from "@react-oauth/google";
 import GoogleLoginButton from "@/components/googleLoginButton";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function RegisterPage() {
+  // --- AUTH CONTEXT ---
+  const { loading, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -47,6 +50,12 @@ export default function RegisterPage() {
       transition: { type: "spring", stiffness: 100, damping: 20 },
     },
   };
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div className="min-h-screen flex bg-[#FFFBF7] dark:bg-[#120F0D] selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-hidden transition-colors duration-500">
