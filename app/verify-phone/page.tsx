@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Smartphone,
   ShieldCheck,
@@ -14,6 +15,7 @@ import {
   RefreshCcw,
   ArrowLeft,
   MessageSquareText,
+  Home,
 } from "lucide-react";
 import axi from "@/lib/axi";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -190,10 +192,10 @@ export default function VerifyPhonePage() {
 
       await axi.post("/auth/refresh");
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       setOtp("");
-      setError("Incorrect OTP.");
+      setError(error?.response?.data?.error || "Please try again.");
 
       // Re-fetch to update attempts from server
       await fetchOtpInfo();
@@ -237,7 +239,7 @@ export default function VerifyPhonePage() {
             real students are using the platform.
           </p>
           <div className="flex items-center gap-4 text-[#5C4D45] font-black">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#FF9E75]">
+            <div className="w-12 h-12 bg-white dark:bg-transparent rounded-2xl flex items-center justify-center shadow-sm text-[#FF9E75]">
               <ShieldCheck size={24} />
             </div>
             <span>No spam. Ever.</span>
@@ -247,10 +249,20 @@ export default function VerifyPhonePage() {
 
       {/* RIGHT SIDE: FORM */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 lg:p-12 relative">
-        <div className="w-full max-w-md">
-          <div className="w-16 h-16 bg-[#F5EFE8] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] mb-6 shadow-inner">
-            <Smartphone size={32} strokeWidth={2.5} />
+        <div className="w-full max-w-md h-full py-10 mt-5 lg:mt-10">
+          <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-20">
+            <Link
+              href="/"
+              className="flex bg-white dark:bg-[#1E1915] items-center gap-2 px-4 py-2 rounded-full font-bold text-[#9C8C84] hover:text-[#FF9E75] hover:bg-[#F5EFE8] dark:text-[#887A72] dark:hover:text-[#E6DCD5] dark:hover:bg-[#1E1915] transition-all"
+            >
+              <Home size={20} />
+
+              <span className="hidden sm:inline">Back to Home</span>
+            </Link>
           </div>
+          {/* <div className="w-16 h-16 bg-[#F5EFE8] rounded-[1.5rem] flex items-center justify-center text-[#FF9E75] mb-6 shadow-inner">
+            <Smartphone size={32} strokeWidth={2.5} />
+          </div> */}
 
           <AnimatePresence mode="wait">
             {step === "phone" ? (
@@ -284,7 +296,7 @@ export default function VerifyPhonePage() {
                   </motion.div>
                 )}
 
-                <form onSubmit={handleSendOtp} className="space-y-6">
+                <form onSubmit={handleSendOtp} className="space-y-6 ">
                   <div className="space-y-2">
                     <label
                       className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
@@ -338,11 +350,13 @@ export default function VerifyPhonePage() {
                   <strong>+91 {phoneNumber}</strong>.
                 </p>
                 {/* SENDER INFO ADDED HERE */}
-                <div className="flex items-center gap-2 mb-8 text-sm text-[#9C8C84]/80 font-bold bg-white/50 p-2 rounded-lg w-fit">
+                <div className="flex items-center gap-2 mb-8 text-sm text-[#9C8C84]/80 dark:text-foreground font-bold bg-white/50 dark:bg-transparent p-2 rounded-lg w-fit">
                   <MessageSquareText size={16} className="text-[#FF9E75]" />
                   <span>
                     Sender ID:{" "}
-                    <span className="font-mono text-[#5C4D45]">8559022055</span>
+                    <span className="font-mono text-[#5C4D45] dark:text-foreground">
+                      8559022055
+                    </span>
                   </span>
                 </div>
 
@@ -405,7 +419,7 @@ export default function VerifyPhonePage() {
                   <div className="flex flex-col items-center justify-center gap-4 mt-6">
                     {timeLeft > 0 ? (
                       <div className="w-full flex flex-col items-center gap-3">
-                        <div className="flex items-center gap-2 text-[#9C8C84] font-bold text-sm bg-stone-100 px-4 py-2 rounded-full shadow-inner">
+                        <div className="flex items-center gap-2 text-[#9C8C84] font-bold text-sm bg-stone-100 dark:bg-accent px-4 py-2 rounded-full shadow-inner">
                           <Timer size={16} />
                           <span>
                             Wait {formatTime(timeLeft)} to resend or change
@@ -426,7 +440,7 @@ export default function VerifyPhonePage() {
                           type="button"
                           onClick={handleResendOtp}
                           disabled={isLoading}
-                          className="hover:cursor-pointer  flex-1 flex items-center justify-center gap-2 h-12 rounded-[1rem] text-sm font-bold text-white bg-[#FF9E75] hover:bg-[#FF9E75]/90 transition-all shadow-[4px_4px_8px_rgba(255,158,117,0.3)] active:translate-y-[1px] active:shadow-none"
+                          className="hover:cursor-pointer dark:bg-primary  flex-1 flex items-center justify-center gap-2 h-12 rounded-[1rem] text-sm font-bold text-white bg-[#FF9E75] hover:bg-[#FF9E75]/90 transition-all  active:translate-y-[1px] active:shadow-none"
                         >
                           <RefreshCcw size={16} />
                           Resend OTP
@@ -435,7 +449,7 @@ export default function VerifyPhonePage() {
                           type="button"
                           onClick={handleChangeNumber}
                           disabled={isLoading}
-                          className="hover:cursor-pointer flex-1 flex items-center justify-center h-12 rounded-[1rem] text-sm font-bold text-[#9C8C84] bg-white border-2 border-[#F5EFE8] hover:border-[#FF9E75] hover:text-[#FF9E75] transition-all"
+                          className="hover:cursor-pointer flex-1 flex items-center justify-center h-12 rounded-[1rem] text-sm font-bold text-[#9C8C84] bg-white border-2  border-[#F5EFE8] hover:border-[#FF9E75] hover:text-[#FF9E75] transition-all"
                         >
                           Change Number
                         </button>

@@ -268,7 +268,7 @@ export default function ProfilePage() {
             {/* Section 2: Security */}
             <motion.div variants={itemVariants} className={clayCard}>
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#F5EFE8] dark:border-border">
-                <div className="w-12 h-12 bg-[#5C4D45] dark:bg-primary rounded-[1rem] flex items-center justify-center text-white dark:text-primary-foreground">
+                <div className="w-12 h-12 bg-[#5C4D45] dark:bg-primary/10 dark:text-primary rounded-[1rem] flex items-center justify-center text-white ">
                   <ShieldCheck className="w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <h2 className={`text-2xl ${textHeading}`}>Security Settings</h2>
@@ -287,7 +287,7 @@ export default function ProfilePage() {
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       className={`w-full px-6 py-4 text-base font-black ${clayInset} pr-14`}
-                      placeholder="••••••••"
+                      placeholder="old password"
                     />
                     <button
                       type="button"
