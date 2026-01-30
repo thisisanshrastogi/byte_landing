@@ -173,6 +173,8 @@ export default function LoginPage() {
           {/* 1. GOOGLE LOGIN (PRIORITY) */}
           <div className="mb-8">
             <GoogleLoginButton
+              intent="login"
+              text="Sign In With Google"
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />

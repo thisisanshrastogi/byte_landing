@@ -176,6 +176,8 @@ export default function RegisterPage() {
             </div>
 
             <GoogleLoginButton
+              intent="register"
+              text={"Sign Up With Google"}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />

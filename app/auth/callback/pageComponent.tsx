@@ -10,6 +10,7 @@ export default function AuthCallbackPage() {
   const router = useRouter();
   const params = useSearchParams();
   const code = params.get("code");
+  const intent = params.get("state"); // "login" or "register"
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -38,8 +39,20 @@ export default function AuthCallbackPage() {
         //   credentials: "include", // IMPORTANT (for cookies)
         //   body: JSON.stringify({ code }),
         // });
-        const res = await axi.post("/auth/google/exchange", { code });
-        if (res.status !== 200) throw new Error("Auth failed");
+        var route = "/auth/google/exchange";
+        switch (intent) {
+          case "login":
+            route += "/signin";
+            break;
+          case "register":
+            route += "/signup";
+            break;
+          default:
+            throw new Error("Invalid intent");
+        }
+
+        const res = await axi.post(route, { code });
+        if (res.status !== 200) throw new Error("Auth failed : Check Email");
 
         const data = res.data;
 
@@ -59,8 +72,10 @@ export default function AuthCallbackPage() {
       } catch (err) {
         console.error(err);
         setStatus("error");
-        setMessage("Something went wrong. Redirecting to login...");
-        setTimeout(() => router.push("/login"), 1500);
+        setMessage(
+          "Authentication failed, Check Email. Redirecting to login...",
+        );
+        setTimeout(() => router.push("/login"), 2500);
       }
     };
 

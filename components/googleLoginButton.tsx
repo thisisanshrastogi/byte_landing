@@ -9,9 +9,13 @@ const clayBtnSecondary =
   "bg-white text-[#5C4D45] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] hover:bg-[#F5EFE8] hover:shadow-lg active:translate-y-[2px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none";
 
 export default function GoogleLoginButton({
+  text,
+  intent,
   isLoading,
   setIsLoading,
 }: {
+  text?: string;
+  intent: "login" | "register";
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
 }) {
@@ -27,8 +31,10 @@ export default function GoogleLoginButton({
     ux_mode: "redirect",
     redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
     scope: "openid email profile",
+    state: intent,
     onSuccess: ({ code }) => {
-      router.push(`/auth/callback?code=${code}`);
+      console.log("Success");
+      // router.push(`/auth/callback?code=${code}`);
     },
     onError: () => console.error("Google login failed"),
   });
@@ -62,7 +68,7 @@ export default function GoogleLoginButton({
               fill="#EA4335"
             />
           </svg>
-          Continue with Google
+          {text || "Continue with Google"}
         </>
       )}
     </Button>
