@@ -40,12 +40,20 @@ export default function AuthCallbackPage() {
         //   body: JSON.stringify({ code }),
         // });
         var route = "/auth/google/exchange";
+        var pushRoute = "/";
+        var message = "";
+        var time = 1000;
         switch (intent) {
           case "login":
             route += "/signin";
+            pushRoute = "/";
+            message = "Logging you in ...";
             break;
           case "register":
             route += "/signup";
+            pushRoute = "/login";
+            message = "Account created! Redirecting to login.";
+            time = 2500;
             break;
           default:
             throw new Error("Invalid intent");
@@ -55,26 +63,17 @@ export default function AuthCallbackPage() {
         if (res.status !== 200) throw new Error("Auth failed : Check Email");
 
         const data = res.data;
-
-        /**
-         * Backend should return something like:
-         * {
-         *   "phone_verified": true/false
-         * }
-         */
         console.log("Auth response data:", data);
 
-        // setMessage("Successfully signed in!");
-        // setTimeout(() => router.push("/"), 800);
+        setStatus("success");
 
-        setMessage("Checking Phone number ...");
-        setTimeout(() => router.push("/"), 800);
+        setMessage(message);
+
+        setTimeout(() => router.push(pushRoute), time);
       } catch (err) {
         console.error(err);
         setStatus("error");
-        setMessage(
-          "Authentication failed, Check Email. Redirecting to login...",
-        );
+        setMessage("Authentication failed, Check Email. Redirecting to login.");
         setTimeout(() => router.push("/login"), 2500);
       }
     };
