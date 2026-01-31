@@ -13,7 +13,15 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/contexts/auth-context";
-import { User, Wallet, LogOut, Menu, X } from "lucide-react";
+import {
+  User,
+  Wallet,
+  LogOut,
+  Menu,
+  X,
+  ArrowUpRight,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Navbar() {
@@ -23,9 +31,8 @@ export function Navbar() {
   const pathname = usePathname();
 
   // --- CLAY TOKENS ---
-  // Glassmorphic Clay Container
   const navGlass =
-    "bg-[#FFFBF7]/90 backdrop-blur-md border border-[#F5EFE8] shadow-[8px_8px_16px_rgba(214,198,186,0.25),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:bg-card/80 dark:border-border dark:shadow-none";
+    "bg-[#FFFBF7] backdrop-blur-md border border-[#F5EFE8] shadow-[8px_8px_16px_rgba(214,198,186,0.25),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:bg-card/80 dark:border-border dark:shadow-none";
 
   const textBrand =
     "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
@@ -33,8 +40,14 @@ export function Navbar() {
     "text-[#9C8C84] hover:text-[#FF9E75] font-bold transition-colors dark:text-muted-foreground dark:hover:text-primary";
   const textActive = "text-[#5C4D45] dark:text-foreground font-black";
 
-  const clayBtn =
+  // Primary Button (Orange - Sign Up)
+  const clayBtnPrimary =
     "bg-[#FF9E75] text-white shadow-[4px_4px_8px_rgba(255,158,117,0.4),_-2px_-2px_4px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[1px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
+
+  // Secondary Button (White - Login)
+  const clayBtnSecondary =
+    "bg-[#FFFEFD] text-[#5C4D45] shadow-[4px_4px_8px_rgba(214,198,186,0.5),_-2px_-2px_4px_rgba(255,255,255,0.8)] border border-[#FFFEFD] hover:bg-[#F5EFE8] hover:border-[#E5DCD5] active:translate-y-[1px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none dark:border-border";
+
   const clayDropdown =
     "bg-white border-none shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[1.5rem] p-2 dark:bg-popover dark:border dark:border-border dark:shadow-none dark:rounded-md";
 
@@ -72,29 +85,34 @@ export function Navbar() {
           transition-all duration-300
         `}
       >
-        {/* Main Bar */}
-        <div className="flex h-16 items-center justify-between px-6 md:px-8">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <img
-              src="/byte-logo.png"
-              alt="Byte"
-              className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden"
-            />
-            <img
-              src="/byte-logo-dark.png"
-              alt="Byte Dark"
-              className="w-24 h-10  object-cover -ml-1  pt-1 px-2 rounded-full hidden dark:block"
-            />
-          </Link>
+        {/* MAIN BAR: Switched from Flex to Grid 
+            - Mobile: 2 Columns (Logo | Actions)
+            - Desktop: 3 Columns (Logo | Links | Actions)
+        */}
+        <div className="grid h-16 grid-cols-2 md:grid-cols-3 items-center px-6 md:px-8">
+          {/* 1. LEFT: Logo (Justify Start) */}
+          <div className="flex justify-start">
+            <Link href="/" className="flex items-center gap-2">
+              <img
+                src="/byte-logo.png"
+                alt="Byte"
+                className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden"
+              />
+              <img
+                src="/byte-logo-dark.png"
+                alt="Byte Dark"
+                className="w-24 h-10 object-cover -ml-2 pt-1 mt-1 px-2 rounded-full hidden dark:block"
+              />
+            </Link>
+          </div>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* 2. CENTER: Desktop Links (Justify Center) - Hidden on Mobile */}
+          <div className="hidden md:flex justify-center items-center space-x-8">
             {["/", "/about", "/contact"].map((path) => (
               <Link
                 key={path}
                 href={path}
-                className={`text-sm ${
+                className={`text-sm whitespace-nowrap ${
                   pathname === path ? textActive : textLink
                 }`}
               >
@@ -106,7 +124,7 @@ export function Navbar() {
             {user && (
               <Link
                 href="/wallet"
-                className={`text-sm ${
+                className={`text-sm whitespace-nowrap ${
                   pathname === "/wallet" ? textActive : textLink
                 }`}
               >
@@ -115,8 +133,8 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center gap-3">
+          {/* 3. RIGHT: Actions (Justify End) */}
+          <div className="flex justify-end items-center gap-3">
             <ThemeToggle />
 
             {!loading && (
@@ -135,7 +153,7 @@ export function Navbar() {
                           </div>
                           {/* Fallback for empty name */}
                           <span className="text-sm truncate max-w-[100px]">
-                            {user.name || "User"}
+                            {user.data.name || "User"}
                           </span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -146,13 +164,11 @@ export function Navbar() {
                       >
                         <DropdownMenuLabel className="font-normal px-4 pt-4">
                           <div className="flex flex-col space-y-1">
-                            {/* Fallback for empty name */}
                             <p className={`text-sm ${textBrand} truncate`}>
-                              {user.name || "User"}
+                              {user.data.name || "User"}
                             </p>
-                            {/* Fallback for empty email */}
                             <p className="text-xs text-[#9C8C84] font-bold truncate">
-                              {user.email || "No email linked"}
+                              {user.data.email || "No email linked"}
                             </p>
                           </div>
                         </DropdownMenuLabel>
@@ -175,7 +191,18 @@ export function Navbar() {
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator className="bg-[#F5EFE8] dark:bg-border my-2" />
-
+                        <DropdownMenuItem
+                          asChild
+                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent"
+                        >
+                          <Link
+                            href="/profile"
+                            className="flex items-center gap-2"
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span>Settings</span>
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={logout}
                           className="rounded-[1rem] focus:bg-[#FFF0E0] text-[#FF6B6B] focus:text-[#FF6B6B] cursor-pointer p-3 font-bold flex items-center gap-2 dark:focus:bg-destructive/10"
@@ -187,13 +214,23 @@ export function Navbar() {
                     </DropdownMenu>
                   </div>
                 ) : (
-                  <div className="hidden md:block">
+                  // Desktop Guest Buttons
+                  <div className="hidden md:flex gap-4">
                     <Link href="/login">
                       <Button
-                        className={`rounded-[1rem] font-bold px-5 ${clayBtn}`}
+                        className={`rounded-[1rem] font-bold px-5 ${clayBtnSecondary}`}
                         size="sm"
                       >
                         Login
+                      </Button>
+                    </Link>
+
+                    <Link href="/register">
+                      <Button
+                        className={`rounded-[1rem] font-bold px-5 ${clayBtnPrimary} gap-2`}
+                        size="sm"
+                      >
+                        Sign Up
                       </Button>
                     </Link>
                   </div>
@@ -223,7 +260,7 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden px-2 pb-2">
             <div className="rounded-[1.5rem] bg-[#FFFBF7] dark:bg-card border border-[#F5EFE8] dark:border-border shadow-inner p-2 space-y-1">
-              {["Home", "About", "Contact"].map((label) => {
+              {["Home", "About", "Contact", "Profile"].map((label) => {
                 const path = label === "Home" ? "/" : `/${label.toLowerCase()}`;
                 return (
                   <Link
@@ -256,7 +293,7 @@ export function Navbar() {
                     <div className="flex items-center justify-between">
                       <span>Wallet</span>
                       <span className="text-xs bg-[#EAF8E6] text-[#4CAF50] px-2 py-1 rounded-md dark:bg-muted dark:text-muted-foreground">
-                        ₹{user.walletBalance?.toFixed(0) || "0"}
+                        ₹{user.walletBalance?.toFixed(2) || "0"}
                       </span>
                     </div>
                   </Link>
@@ -273,13 +310,22 @@ export function Navbar() {
               )}
 
               {!loading && !user && (
-                <Link
-                  href="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block rounded-[1rem] px-4 py-3 text-center font-bold mt-2 ${clayBtn}`}
-                >
-                  Login
-                </Link>
+                <div className="mt-2 space-y-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block rounded-[1rem] px-4 py-3 text-center font-bold ${clayBtnSecondary}`}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block rounded-[1rem] px-4 py-3 text-center font-bold ${clayBtnPrimary}`}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               )}
             </div>
           </div>

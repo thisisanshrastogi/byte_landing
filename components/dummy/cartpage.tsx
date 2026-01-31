@@ -30,7 +30,7 @@ const ClayCart = ({ onBack }: { onBack: () => void }) => {
 
   const itemTotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
-    0
+    0,
   );
   const taxes = Math.round(itemTotal * 0.05);
   const grandTotal = itemTotal + taxes;
@@ -56,8 +56,8 @@ const ClayCart = ({ onBack }: { onBack: () => void }) => {
         >
           <ChevronLeft size={20} strokeWidth={3} />
         </button>
-        <h1 className="text-lg font-black text-[#5C4D45] tracking-wide">
-          Order Details
+        <h1 className="text-lg font-black text-[#5C4D45] tracking-wide py-4">
+          My Cart
         </h1>
         <div className="w-10"></div>
       </header>

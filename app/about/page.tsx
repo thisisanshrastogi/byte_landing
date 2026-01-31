@@ -2,51 +2,52 @@
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { Lightbulb, Target, Rocket, Heart } from "lucide-react";
+import {
+  Lightbulb,
+  Rocket,
+  Heart,
+  Wallet,
+  Clock,
+  RefreshCcw,
+  BarChart3,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import { BackgroundElements } from "@/components/background-element";
 
 export default function AboutPage() {
-  // --- CLAY TOKENS ---
-  const clayCard =
-    "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent transition-all dark:bg-card dark:border-border dark:shadow-none";
+  // --- STYLING TOKENS ---
+  // A slightly softer clay effect for individual interaction cards
+  const clayItem =
+    "bg-white h-full p-8 rounded-[2rem] shadow-[8px_8px_16px_rgba(214,198,186,0.3),_-4px_-4px_12px_rgba(255,255,255,0.8)] border border-transparent transition-transform hover:-translate-y-1 dark:bg-card dark:border-border dark:shadow-none";
+
   const textHeading =
     "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
   const textBody =
-    "text-[#9C8C84] dark:text-muted-foreground font-bold leading-relaxed";
+    "text-[#9C8C84] dark:text-muted-foreground font-medium leading-relaxed";
 
   const iconBox =
-    "w-14 h-14 rounded-[1rem] flex items-center justify-center bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm";
+    "w-12 h-12 rounded-2xl flex items-center justify-center bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary mb-4";
 
-  // --- ANIMATION VARIANTS ---
-  const containerVariants: Variants = {
+  // --- ANIMATION ---
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 50, damping: 10 },
+    },
+  };
+
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
       },
-    },
-  };
-
-  const itemUpVariants: Variants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 20 },
-    },
-  };
-
-  // The signature "Clay Pop" for cards
-  const clayPopVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95, y: 30 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 120, damping: 15 },
     },
   };
 
@@ -55,158 +56,274 @@ export default function AboutPage() {
       <Navbar />
       <BackgroundElements />
 
-      <main className="relative z-10 py-20 mt-20 lg:py-28">
-        <motion.div
-          className="max-w-5xl mx-auto px-6 lg:px-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Header */}
-          <motion.div variants={itemUpVariants} className="text-center mb-20">
+      <main className="relative z-10 pt-24 pb-20 lg:pt-32 lg:pb-32">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          {/* --- HERO SECTION --- */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center  h-[90vh] py-10 md:py-2"
+          >
             <motion.div
-              variants={clayPopVariants}
-              className="inline-block px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-black text-xs uppercase tracking-wider mb-6 shadow-sm border border-[#F5EFE8] dark:border-border"
+              variants={fadeInUp}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-bold text-xs uppercase tracking-wider mb-8 shadow-sm border border-[#F5EFE8] dark:border-border"
             >
-              Our Story
+              <Zap size={14} fill="currentColor" />
+              <span>Revolutionizing Campus Dining</span>
             </motion.div>
 
-            <h1
-              className={`text-4xl md:text-5xl lg:text-6xl mb-6 ${textHeading}`}
+            <motion.h1
+              variants={fadeInUp}
+              className={`text-5xl md:text-7xl mb-8 ${textHeading} max-w-4xl mx-auto mt-10 leading-[1.2]`}
             >
-              About Byte
-            </h1>
-            <p className={`text-xl md:text-2xl max-w-2xl mx-auto ${textBody}`}>
-              Revolutionizing campus dining with seamless technology and
-              student-first design.
-            </p>
+              Your break belongs to you, <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7E47]">
+                not the queue.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              variants={fadeInUp}
+              className={`text-xl md:text-xl max-w-2xl mt-20 md:mt-0 mx-auto ${textBody}`}
+            >
+              Byte optimizes campus dining by eliminating queues for students
+              and maximizing throughput for vendors.
+            </motion.p>
           </motion.div>
 
-          <div className="space-y-12 lg:space-y-16">
-            {/* Mission Section */}
-            <motion.section
-              variants={clayPopVariants}
-              whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
-              className={`p-8 md:p-10 lg:p-12 ${clayCard} flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-12`}
-            >
-              <div className="shrink-0">
-                <div className={iconBox}>
-                  <Target size={28} strokeWidth={2.5} />
-                </div>
-              </div>
-              <div>
-                <h2 className={`text-3xl mb-4 ${textHeading}`}>Our Mission</h2>
+          {/* --- PROBLEM & SOLUTION (Split Layout, No Box) --- */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-32"
+          >
+            {/* Left: The Statement */}
+            <div className="space-y-8">
+              <motion.div variants={fadeInUp}>
+                <h2 className={`text-3xl md:text-4xl mb-6 ${textHeading}`}>
+                  The Campus Lunchbreak Paradox
+                </h2>
                 <p className={`text-lg ${textBody}`}>
-                  At Byte, we believe that getting great food on campus
-                  shouldn't be complicated. We're dedicated to creating a
-                  seamless, fast, and secure food ordering experience that fits
-                  perfectly into the busy lives of college students.
+                  Every day, hundreds of students rush to the cafeteria at the
+                  exact same time. The result?
+                  <span className="text-[#5C4D45] dark:text-foreground font-bold">
+                    {" "}
+                    Chaos.{" "}
+                  </span>
+                  Students spend their entire break waiting in line, while
+                  vendors struggle to manage the unpredictable surge.
+                </p>
+              </motion.div>
+
+              <motion.div variants={fadeInUp} className="flex flex-col gap-4">
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 bg-red-100 dark:bg-red-900/20 p-2 rounded-lg text-red-500">
+                    <Clock size={20} />
+                  </div>
+                  <div>
+                    <h4 className={`font-bold text-lg ${textHeading}`}>
+                      Wasted Time
+                    </h4>
+                    <p className={textBody}>
+                      Average wait times exceed 20 minutes during peak hours.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 bg-orange-100 dark:bg-orange-900/20 p-2 rounded-lg text-orange-500">
+                    <BarChart3 size={20} />
+                  </div>
+                  <div>
+                    <h4 className={`font-bold text-lg ${textHeading}`}>
+                      Unpredictable Demand
+                    </h4>
+                    <p className={textBody}>
+                      Vendors often over-prep (waste) or under-prep (lost
+                      revenue).
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right: The Abstract Visual/Solution */}
+            <motion.div variants={fadeInUp} className="relative">
+              <div
+                className={`relative z-10 p-10 md:p-12 ${clayItem} flex flex-col justify-center items-start`}
+              >
+                <div className={iconBox}>
+                  <Rocket size={24} strokeWidth={2.5} />
+                </div>
+                <h3 className={`text-2xl font-bold mb-4 ${textHeading}`}>
+                  The Byte Solution
+                </h3>
+                <p className={textBody}>
+                  We bridge the gap. Students order ahead, vendors manage a
+                  steady stream. Efficiency meets satisfaction in a seamless
+                  digital handshake.
                 </p>
               </div>
-            </motion.section>
+              {/* Decorative Element behind */}
+              <div className="absolute top-2 left-2 w-full h-full rounded-[2.5rem] bg-[#FF9E75]/20 -z-10" />
+            </motion.div>
+          </motion.div>
 
-            {/* What We Do Section */}
-            <motion.section
-              variants={clayPopVariants}
-              whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
-              className={`p-8 md:p-10 lg:p-12 ${clayCard} flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-12`}
+          {/* --- HOW IT WORKS (Bento Grid of Cards) --- */}
+          <div className="mb-32">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
             >
-              <div className="shrink-0">
-                <div className={iconBox}>
-                  <Lightbulb size={28} strokeWidth={2.5} />
-                </div>
-              </div>
-              <div>
-                <h2 className={`text-3xl mb-6 ${textHeading}`}>What We Do</h2>
-                <div className="space-y-4">
-                  <p className={textBody}>
-                    Byte is a comprehensive food ordering platform designed
-                    specifically for college campuses. We connect students with
-                    their favorite canteens through an intuitive mobile-first
-                    platform.
-                  </p>
-                  <p className={textBody}>
-                    Our digital wallet system eliminates the need for cash
-                    transactions, while real-time tracking ensures you know
-                    exactly when to pick up your food.
-                  </p>
-                </div>
-              </div>
-            </motion.section>
+              <h2 className={`text-3xl md:text-4xl mb-4 ${textHeading}`}>
+                How the Magic Happens
+              </h2>
+              <p className={textBody}>A transparent, four-step ecosystem.</p>
+            </motion.div>
 
-            {/* Why We Started Section */}
-            <motion.section
-              variants={clayPopVariants}
-              whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
-              className={`p-8 md:p-10 lg:p-12 ${clayCard} flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-12`}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={staggerContainer}
+              className="grid md:grid-cols-2 gap-6 lg:gap-8"
             >
-              <div className="shrink-0">
-                <div className={iconBox}>
-                  <Rocket size={28} strokeWidth={2.5} />
-                </div>
-              </div>
-              <div>
-                <h2 className={`text-3xl mb-6 ${textHeading}`}>
-                  Why We Started
-                </h2>
-                <div className="space-y-4">
-                  <p className={textBody}>
-                    Founded by students who experienced the frustrations of
-                    campus dining firsthand—long lines, cash-only counters, and
-                    unpredictable waits.
-                  </p>
-                  <p className={textBody}>
-                    We built Byte to solve these everyday problems with modern
-                    technology that works around your class schedule, not the
-                    other way around.
-                  </p>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Values Section */}
-            <motion.section
-              variants={clayPopVariants}
-              whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
-              className={`p-8 md:p-10 lg:p-12 ${clayCard} flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16`}
-            >
-              <div className="shrink-0 lg:w-1/3">
-                <div className={iconBox} style={{ marginBottom: "1.5rem" }}>
-                  <Heart size={28} strokeWidth={2.5} />
-                </div>
-                <h2 className={`text-3xl ${textHeading}`}>Our Values</h2>
-              </div>
-
-              <div className="lg:w-2/3 grid sm:grid-cols-2 gap-x-8 gap-y-10">
-                {[
-                  {
-                    title: "Student-First",
-                    desc: "Every feature is designed with student needs in mind.",
-                  },
-                  {
-                    title: "Simplicity",
-                    desc: "Technology should make life easier, not more complicated.",
-                  },
-                  {
-                    title: "Security",
-                    desc: "Your money and data are protected with bank-grade security.",
-                  },
-                  {
-                    title: "Community",
-                    desc: "Supporting local campus food vendors and building connections.",
-                  },
-                ].map((val, i) => (
-                  <div key={i} className="flex flex-col gap-2">
-                    <h3 className={`text-xl font-black ${textHeading}`}>
-                      {val.title}
-                    </h3>
-                    <p className={textBody}>{val.desc}</p>
+              {/* Card 1 */}
+              <motion.div variants={fadeInUp} className={clayItem}>
+                <div className="flex justify-between items-start mb-6">
+                  <div className={iconBox}>
+                    <Wallet size={24} />
                   </div>
-                ))}
-              </div>
-            </motion.section>
+                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
+                    01
+                  </span>
+                </div>
+                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
+                  Smart Wallet
+                </h3>
+                <p className={textBody}>
+                  Money moves to a{" "}
+                  <span className="text-[#FF9E75] font-bold">
+                    Reserved State
+                  </span>{" "}
+                  securely held until the vendor confirms. No accidental
+                  charges, ever.
+                </p>
+              </motion.div>
+
+              {/* Card 2 */}
+              <motion.div variants={fadeInUp} className={clayItem}>
+                <div className="flex justify-between items-start mb-6">
+                  <div className={iconBox}>
+                    <Clock size={24} />
+                  </div>
+                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
+                    02
+                  </span>
+                </div>
+                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
+                  7-Minute Promise
+                </h3>
+                <p className={textBody}>
+                  Vendors have 7 minutes to accept. If they timeout or reject,
+                  your money moves instantly back to your Available Balance.
+                </p>
+              </motion.div>
+
+              {/* Card 3 */}
+              <motion.div variants={fadeInUp} className={clayItem}>
+                <div className="flex justify-between items-start mb-6">
+                  <div className={iconBox}>
+                    <RefreshCcw size={24} />
+                  </div>
+                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
+                    03
+                  </span>
+                </div>
+                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
+                  Instant Refunds
+                </h3>
+                <p className={textBody}>
+                  Vendor ran out of ingredients? Cancellations trigger immediate
+                  refunds. No waiting 3-5 business days for bank processing.
+                </p>
+              </motion.div>
+
+              {/* Card 4 */}
+              <motion.div variants={fadeInUp} className={clayItem}>
+                <div className="flex justify-between items-start mb-6">
+                  <div className={iconBox}>
+                    <BarChart3 size={24} />
+                  </div>
+                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
+                    04
+                  </span>
+                </div>
+                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
+                  Vendor Analytics
+                </h3>
+                <p className={textBody}>
+                  We predict demand before it happens, allowing kitchens to prep
+                  efficiently and reduce food wastage significantly.
+                </p>
+              </motion.div>
+            </motion.div>
           </div>
-        </motion.div>
+
+          {/* --- VALUES (Clean Grid, No Backgrounds) --- */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="border-t border-[#E6DCCF] dark:border-border pt-24"
+          >
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+              <div className="md:col-span-2 lg:col-span-1">
+                <h2 className={`text-3xl ${textHeading} mb-4`}>
+                  Our Core Values
+                </h2>
+                <p className={textBody}>
+                  Built on trust, speed, and transparency.
+                </p>
+                {/* <div className="mt-8 hidden lg:block text-[#FF9E75]">
+                  <Heart size={40} fill="currentColor" className="opacity-20" />
+                </div> */}
+              </div>
+
+              {[
+                {
+                  title: "Efficiency",
+                  desc: "We respect your time. Every feature is designed to reduce friction.",
+                },
+                {
+                  title: "Transparency",
+                  desc: "Clear wallet states. You always know where your money is.",
+                },
+                {
+                  title: "Sustainability",
+                  desc: "Predicting demand means less food in the trash and more on the plate.",
+                },
+              ].map((val, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeInUp}
+                  className="flex flex-col gap-3"
+                >
+                  <div className="w-8 h-1 bg-[#FF9E75] rounded-full mb-2"></div>
+                  <h3 className={`text-xl font-black ${textHeading}`}>
+                    {val.title}
+                  </h3>
+                  <p className={`text-sm ${textBody}`}>{val.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </main>
 
       <Footer />

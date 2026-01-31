@@ -1,14 +1,15 @@
+// next.config.js
+const fs = require("fs");
+
+let localConfig = {};
+if (fs.existsSync("./next.config.local.js")) {
+  localConfig = require("./next.config.local.js");
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/v1/:path*",
-        // destination: "https://api.byteapp.tech/api/v1/:path*",
-        destination: "http://localhost:2707/api/v1/:path*",
-      },
-    ];
-  },
+  // compress: false,
+  ...localConfig, // override anything locally
 };
 
 module.exports = nextConfig;

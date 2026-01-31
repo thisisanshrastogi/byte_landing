@@ -75,7 +75,7 @@ export default function BetaApplicationPage() {
           "entry.1532332021": formData.platform,
           "entry.1861519418": formData.reason,
         }),
-      }
+      },
     )
       .then(() => {
         setIsSuccess(true);
@@ -146,11 +146,11 @@ export default function BetaApplicationPage() {
           {/* Benefits Cards */}
           <div className="space-y-6">
             {[
-              {
-                icon: Wallet,
-                title: "Zero Convenience Fees",
-                desc: "No platform or service fees during the beta period.",
-              },
+              // {
+              //   icon: Wallet,
+              //   title: "Zero Convenience Fees",
+              //   desc: "No platform or service fees during the beta period.",
+              // },
               {
                 icon: ArrowRight,
                 title: "Exclusive Early Access",

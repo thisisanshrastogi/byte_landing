@@ -63,7 +63,7 @@ export default function ContactPage() {
       <Navbar />
       <BackgroundElements />
 
-      <main className="py-20 mt-20 lg:py-24 z-10 relative">
+      <main className="py-20 mt-10 lg:py-24 z-10 relative">
         <motion.div
           className="max-w-4xl mx-auto px-6 lg:px-8"
           variants={containerVariants}

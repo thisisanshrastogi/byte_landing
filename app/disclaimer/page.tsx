@@ -132,7 +132,7 @@ export default function DisclaimerPage() {
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans">
       <Navbar />
 
-      <main className="py-20 mt-20 lg:py-24">
+      <main className="py-20 mt-10 lg:py-24">
         <motion.div
           className="max-w-4xl mx-auto px-6 lg:px-8"
           variants={containerVariants}
@@ -142,7 +142,7 @@ export default function DisclaimerPage() {
           {/* Header */}
           <motion.div variants={itemUpVariants} className="text-center mb-16">
             <div className="inline-block px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-black text-xs uppercase tracking-wider mb-6 shadow-sm border border-[#F5EFE8] dark:border-border">
-              Last updated: December 2025
+              Last updated: January 2026
             </div>
             <h1
               className={`text-4xl md:text-5xl lg:text-6xl mb-6 ${textHeading}`}

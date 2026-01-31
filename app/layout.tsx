@@ -4,6 +4,9 @@ import { Modak, Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 import ClientProviders from "@/components/ClientProvider";
 import IntroShutter from "@/components/ui/intro-shutter";
+import { AnimatePresence, MotionConfig } from "framer-motion";
+import MotionGate from "@/components/motion-gate";
+import "@/lib/axiClient";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -43,9 +46,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans">
-        <IntroShutter />
-
-        <ClientProviders>{children}</ClientProviders>
+          <MotionGate>{children}</MotionGate>
       </body>
     </html>
   );

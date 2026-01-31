@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { load } from "@cashfreepayments/cashfree-js";
 import CountUp from "react-countup";
-import { motion, Variants } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/navbar";
@@ -50,44 +50,18 @@ interface WalletProfile {
   previous_transactions: WalletTransaction[];
 }
 
-// --- DUMMY TRANSACTIONS (ISO 8601 Format) ---
-// Note: 'Z' at the end means UTC. JS will convert this to local time.
-const DUMMY_TRANSACTIONS: WalletTransaction[] = [
-  {
-    id: "tx_123456789",
-    amount: 500,
-    transaction_type: "PAYOUT",
-    transaction_status: "SUCCESS",
-    created_at: "2025-12-30T08:45:12Z", // Today
-  },
-  {
-    id: "tx_987654321",
-    amount: 120,
-    transaction_type: "DEPOSIT",
-    transaction_status: "SUCCESS",
-    created_at: "2025-12-29T14:30:00Z", // Yesterday
-  },
-  {
-    id: "tx_456123789",
-    amount: 50,
-    transaction_type: "PAYOUT",
-    transaction_status: "PENDING",
-    created_at: "2025-12-28T09:15:00Z", // 2 days ago
-  },
-  {
-    id: "tx_741852963",
-    amount: 1000,
-    transaction_type: "PAYOUT",
-    transaction_status: "SUCCESS",
-    created_at: "2025-12-25T11:00:00Z", // 5 days ago
-  },
-];
-
 export default function WalletPage() {
   const router = useRouter();
   const { user, loading, updateWalletBalance } = useAuth();
 
+  // 1. Calculate derived values cleanly at the start
   const [amount, setAmount] = useState("");
+
+  const numAmount = parseFloat(amount) || 0;
+  // fee percentage
+  const gatewayFee = numAmount * 0;
+  const totalPayable = numAmount + gatewayFee;
+  const showReceipt = numAmount > 0;
 
   const [walletProfile, setWalletProfile] = useState<WalletProfile>({
     user_id: "",
@@ -173,7 +147,6 @@ export default function WalletPage() {
       const res = await axi.get("/wallet/balance");
       const data: WalletProfile = res.data;
 
-      // If API returns empty transactions, use dummy ones for visual verification
       const transactionsToShow = data.previous_transactions;
 
       setWalletProfile({
@@ -219,14 +192,17 @@ export default function WalletPage() {
 
     try {
       const sessionId = await getPaymentSession(amount);
-      await cashfreeRef.current.checkout({
+      const result = await cashfreeRef.current.checkout({
         paymentSessionId: sessionId,
         redirectTarget: "_modal",
       });
       await fetchWalletBalance();
       clearPaymentAttemptId();
-      setMessage("Wallet recharged successfully");
-      setMessageType("success");
+
+      if (result.status === "SUCCESS") {
+        setMessage("Wallet recharged successfully");
+        setMessageType("success");
+      }
     } catch (err) {
       console.error(err);
       clearPaymentAttemptId();
@@ -250,16 +226,14 @@ export default function WalletPage() {
 
   const quickAmounts = [50, 100, 200, 500, 1000];
 
-  const displayEmail = walletProfile.email || user?.email || "";
+  const displayEmail = walletProfile.email || user?.data.email || "";
   const maskedId = walletProfile.user_id
     ? `...${walletProfile.user_id.slice(-8)}`
     : "****";
 
-  // --- STANDARD ISO DATE FORMATTER ---
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     try {
-      // "2025-12-30T08:45:12Z" works natively here
       return new Date(dateString).toLocaleDateString("en-IN", {
         month: "short",
         day: "numeric",
@@ -278,7 +252,7 @@ export default function WalletPage() {
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans">
       <Navbar />
       <BackgroundElements />
-      <main className=" relative z-10 container mx-auto px-4 py-20 mt-20 lg:py-24 min-h-[90vh]">
+      <main className="relative z-10 container mx-auto px-4 py-20 mt-20 lg:py-24 min-h-[90vh]">
         <motion.div
           className="max-w-5xl mx-auto space-y-8"
           variants={containerVariants}
@@ -288,7 +262,7 @@ export default function WalletPage() {
           {/* ---------------- TOP ROW (Cards) ---------------- */}
           <div className="grid lg:grid-cols-2 gap-20">
             {/* ---------------- Wallet Card ---------------- */}
-            <motion.div variants={clayPopVariants} className="w-full">
+            <motion.div variants={clayPopVariants} className="w-full h-fit">
               <div
                 className={`${clayCard} overflow-hidden h-full flex flex-col p-6`}
               >
@@ -447,7 +421,9 @@ export default function WalletPage() {
             </motion.div>
 
             {/* ---------------- Recharge Card ---------------- */}
+            {/* Added 'layout' prop here to fix layout shift on expansion */}
             <motion.div
+              layout
               variants={clayPopVariants}
               className={`w-full ${clayCard} p-6`}
             >
@@ -465,7 +441,8 @@ export default function WalletPage() {
                 </p>
               </div>
 
-              <form onSubmit={handleRecharge} className="space-y-8">
+              <form onSubmit={handleRecharge} className="space-y-6">
+                {/* Input Section */}
                 <div className="space-y-3">
                   <label
                     className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
@@ -482,77 +459,101 @@ export default function WalletPage() {
                       value={amount}
                       onChange={(e) => {
                         setAmount(e.target.value);
-                        clearPaymentAttemptId();
                       }}
-                      className={`w-full pl-8 pr-4 py-5 text-xl font-black ${clayInset}`}
+                      className={`w-full pl-8 pr-4 py-5 text-xl font-black ${clayInset} transition-all focus:outline-none focus:ring-2 focus:ring-[#FF9E75]/50`}
                       placeholder="0"
-                      required
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label
-                    className={`block text-xs font-black uppercase tracking-wide ml-1 ${textBody}`}
-                  >
-                    Quick Add
-                  </label>
-                  <div className="grid grid-cols-5 gap-3">
-                    {quickAmounts.map((q) => (
-                      <button
-                        key={q}
-                        type="button"
-                        onClick={() => {
-                          setAmount(q.toString());
-                          clearPaymentAttemptId();
-                        }}
-                        className={`py-2 rounded-[0.8rem] text-sm font-black transition-all
-                          ${
-                            amount === q.toString()
-                              ? "bg-[#5C4D45] text-white shadow-md scale-105 dark:bg-primary dark:text-black"
-                              : "bg-[#F5EFE8] text-[#9C8C84] hover:bg-[#E8DED5] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent"
-                          }
-                        `}
-                      >
-                        ₹{q}
-                      </button>
-                    ))}
-                  </div>
+                {/* Quick Add Buttons (Visual Update: Bigger, Taller, more gap) */}
+
+                <label
+                  className={`block text-xs font-black uppercase tracking-wide ml-1 mb-3 ${textBody}`}
+                >
+                  Quick Add
+                </label>
+                <div className=" grid grid-cols-5 gap-3">
+                  {quickAmounts.map((q) => (
+                    <button
+                      key={q}
+                      type="button"
+                      onClick={() => setAmount(q.toString())}
+                      // Updated classes for bigger buttons
+                      className={`h-9 rounded-sm text-xs md:text-sm font-black transition-all duration-200 flex items-center justify-center
+                        ${
+                          amount === q.toString()
+                            ? "bg-[#5C4D45] dark:bg-primary text-white shadow-md scale-105"
+                            : "bg-[#F5EFE8] dark:bg-accent text-accent-foreground hover:bg-[#E8DED5] active:scale-95"
+                        }
+                      `}
+                    >
+                      ₹{q}
+                    </button>
+                  ))}
                 </div>
 
-                {message && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-[1rem] flex items-center gap-3 font-bold text-sm ${
-                      messageType === "error"
-                        ? "bg-[#FFF0F0] text-[#FF6B6B]"
-                        : "bg-[#EAF8E6] text-[#4CAF50]"
-                    }`}
-                  >
-                    {messageType === "error" ? (
-                      <AlertCircle size={18} />
-                    ) : (
-                      <CheckCircle2 size={18} />
-                    )}
-                    {message}
-                  </motion.div>
-                )}
+                {/* --- SMOOTH FEE RECEIPT --- */}
+                {/* <AnimatePresence mode="sync">
+                  {showReceipt && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                      animate={{
+                        opacity: 1,
+                        height: "auto",
+                        marginBottom: 24,
+                        transition: { duration: 0.25, ease: "easeInOut" }, // Smoother timing
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: 0,
+                        marginBottom: 0,
+                        transition: { duration: 0.2, ease: "easeInOut" },
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-[#F5EFE8] dark:bg-white/5 rounded-[1.2rem] p-5 space-y-3 border border-white/50 dark:border-white/5">
+                        <div className="flex justify-between items-center text-xs font-bold text-[#9C8C84]">
+                          <span>Recharge Amount</span>
+                          <span>₹{numAmount.toFixed(2)}</span>
+                        </div>
 
-                <Button
+                        <div className="flex justify-between items-center text-xs font-bold text-[#9C8C84]">
+                          <div className="flex items-center gap-1.5">
+                            <span>Payment Gateway Fee* {gatewayFee}</span>
+                          </div>
+                          <span className="text-[#FF9E75]">
+                            + ₹{gatewayFee.toFixed(2)}
+                          </span>
+                        </div>
+
+                        <div className="w-full border-t-2 border-dashed border-[#D6C6BA]/30 dark:border-white/10 my-1"></div>
+
+                        <div className="flex justify-between items-center text-sm font-black text-[#5C4D45] dark:text-white pt-1">
+                          <span>Total Payable</span>
+                          <span>₹{totalPayable.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence> */}
+
+                {/* --- SUBMIT BUTTON --- */}
+                <motion.button
+                  layout
                   type="submit"
-                  disabled={isPaying}
-                  className={`w-full h-14 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 ${clayBtn} disabled:opacity-70`}
+                  disabled={isPaying || !showReceipt}
+                  className={`w-full h-14 rounded-[1.2rem] text-base font-black uppercase tracking-wide flex items-center justify-center gap-2 ${clayBtn} disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {isPaying ? (
                     "Processing..."
                   ) : (
                     <>
-                      Add Money{" "}
+                      Add Money&nbsp;
                       <CreditCard className="w-5 h-5" strokeWidth={2.5} />
                     </>
                   )}
-                </Button>
+                </motion.button>
               </form>
             </motion.div>
           </div>
@@ -581,8 +582,6 @@ export default function WalletPage() {
                   const isCredit = tx.transaction_type === "DEPOSIT";
                   const isLocked = false;
 
-                  const isSuccess = tx.transaction_status === "SUCCESS";
-
                   return (
                     <div
                       key={tx.id}
@@ -595,8 +594,8 @@ export default function WalletPage() {
                             isCredit
                               ? "bg-[#EAF8E6] text-[#4CAF50] dark:bg-transparent"
                               : isLocked
-                              ? "bg-[#F5EFE8] text-[#9C8C84] dark:bg-transparent"
-                              : "bg-[#FFF0F0] text-[#FF6B6B] dark:bg-transparent"
+                                ? "bg-[#F5EFE8] text-[#9C8C84] dark:bg-transparent"
+                                : "bg-[#FFF0F0] text-[#FF6B6B] dark:bg-transparent"
                           }`}
                         >
                           {isCredit ? (
@@ -624,8 +623,8 @@ export default function WalletPage() {
                             isCredit
                               ? "text-[#4CAF50]"
                               : isLocked
-                              ? "text-[#9C8C84]"
-                              : "text-[#FF6B6B]"
+                                ? "text-[#9C8C84]"
+                                : "text-[#FF6B6B]"
                           }`}
                         >
                           {isCredit ? "+" : isLocked ? "" : "-"}₹
