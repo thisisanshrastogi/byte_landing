@@ -31,7 +31,7 @@ export default function MotionGate({
   // Desktop: no restrictions
   return (
     <>
-      <IntroShutter />
+      {/* <IntroShutter /> */}
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
         <ClientProviders>{children}</ClientProviders>
       </GoogleOAuthProvider>
