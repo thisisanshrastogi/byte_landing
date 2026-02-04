@@ -1,5 +1,6 @@
 "use client";
 
+import { WalletProfile } from "@/app/wallet/page";
 import axi from "@/lib/axi";
 import { usePathname } from "next/navigation";
 import {
@@ -59,14 +60,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-
-    refreshUser();
   }, [pathname]);
 
   const refreshUser = async () => {
     try {
-      const { data } = await axi.get("/auth/me");
-      setUser(data);
+      const [me, wallet] = await Promise.all([
+        axi.get("/auth/me"),
+        axi.get("/wallet/balance"),
+      ]);
+      setUser(me.data);
+
+      const data2: WalletProfile = wallet.data;
+      const totalBalance = data2.available_balance + data2.reserved_balance;
+      updateWalletBalance(totalBalance);
     } catch (err: any) {
       if (err.response?.status === 401) {
         setUser(null);

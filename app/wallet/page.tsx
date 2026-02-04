@@ -42,7 +42,7 @@ interface WalletTransaction {
   created_at: string; // ISO String: "2025-12-30T08:45:12Z"
 }
 
-interface WalletProfile {
+export interface WalletProfile {
   user_id: string;
   email: string;
   available_balance: number;
