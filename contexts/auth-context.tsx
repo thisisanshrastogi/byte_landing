@@ -16,6 +16,7 @@ interface User {
     id: string;
     email: string;
     name: string;
+    phone_verified: boolean;
   };
 
   walletBalance: number;

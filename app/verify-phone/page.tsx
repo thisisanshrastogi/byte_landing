@@ -206,8 +206,12 @@ export default function VerifyPhonePage() {
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
+    } else if (!loading && user && user.data.phone_verified) {
+      router.push("/");
     }
   }, [user, loading, router]);
+
+  // /me to check
 
   if (checkingStatus || loading) {
     return (
