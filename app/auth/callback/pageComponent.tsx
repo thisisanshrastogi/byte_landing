@@ -5,12 +5,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import axi from "@/lib/axi";
+import { useAuth } from "@/contexts/auth-context";
+
 
 export default function AuthCallbackPage() {
   const router = useRouter();
   const params = useSearchParams();
   const code = params.get("code");
   const intent = params.get("state"); // "login" or "register"
+  const {refreshUser} = useAuth()
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -64,6 +67,7 @@ export default function AuthCallbackPage() {
 
         const data = res.data;
         console.log("Auth response data:", data);
+        await refreshUser();
 
         setStatus("success");
 
