@@ -488,7 +488,7 @@ export default function LandingPage() {
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
               >
                 <button
-                  onClick={() => router.push("/invite")}
+                  onClick={() => router.push("/register")}
                   className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                 >
                   <Smartphone size={18} /> Become a Tester
@@ -690,7 +690,7 @@ export default function LandingPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <button
-                    onClick={() => router.push("/invite")}
+                    onClick={() => router.push("/register")}
                     className={`${THEME.btnPrimary} h-14 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2`}
                   >
                     I'm a Student <ArrowUpRight size={18} />

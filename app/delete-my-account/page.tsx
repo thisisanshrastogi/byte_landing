@@ -47,9 +47,9 @@ export default function DeleteAccountPage() {
     <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans">
       <Navbar />
 
-      <main className="py-20 lg:py-24">
+      <main className="py-20 lg:py-24 ">
         <motion.div
-          className="max-w-4xl mx-auto px-6 lg:px-8"
+          className="max-w-4xl mx-auto px-6 lg:px-8 mt-10"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
