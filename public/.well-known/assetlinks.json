@@ -1,0 +1,20 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.arjunmnath.byteit",
+      "sha256_cert_fingerprints":
+        ["73:2F:FD:2B:A8:86:29:88:45:46:21:0E:AA:25:FF:DF:BD:D2:CD:79:89:74:7D:AE:BE:63:1A:5C:FF:FD:6C:1F"]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.arjunmnath.byte.vendor.worker",
+      "sha256_cert_fingerprints":
+        ["1C:6E:8C:FD:6A:1F:19:31:83:25:AB:C0:29:F2:37:56:5D:1B:B5:57:8E:1E:6C:8F:EB:F3:2F:95:33:BC:7B:EA"]
+    }
+  }
+]
