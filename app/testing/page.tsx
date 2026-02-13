@@ -21,6 +21,13 @@ import {
   Plus,
   Bike,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+type FeaturePillProps = {
+  icon: LucideIcon;
+  text: string;
+};
+
 
 // --- DESIGN TOKENS ---
 // Deep, soft shadows for the main objects
@@ -143,7 +150,7 @@ const PhoneMockup = () => (
   </div>
 );
 
-const FeaturePill = ({ icon: Icon, text }) => (
+const FeaturePill = ({ icon: Icon, text }:  FeaturePillProps) => (
   <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-sm border border-white whitespace-nowrap">
     <Icon className="w-5 h-5 text-[#FF9E75]" />
     <span className="text-[#5C4D45] font-black text-xs uppercase tracking-wide">
