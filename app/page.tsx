@@ -488,10 +488,15 @@ export default function LandingPage() {
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
               >
                 <button
-                  onClick={() => router.push("/register")}
+                  onClick={() =>
+                    window.open(
+                      "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit",
+                      "_blank",
+                    )
+                  }
                   className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                 >
-                  <Smartphone size={18} /> Become a Tester
+                  <Smartphone size={18} /> Get the App
                 </button>
                 <button
                   onClick={() => router.push("/invite")}
