@@ -238,6 +238,20 @@ export function Navbar() {
               </>
             )}
 
+            {/* Wallet Button */}
+            <div className="md:hidden">
+              <Link
+                href="/wallet"
+                className={`block rounded-[1rem] px-3 py-2 font-bold transition-colors ${
+                  pathname === "/wallet"
+                    ? "bg-[#FFF0E6] text-[#FF9E75] dark:bg-accent/50 dark:text-primary"
+                    : "text-[#5C4D45] hover:bg-[#F5EFE8] dark:text-foreground dark:hover:bg-accent"
+                }`}
+              >
+                <Wallet className="h-4 w-4 text-[#5C4D45] dark:text-foreground" />
+              </Link>
+            </div>
+
             {/* Mobile Menu Button */}
             <div className="md:hidden">
               <Button
@@ -286,7 +300,7 @@ export function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className={`block rounded-[1rem] px-4 py-3 font-bold transition-colors ${
                       pathname === "/wallet"
-                        ? "bg-[#FFF0E6] text-[#FF9E75]"
+                        ? "bg-[#FFF0E6] text-[#FF9E75] dark:bg-accent/50 dark:text-primary"
                         : "text-[#5C4D45] hover:bg-[#F5EFE8] dark:text-foreground dark:hover:bg-accent"
                     }`}
                   >

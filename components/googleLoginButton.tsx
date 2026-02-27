@@ -15,7 +15,7 @@ export default function GoogleLoginButton({
   setIsLoading,
 }: {
   text?: string;
-  intent: "login" | "register";
+  intent: "login" | "register" | "open_app";
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
 }) {

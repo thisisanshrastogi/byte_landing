@@ -419,6 +419,7 @@ export default function LandingPage() {
   const viewportMotion = useViewportMotion();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { user, loading } = useAuth();
 
   const toggleIndex = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -461,7 +462,7 @@ export default function LandingPage() {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF9E75]"></span>
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-wider text-[#9C8C84]">
-                  Now In Beta
+                  Now Live
                 </span>
               </motion.div>
 
@@ -487,17 +488,27 @@ export default function LandingPage() {
                 variants={fadeInUp}
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
               >
-                <button
-                  onClick={() =>
-                    window.open(
-                      "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit",
-                      "_blank",
-                    )
-                  }
-                  className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
-                >
-                  <Smartphone size={18} /> Get the App
-                </button>
+                {user ? (
+                  <button
+                    onClick={() =>
+                      window.open(
+                        "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit",
+                        "_blank",
+                      )
+                    }
+                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                  >
+                    <Smartphone size={18} /> Get the App
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => router.push("/register?state=open_app")}
+                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                  >
+                    <User size={18} /> Get the App
+                  </button>
+                )}
+
                 <button
                   onClick={() => router.push("/invite")}
                   className={`${THEME.btnSecondary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}

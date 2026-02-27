@@ -24,6 +24,8 @@ export default function RegisterPage() {
   const { loading, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
+  const intent =
+    searchParams.get("state") === "open_app" ? "open_app" : "register";
   const token = searchParams.get("token");
   const router = useRouter();
 
@@ -176,7 +178,7 @@ export default function RegisterPage() {
             </div>
 
             <GoogleLoginButton
-              intent="register"
+              intent={intent}
               text={"Sign Up With Google"}
               isLoading={isLoading}
               setIsLoading={setIsLoading}

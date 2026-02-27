@@ -1,26 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import axi from "@/lib/axi";
 import { useAuth } from "@/contexts/auth-context";
 
-
 export default function AuthCallbackPage() {
   const router = useRouter();
   const params = useSearchParams();
   const code = params.get("code");
-  const intent = params.get("state"); // "login" or "register"
-  const {refreshUser} = useAuth()
-
+  const intent = params.get("state"); // "login" or "register" or "open_app"
+  const { refreshUser } = useAuth();
+  const executed = useRef(false);
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
   );
   const [message, setMessage] = useState("Verifying your identity...");
 
   useEffect(() => {
+    if (!code || executed.current) return;
+
+    executed.current = true;
+
     if (!code) {
       setStatus("error");
       setMessage("No code provided. Redirecting to login...");
@@ -35,6 +38,12 @@ export default function AuthCallbackPage() {
       }
 
       try {
+        console.log(
+          "Calling Handle Auth with code:",
+          code,
+          "and intent:",
+          intent,
+        );
         // REAL BACKEND CALL
         // const res = await fetch("http://localhost:8080/auth/google/exchange", {
         //   method: "POST",
@@ -58,24 +67,64 @@ export default function AuthCallbackPage() {
             message = "Account created! Redirecting to login.";
             time = 2500;
             break;
+          case "open_app":
+            route += "/signup";
+            pushRoute =
+              "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit";
+            message = "Opening app...";
+            time = 2500;
+            break;
           default:
             throw new Error("Invalid intent");
         }
 
         const res = await axi.post(route, { code });
-        if (res.status !== 200) throw new Error("Auth failed : Check Email");
+
+        console.log("Auth response:", res);
+        if (res.status !== 200)
+          throw new Error("Auth failed : Email already exists or invalid code");
 
         const data = res.data;
         console.log("Auth response data:", data);
-        await refreshUser();
+        // await refreshUser();
 
         setStatus("success");
 
         setMessage(message);
+        if (intent === "open_app") {
+          const appUrl = "https://byteapp.tech/app";
+          const playStore =
+            "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit";
 
-        setTimeout(() => router.push(pushRoute), time);
+          let shouldFallback = true;
+
+          const visibilityHandler = () => {
+            // App opened → browser lost focus
+            if (document.hidden) {
+              shouldFallback = false;
+            }
+          };
+
+          document.addEventListener("visibilitychange", visibilityHandler);
+
+          // Try opening app
+          window.location.href = appUrl;
+
+          // Fallback to Play Store
+          setTimeout(() => {
+            document.removeEventListener("visibilitychange", visibilityHandler);
+
+            if (shouldFallback) {
+              window.location.href = playStore;
+            }
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            router.push(pushRoute);
+          }, 1500);
+        }
       } catch (err) {
-        console.error(err);
+        console.error("Auth Error: ", err);
         setStatus("error");
         setMessage("Authentication failed, Check Email. Redirecting to login.");
         setTimeout(() => router.push("/login"), 2500);
@@ -118,7 +167,7 @@ export default function AuthCallbackPage() {
           {status === "loading"
             ? "Just a moment"
             : status === "success"
-              ? "Welcome back!"
+              ? "Hey User!"
               : "Oops!"}
         </h2>
 
