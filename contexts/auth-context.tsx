@@ -62,17 +62,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
   }, [pathname]);
-
   const refreshUser = async () => {
     try {
-      const [me, wallet] = await Promise.all([
-        axi.get("/auth/me"),
-        axi.get("/wallet/balance"),
-      ]);
+      const me = await axi.get("/auth/me");
+
       setUser(me.data);
+
+      const wallet = await axi.get("/wallet/balance");
 
       const data2: WalletProfile = wallet.data;
       const totalBalance = data2.available_balance + data2.reserved_balance;
+
       updateWalletBalance(totalBalance);
     } catch (err: any) {
       if (err.response?.status === 401) {
@@ -84,24 +84,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   useEffect(() => {
-    if (refreshFailed) return;
     refreshUser();
-  }, [refreshFailed]);
-
+  }, []);
   // 🔐 Login → cookies set → rehydrate via /me
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const res = await axi.post("/auth/login", { email, password });
-      if (res.status === 200) {
-        await refreshUser();
-        return true;
-      }
-      return false;
+      await axi.post("/auth/login", { email, password });
+
+      await refreshUser();
+
+      return true;
     } catch {
       return false;
     }
   };
-
   const logout = async () => {
     try {
       await axi.post("/auth/logout");

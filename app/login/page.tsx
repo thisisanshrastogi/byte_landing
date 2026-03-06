@@ -58,9 +58,7 @@ export default function LoginPage() {
 
     try {
       const success = await login(email, password);
-      if (success) {
-        router.push("/wallet");
-      } else {
+      if (!success) {
         setError("Invalid email or password");
       }
     } catch (error) {
@@ -240,42 +238,38 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
-              <label
-                className={`block text-xs font-black uppercase tracking-wide ${textBody}`}
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-xs font-black text-[#FF9E75] hover:underline dark:text-primary"
-              >
-                Forgot Password?
-              </Link>
+                <label
+                  className={`block text-xs font-black uppercase tracking-wide ${textBody}`}
+                  htmlFor="password"
+                >
+                  Password
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-black text-[#FF9E75] hover:underline dark:text-primary"
+                >
+                  Forgot Password?
+                </Link>
               </div>
               <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full px-5 py-5 text-base ${clayInset}`}
-                placeholder="••••••••"
-                required
-              />
-              <button
-                type="button"
-                tabIndex={-1}
-                className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-[#D6C6BA] dark:text-[#B0A69E] focus:outline-none"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                <EyeOff size={18} />
-                ) : (
-                <Eye size={18} />
-                )}
-              </button>
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`w-full px-5 py-5 text-base ${clayInset}`}
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-[#D6C6BA] dark:text-[#B0A69E] focus:outline-none"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
