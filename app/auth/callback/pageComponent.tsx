@@ -58,12 +58,12 @@ export default function AuthCallbackPage() {
         switch (intent) {
           case "login":
             route += "/signin";
-            pushRoute = "/";
+            pushRoute = "";
             message = "Logging you in ...";
             break;
           case "register":
             route += "/signup";
-            pushRoute = "/login";
+            pushRoute = "";
             message = "Account created! Redirecting to login.";
             time = 2500;
             break;
@@ -92,35 +92,19 @@ export default function AuthCallbackPage() {
 
         setMessage(message);
         if (intent === "open_app") {
-          const appUrl = "https://byteapp.tech/app";
+          // const appUrl = "https://byteapp.tech/app";
           const playStore =
             "https://play.google.com/store/apps/details?id=com.arjunmnath.byteit";
 
-          let shouldFallback = true;
-
-          const visibilityHandler = () => {
-            // App opened → browser lost focus
-            if (document.hidden) {
-              shouldFallback = false;
-            }
-          };
-
-          document.addEventListener("visibilitychange", visibilityHandler);
-
-          // Try opening app
-          window.location.href = appUrl;
-
-          // Fallback to Play Store
           setTimeout(() => {
-            document.removeEventListener("visibilitychange", visibilityHandler);
+            setStatus("success");
+            setMessage("Signup successful! Redirecting to Play Store...");
 
-            if (shouldFallback) {
-              window.location.href = playStore;
-            }
+            window.location.href = playStore;
           }, 1500);
         } else {
           setTimeout(() => {
-            router.push(pushRoute);
+            window.location.href = `https://byteapp.tech/${pushRoute}`;
           }, 1500);
         }
       } catch (err) {
