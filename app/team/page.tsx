@@ -66,7 +66,7 @@ const teamMembers = [
     icon: <Store size={18} />,
     image: "https://avatars.githubusercontent.com/u/69890484?v=4",
     links: {
-      github: "https://github.com/mathew2103",
+      github: "https://github.com/itsmathew",
       linkedin: "https://www.linkedin.com/in/mathewmanachery",
       twitter: null,
     },
