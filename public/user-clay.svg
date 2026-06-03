@@ -1,0 +1,54 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Claymorphic Base Filter -->
+    <filter id="clay" x="-20%" y="-20%" width="140%" height="140%">
+      <!-- Outer Shadow (Dark) -->
+      <feDropShadow dx="6" dy="6" stdDeviation="6" flood-color="#D6C6BA" flood-opacity="0.5" result="dropShadow1" />
+      <!-- Outer Shadow (Light) -->
+      <feDropShadow dx="-4" dy="-4" stdDeviation="6" flood-color="#FFFFFF" flood-opacity="0.8" result="dropShadow2" />
+      
+      <!-- Inner Shadow (Light Top-Left) -->
+      <feOffset dx="3" dy="3" in="SourceAlpha" result="innerOffset1" />
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="innerShadowMask1" />
+      <feGaussianBlur stdDeviation="3" result="innerBlur1" />
+      <feFlood flood-color="#FFFFFF" flood-opacity="0.9" />
+      <feComposite in2="innerBlur1" operator="in" />
+      <feComposite in2="SourceGraphic" operator="atop" result="innerShadow1" />
+
+      <!-- Inner Shadow (Dark Bottom-Right) -->
+      <feOffset dx="-3" dy="-3" in="SourceAlpha" result="innerOffset2" />
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="innerShadowMask2" />
+      <feGaussianBlur stdDeviation="3" result="innerBlur2" />
+      <feFlood flood-color="#CCBEB2" flood-opacity="0.4" />
+      <feComposite in2="innerBlur2" operator="in" />
+      <feComposite in2="innerShadow1" operator="atop" result="innerShadow2" />
+      
+      <!-- Merge Outer and Inner Shadows -->
+      <feMerge>
+        <feMergeNode in="dropShadow1" />
+        <feMergeNode in="dropShadow2" />
+        <feMergeNode in="innerShadow2" />
+      </feMerge>
+    </filter>
+
+    <!-- Debossed Icon Filter -->
+    <filter id="deboss" x="-20%" y="-20%" width="140%" height="140%">
+      <!-- Small inner shadow to look engraved -->
+      <feOffset dx="1" dy="1" in="SourceAlpha" result="off1" />
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="mask1" />
+      <feGaussianBlur stdDeviation="1" result="blur1" />
+      <feFlood flood-color="#5C4D45" flood-opacity="0.3" />
+      <feComposite in2="blur1" operator="in" />
+      <feComposite in2="SourceGraphic" operator="atop" />
+    </filter>
+  </defs>
+
+  <!-- Clay Background Base (Colors based on byte-landing theme) -->
+  <rect x="20" y="20" width="80" height="80" rx="24" fill="#F5EFE8" filter="url(#clay)" />
+
+  <!-- Lucide User Icon (Scaled and centered) -->
+  <g transform="translate(44, 44) scale(1.33)" fill="none" stroke="#FF9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#deboss)">
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </g>
+</svg>

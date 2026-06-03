@@ -245,7 +245,7 @@ const PhoneSimulator = () => {
 
     const timer = setTimeout(() => {
       navigate("home");
-    }, 7000); // 7 seconds
+    }, 4000); // 7 seconds
 
     return () => clearTimeout(timer); // cleanup on unmount / screen change
   }, [screen]);

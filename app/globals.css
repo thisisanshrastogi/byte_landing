@@ -226,3 +226,20 @@
     clip-path: circle(150% at var(--vt-x) var(--vt-y));
   }
 }
+
+@keyframes float-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  15% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-200px);
+  }
+}

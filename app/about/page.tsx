@@ -3,40 +3,24 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import {
-  Lightbulb,
   Rocket,
-  Heart,
   Wallet,
   Clock,
   RefreshCcw,
   BarChart3,
-  ArrowRight,
   Zap,
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import { BackgroundElements } from "@/components/background-element";
+import { THEME, CLAY } from "@/lib/design-tokens";
 
 export default function AboutPage() {
-  // --- STYLING TOKENS ---
-  // A slightly softer clay effect for individual interaction cards
-  const clayItem =
-    "bg-white h-full p-8 rounded-[2rem] shadow-[8px_8px_16px_rgba(214,198,186,0.3),_-4px_-4px_12px_rgba(255,255,255,0.8)] border border-transparent transition-transform hover:-translate-y-1 dark:bg-card dark:border-border dark:shadow-none";
-
-  const textHeading =
-    "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
-  const textBody =
-    "text-[#9C8C84] dark:text-muted-foreground font-medium leading-relaxed";
-
-  const iconBox =
-    "w-12 h-12 rounded-2xl flex items-center justify-center bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary mb-4";
-
-  // --- ANIMATION ---
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 50, damping: 10 },
+      transition: { type: "spring", stiffness: 60, damping: 12 },
     },
   };
 
@@ -45,144 +29,129 @@ export default function AboutPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.08,
         delayChildren: 0.1,
       },
     },
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFBF7] dark:bg-background selection:bg-orange-100 dark:selection:bg-primary/30 font-sans overflow-x-hidden">
+    <div className={`min-h-screen font-sans overflow-x-hidden relative ${THEME.bg}`}>
       <Navbar />
       <BackgroundElements />
 
-      <main className="relative z-10 pt-24 pb-20 lg:pt-32 lg:pb-32">
+      <main className="relative z-10 pt-24 pb-20 lg:pt-16 lg:pb-32">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          {/* --- HERO SECTION --- */}
+          {/* --- HERO --- */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center  h-[90vh] py-10 md:py-2"
+            className="text-center py-16 md:py-24"
           >
             <motion.div
               variants={fadeInUp}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-secondary rounded-full text-[#FF9E75] dark:text-foreground font-bold text-xs uppercase tracking-wider mb-8 shadow-sm border border-[#F5EFE8] dark:border-border"
+              className={`inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-full border border-white/50 dark:border-white/10 ${CLAY.shadow.sm} dark:shadow-none mb-8`}
             >
-              <Zap size={14} fill="currentColor" />
-              <span>Revolutionizing Campus Dining</span>
+              <Zap size={14} className={THEME.brand} fill="currentColor" />
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${THEME.textSoft}`}>
+                Operating System for Campus Food
+              </span>
             </motion.div>
 
             <motion.h1
               variants={fadeInUp}
-              className={`text-5xl md:text-7xl mb-8 ${textHeading} max-w-4xl mx-auto mt-10 leading-[1.2]`}
+              className={`text-5xl md:text-7xl font-black ${THEME.textDark} max-w-4xl mx-auto leading-[1.15] tracking-tight mb-8`}
             >
-              Your break belongs to you, <br />
+              Building the <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7E47]">
-                not the queue.
+                OS for Campus Food.
               </span>
             </motion.h1>
 
             <motion.p
               variants={fadeInUp}
-              className={`text-xl md:text-xl max-w-2xl mt-20 md:mt-0 mx-auto ${textBody}`}
+              className={`text-lg md:text-xl max-w-2xl mx-auto ${THEME.textSoft} leading-relaxed`}
             >
-              Byte optimizes campus dining by eliminating queues for students
-              and maximizing throughput for vendors.
+              Byte was created to solve a simple problem: students shouldn&apos;t spend their breaks standing in line, and vendors shouldn&apos;t have to guess how much food to prepare.
             </motion.p>
           </motion.div>
 
-          {/* --- PROBLEM & SOLUTION (Split Layout, No Box) --- */}
+          {/* --- PROBLEM & SOLUTION --- */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-32"
+            className={`grid lg:grid-cols-2 gap-16 lg:gap-24 items-center ${CLAY.spacing.sectionGap}`}
           >
-            {/* Left: The Statement */}
             <div className="space-y-8">
               <motion.div variants={fadeInUp}>
-                <h2 className={`text-3xl md:text-4xl mb-6 ${textHeading}`}>
-                  The Campus Lunchbreak Paradox
+                <h2 className={`text-3xl md:text-4xl font-extrabold ${THEME.textDark} tracking-tight mb-6`}>
+                  A Daily Problem Hidden in Plain Sight.
                 </h2>
-                <p className={`text-lg ${textBody}`}>
-                  Every day, hundreds of students rush to the cafeteria at the
-                  exact same time. The result?
-                  <span className="text-[#5C4D45] dark:text-foreground font-bold">
-                    {" "}
-                    Chaos.{" "}
-                  </span>
-                  Students spend their entire break waiting in line, while
-                  vendors struggle to manage the unpredictable surge.
+                <p className={`text-base md:text-lg ${THEME.textSoft} leading-relaxed`}>
+                  Campus dining follows a unique pattern. Hundreds of students become hungry at nearly the same time. Vendors face sudden demand spikes, while students have limited break periods.
                 </p>
               </motion.div>
 
-              <motion.div variants={fadeInUp} className="flex flex-col gap-4">
+              <motion.div variants={fadeInUp} className="flex flex-col gap-5">
                 <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-red-100 dark:bg-red-900/20 p-2 rounded-lg text-red-500">
-                    <Clock size={20} />
+                  <div className={`mt-1 w-10 h-10 ${CLAY.radius.sm} ${THEME.cardInset} flex items-center justify-center shrink-0`}>
+                    <Clock size={18} className={THEME.textDark} />
                   </div>
                   <div>
-                    <h4 className={`font-bold text-lg ${textHeading}`}>
-                      Wasted Time
+                    <h4 className={`font-bold text-lg ${THEME.textDark}`}>
+                      For Students
                     </h4>
-                    <p className={textBody}>
-                      Average wait times exceed 20 minutes during peak hours.
+                    <p className={`text-sm ${THEME.textSoft} leading-relaxed`}>
+                      Long waiting times and poor customer experiences.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="mt-1 bg-orange-100 dark:bg-orange-900/20 p-2 rounded-lg text-orange-500">
-                    <BarChart3 size={20} />
+                  <div className={`mt-1 w-10 h-10 ${CLAY.radius.sm} ${THEME.cardInset} flex items-center justify-center shrink-0`}>
+                    <BarChart3 size={18} className={THEME.textDark} />
                   </div>
                   <div>
-                    <h4 className={`font-bold text-lg ${textHeading}`}>
-                      Unpredictable Demand
+                    <h4 className={`font-bold text-lg ${THEME.textDark}`}>
+                      For Vendors
                     </h4>
-                    <p className={textBody}>
-                      Vendors often over-prep (waste) or under-prep (lost
-                      revenue).
+                    <p className={`text-sm ${THEME.textSoft} leading-relaxed`}>
+                      Lost sales opportunities, operational stress, and food wastage.
                     </p>
                   </div>
                 </div>
               </motion.div>
             </div>
 
-            {/* Right: The Abstract Visual/Solution */}
-            <motion.div variants={fadeInUp} className="relative">
-              <div
-                className={`relative z-10 p-10 md:p-12 ${clayItem} flex flex-col justify-center items-start`}
-              >
-                <div className={iconBox}>
+            <motion.div variants={fadeInUp}>
+              <div className={`${THEME.cardElevated} ${CLAY.spacing.cardLarge} flex flex-col justify-center items-start`}>
+                <div className={`w-12 h-12 ${CLAY.radius.sm} ${CLAY.color.accentLight} flex items-center justify-center ${THEME.brand} mb-5`}>
                   <Rocket size={24} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-2xl font-bold mb-4 ${textHeading}`}>
-                  The Byte Solution
+                <h3 className={`text-2xl font-bold ${THEME.textDark} mb-4`}>
+                  Smarter Operations for Everyone
                 </h3>
-                <p className={textBody}>
-                  We bridge the gap. Students order ahead, vendors manage a
-                  steady stream. Efficiency meets satisfaction in a seamless
-                  digital handshake.
+                <p className={`${THEME.textSoft} leading-relaxed`}>
+                  Byte creates a digital bridge between students and local vendors. Students order ahead and schedule deliveries. Vendors receive advance demand visibility and business reporting tools.
                 </p>
               </div>
-              {/* Decorative Element behind */}
-              <div className="absolute top-2 left-2 w-full h-full rounded-[2.5rem] bg-[#FF9E75]/20 -z-10" />
             </motion.div>
           </motion.div>
 
-          {/* --- HOW IT WORKS (Bento Grid of Cards) --- */}
-          <div className="mb-32">
+          {/* --- HOW IT WORKS --- */}
+          <div className={CLAY.spacing.sectionGap}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className={`text-center ${CLAY.spacing.headingGap}`}
             >
-              <h2 className={`text-3xl md:text-4xl mb-4 ${textHeading}`}>
+              <h2 className={`text-3xl md:text-4xl font-extrabold ${THEME.textDark} tracking-tight mb-4`}>
                 How the Magic Happens
               </h2>
-              <p className={textBody}>A transparent, four-step ecosystem.</p>
+              <p className={THEME.textSoft}>A transparent, four-step ecosystem.</p>
             </motion.div>
 
             <motion.div
@@ -190,124 +159,60 @@ export default function AboutPage() {
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               variants={staggerContainer}
-              className="grid md:grid-cols-2 gap-6 lg:gap-8"
+              className={`grid md:grid-cols-2 ${CLAY.spacing.gridGap}`}
             >
-              {/* Card 1 */}
-              <motion.div variants={fadeInUp} className={clayItem}>
-                <div className="flex justify-between items-start mb-6">
-                  <div className={iconBox}>
-                    <Wallet size={24} />
+              {[
+                { icon: Wallet, num: "01", title: "Smart Wallet", desc: <>Money moves to a <span className={`${THEME.brand} font-semibold`}>Reserved State</span> securely held until the vendor confirms. No accidental charges, ever.</> },
+                { icon: Clock, num: "02", title: "7-Minute Promise", desc: "Vendors have 7 minutes to accept. If they timeout or reject, your money moves instantly back to your Available Balance." },
+                { icon: RefreshCcw, num: "03", title: "Instant Refunds", desc: "Vendor ran out of ingredients? Cancellations trigger immediate refunds. No waiting 3-5 business days for bank processing." },
+                { icon: BarChart3, num: "04", title: "Vendor Analytics", desc: "We predict demand before it happens, allowing kitchens to prep efficiently and reduce food wastage significantly." },
+              ].map((card, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeInUp}
+                  className={`${THEME.card} ${CLAY.spacing.cardSmall} h-full transition-transform hover:-translate-y-1 duration-300`}
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div className={`w-12 h-12 ${CLAY.radius.sm} ${THEME.cardInset} flex items-center justify-center`}>
+                      <card.icon size={22} className={THEME.textDark} />
+                    </div>
+                    <span className={`text-3xl font-extrabold text-[#F5EFE8] dark:text-white/5 select-none`}>
+                      {card.num}
+                    </span>
                   </div>
-                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
-                    01
-                  </span>
-                </div>
-                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
-                  Smart Wallet
-                </h3>
-                <p className={textBody}>
-                  Money moves to a{" "}
-                  <span className="text-[#FF9E75] font-bold">
-                    Reserved State
-                  </span>{" "}
-                  securely held until the vendor confirms. No accidental
-                  charges, ever.
-                </p>
-              </motion.div>
-
-              {/* Card 2 */}
-              <motion.div variants={fadeInUp} className={clayItem}>
-                <div className="flex justify-between items-start mb-6">
-                  <div className={iconBox}>
-                    <Clock size={24} />
-                  </div>
-                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
-                    02
-                  </span>
-                </div>
-                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
-                  7-Minute Promise
-                </h3>
-                <p className={textBody}>
-                  Vendors have 7 minutes to accept. If they timeout or reject,
-                  your money moves instantly back to your Available Balance.
-                </p>
-              </motion.div>
-
-              {/* Card 3 */}
-              <motion.div variants={fadeInUp} className={clayItem}>
-                <div className="flex justify-between items-start mb-6">
-                  <div className={iconBox}>
-                    <RefreshCcw size={24} />
-                  </div>
-                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
-                    03
-                  </span>
-                </div>
-                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
-                  Instant Refunds
-                </h3>
-                <p className={textBody}>
-                  Vendor ran out of ingredients? Cancellations trigger immediate
-                  refunds. No waiting 3-5 business days for bank processing.
-                </p>
-              </motion.div>
-
-              {/* Card 4 */}
-              <motion.div variants={fadeInUp} className={clayItem}>
-                <div className="flex justify-between items-start mb-6">
-                  <div className={iconBox}>
-                    <BarChart3 size={24} />
-                  </div>
-                  <span className="text-4xl font-black text-gray-100 dark:text-neutral-600">
-                    04
-                  </span>
-                </div>
-                <h3 className={`text-xl font-bold mb-3 ${textHeading}`}>
-                  Vendor Analytics
-                </h3>
-                <p className={textBody}>
-                  We predict demand before it happens, allowing kitchens to prep
-                  efficiently and reduce food wastage significantly.
-                </p>
-              </motion.div>
+                  <h3 className={`text-xl font-bold ${THEME.textDark} mb-3`}>
+                    {card.title}
+                  </h3>
+                  <p className={`text-sm ${THEME.textSoft} leading-relaxed`}>
+                    {card.desc}
+                  </p>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
 
-          {/* --- VALUES (Clean Grid, No Backgrounds) --- */}
+          {/* --- VALUES --- */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="border-t border-[#E6DCCF] dark:border-border pt-24"
+            className="border-t border-[#E6DCCF] dark:border-white/10 pt-24"
           >
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
               <div className="md:col-span-2 lg:col-span-1">
-                <h2 className={`text-3xl ${textHeading} mb-4`}>
+                <h2 className={`text-3xl font-extrabold ${THEME.textDark} tracking-tight mb-4`}>
                   Our Core Values
                 </h2>
-                <p className={textBody}>
+                <p className={THEME.textSoft}>
                   Built on trust, speed, and transparency.
                 </p>
-                {/* <div className="mt-8 hidden lg:block text-[#FF9E75]">
-                  <Heart size={40} fill="currentColor" className="opacity-20" />
-                </div> */}
               </div>
 
               {[
-                {
-                  title: "Efficiency",
-                  desc: "We respect your time. Every feature is designed to reduce friction.",
-                },
-                {
-                  title: "Transparency",
-                  desc: "Clear wallet states. You always know where your money is.",
-                },
-                {
-                  title: "Sustainability",
-                  desc: "Predicting demand means less food in the trash and more on the plate.",
-                },
+                { title: "Efficiency", desc: "We respect your time. Every feature is designed to reduce friction." },
+                { title: "Transparency", desc: "Clear wallet states. You always know where your money is." },
+                { title: "Sustainability", desc: "Predicting demand means less food in the trash and more on the plate." },
               ].map((val, i) => (
                 <motion.div
                   key={i}
@@ -315,10 +220,10 @@ export default function AboutPage() {
                   className="flex flex-col gap-3"
                 >
                   <div className="w-8 h-1 bg-[#FF9E75] rounded-full mb-2"></div>
-                  <h3 className={`text-xl font-black ${textHeading}`}>
+                  <h3 className={`text-xl font-bold ${THEME.textDark}`}>
                     {val.title}
                   </h3>
-                  <p className={`text-sm ${textBody}`}>{val.desc}</p>
+                  <p className={`text-sm ${THEME.textSoft} leading-relaxed`}>{val.desc}</p>
                 </motion.div>
               ))}
             </div>

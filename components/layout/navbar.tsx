@@ -23,6 +23,7 @@ import {
   Settings,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { CLAY } from "@/lib/design-tokens";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,8 +32,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   // --- CLAY TOKENS ---
-  const navGlass =
-    "bg-[#FFFBF7] backdrop-blur-md border border-[#F5EFE8] shadow-[8px_8px_16px_rgba(214,198,186,0.25),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:bg-card/80 dark:border-border dark:shadow-none";
+  const navGlass = `bg-[#FFFBF7] backdrop-blur-md border border-[#F5EFE8] ${CLAY.shadow.md} dark:bg-card/80 dark:border-border dark:shadow-none`;
 
   const textBrand =
     "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
@@ -40,16 +40,11 @@ export function Navbar() {
     "text-[#9C8C84] hover:text-[#FF9E75] font-bold transition-colors dark:text-muted-foreground dark:hover:text-primary";
   const textActive = "text-[#5C4D45] dark:text-foreground font-black";
 
-  // Primary Button (Orange - Sign Up)
-  const clayBtnPrimary =
-    "bg-[#FF9E75] text-white shadow-[4px_4px_8px_rgba(255,158,117,0.4),_-2px_-2px_4px_rgba(255,255,255,0.4)] hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[1px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none";
+  const clayBtnPrimary = `bg-[#FF9E75] text-white ${CLAY.shadow.brand} hover:bg-[#FF9E75]/90 hover:shadow-lg active:translate-y-[1px] active:shadow-none transition-all dark:bg-primary dark:text-primary-foreground dark:shadow-none`;
 
-  // Secondary Button (White - Login)
-  const clayBtnSecondary =
-    "bg-[#FFFEFD] text-[#5C4D45] shadow-[4px_4px_8px_rgba(214,198,186,0.5),_-2px_-2px_4px_rgba(255,255,255,0.8)] border border-[#FFFEFD] hover:bg-[#F5EFE8] hover:border-[#E5DCD5] active:translate-y-[1px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none dark:border-border";
+  const clayBtnSecondary = `bg-[#FFFEFD] text-[#5C4D45] ${CLAY.shadow.sm} border border-[#FFFEFD] hover:bg-[#F5EFE8] hover:border-[#E5DCD5] active:translate-y-[1px] active:shadow-none transition-all dark:bg-secondary dark:text-secondary-foreground dark:shadow-none dark:border-border`;
 
-  const clayDropdown =
-    "bg-white border-none shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[1.5rem] p-2 dark:bg-popover dark:border dark:border-border dark:shadow-none dark:rounded-md";
+  const clayDropdown = `bg-white border-none ${CLAY.shadow.md} ${CLAY.radius.md} p-2 dark:bg-popover dark:border dark:border-border dark:shadow-none`;
 
   // ---- hide/show on scroll ----
   useEffect(() => {
@@ -238,19 +233,21 @@ export function Navbar() {
               </>
             )}
 
-            {/* Wallet Button */}
-            <div className="md:hidden">
-              <Link
-                href="/wallet"
-                className={`block rounded-[1rem] px-3 py-2 font-bold transition-colors ${
-                  pathname === "/wallet"
-                    ? "bg-[#FFF0E6] text-[#FF9E75] dark:bg-accent/50 dark:text-primary"
-                    : "text-[#5C4D45] hover:bg-[#F5EFE8] dark:text-foreground dark:hover:bg-accent"
-                }`}
-              >
-                <Wallet className="h-4 w-4 text-[#5C4D45] dark:text-foreground" />
-              </Link>
-            </div>
+            {/* Wallet Button - Mobile */}
+            {!loading && user && (
+              <div className="md:hidden">
+                <Link
+                  href="/wallet"
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
+                    pathname === "/wallet"
+                      ? "bg-[#FFF0E6] text-[#FF9E75] dark:bg-accent/50 dark:text-primary"
+                      : "text-[#5C4D45] hover:bg-[#F5EFE8] dark:text-foreground dark:hover:bg-accent"
+                  }`}
+                >
+                  <Wallet className="h-4 w-4" />
+                </Link>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">

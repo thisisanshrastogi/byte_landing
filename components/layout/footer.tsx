@@ -77,10 +77,10 @@ export function Footer() {
               </li>
               <li key="join_beta_testing">
                 <Link
-                  href="/invite"
+                  href="/partner"
                   className={`text-sm font-bold ${textBase} ${hoverLink}`}
                 >
-                  Become a Beta Tester
+                  Partner as Vendor
                 </Link>
               </li>
               <li key="delete_account">

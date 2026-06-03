@@ -1,69 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import {
   Clock,
-  ChevronRight,
-  Utensils,
-  Users,
-  ChefHat,
   Leaf,
   BarChart3,
   CalendarClock,
-  Quote,
-  ChevronDown,
-  Star,
   Store,
   Smartphone,
   ArrowUpRight,
-  ShieldCheck,
   Zap,
   TrendingUp,
   Minus,
   Plus,
-  HelpCircle,
-  MessageCircle,
   User,
-  Hourglass,
-  Flame,
-  Megaphone,
-  Clock7,
-  FlameKindling,
-  Heater,
-  LogIn,
-  Mail,
 } from "lucide-react";
 import PhoneSimulator from "@/components/dummy/phone";
 import { BackgroundElements } from "@/components/background-element";
+import { ClayCursor } from "@/components/clay-cursor";
 import useIsMobile from "@/components/mobile-detector";
 import { useAuth } from "@/contexts/auth-context";
+import { THEME, CLAY } from "@/lib/design-tokens";
 
 // --- EXISTING DATA & CONSTANTS ---
 const problems = [
   {
-    icon: Megaphone,
-    title: "Cafeteria Chaos",
-    desc: "No token system means shouting names, missed orders, and a chaotic environment for everyone.",
-    color: "text-[#5D4037] dark:text-[#E7DCD6]",
-    accent: "bg-[#EFEBE9]",
+    icon: Clock,
+    title: "Lost Time & Missed Meals",
+    desc: "Long queues eat up most of your break. Popular items sell out unexpectedly.",
   },
   {
-    icon: Heater,
-    title: "Kitchen Meltdowns",
-    desc: "Vendors get hit by 500 orders in 10 minutes. Without prep time, quality drops and panic sets in.",
-    color: "text-[#EA580C] ",
-    accent: "bg-[#FFF7ED]",
+    icon: Zap,
+    title: "Vendor Chaos",
+    desc: "Demand arrives in unpredictable bursts. Food gets overprepared and wasted.",
   },
   {
-    icon: Clock7,
-    title: "The 15-Minute Wait",
-    desc: "Breaks are only 20 minutes long. Students spend 75% of that time just standing in a queue.",
-    color: "text-[#57534E] dark:text-[#E7E5E4]",
-    accent: "bg-[#FAFAF9]",
+    icon: Store,
+    title: "Costly Alternatives",
+    desc: "Traditional delivery apps are too expensive for daily use, with no way to schedule food around classes.",
   },
 ];
 
@@ -85,21 +63,6 @@ const faqs = [
 const footerBg =
   "bg-[#5C4D45] border-[#6B5A50] dark:bg-card dark:border-border";
 
-const THEME = {
-  bg: "bg-[#FFFBF7] dark:bg-[#050505] transition-colors duration-500",
-  card: "bg-[#FFFBF7] dark:bg-[#121212] shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:shadow-none border border-white dark:border-white/10",
-  cardHover:
-    "hover:-translate-y-1 hover:shadow-[12px_12px_24px_rgba(214,198,186,0.6),_-6px_-6px_16px_rgba(255,255,255,0.9)] transition-all duration-300 ease-out",
-  cardInset:
-    "bg-[#F5EFE8] dark:bg-[#0a0a0a] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]",
-  btnPrimary:
-    "bg-[#FF9E75] dark:bg-[#ff7c50] text-white shadow-[6px_6px_12px_rgba(255,158,117,0.4),_-2px_-2px_6px_rgba(255,255,255,0.4)] dark:shadow-none hover:bg-[#FF9E75]/90 active:scale-95 transition-all",
-  btnSecondary:
-    "bg-[#FFFEFD] dark:bg-[#1a1a1a] text-[#5C4D45] dark:text-[#E0E0E0] shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-none border border-[#fffefd] hover:border-[#E5DCD5] dark:border-white/10 hover:bg-[#E5DCD5] active:scale-95 transition-all",
-  textDark: "text-[#5C4D45] dark:text-[#EDEDED]",
-  textSoft: "text-[#9C8C84] dark:text-[#A1A1AA]",
-  brand: "text-[#FF9E75] dark:text-[#ff7c50]",
-};
 
 // --- MOBILE STICKY NAV ---
 const MobileStickyNav = () => {
@@ -135,7 +98,7 @@ const MobileStickyNav = () => {
             <div className="w-px h-6 bg-[#E5DCD5] dark:bg-white/10" />
             <button
               onClick={() => router.push("/login")}
-              className="flex-1 h-10 rounded-[1.5rem] bg-[#FF9E75] dark:bg-[#ff7c50] text-white font-black uppercase text-xs tracking-wider shadow-[4px_4px_10px_rgba(255,158,117,0.4)] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              className={`flex-1 h-10 ${CLAY.radius.md} ${CLAY.color.accent} text-white font-bold uppercase text-xs tracking-wider ${CLAY.shadow.brand} hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2`}
             >
               Login
             </button>
@@ -160,13 +123,13 @@ const SectionHeading = ({
 
   return (
     <div
-      className={`mb-12 ${align === "center" ? "text-center" : "text-left"}`}
+      className={`${CLAY.spacing.headingGap} ${align === "center" ? "text-center" : "text-left"}`}
     >
       <motion.h2
         initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
         whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
         viewport={viewportMotion.viewport ?? { once: true }}
-        className={`text-3xl md:text-5xl font-black ${THEME.textDark} tracking-tight mb-4`}
+        className={`text-3xl md:text-5xl font-extrabold ${THEME.textDark} tracking-tight mb-4`}
       >
         {title}
       </motion.h2>
@@ -176,7 +139,7 @@ const SectionHeading = ({
           whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
           viewport={viewportMotion.viewport ?? { once: true }}
           transition={{ delay: 0.1 }}
-          className={`text-base md:text-lg font-medium ${THEME.textSoft} max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
+          className={`text-base md:text-lg ${THEME.textSoft} max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
         >
           {subtitle}
         </motion.p>
@@ -204,7 +167,7 @@ const AnalyticsGraph = () => {
     <div className="w-full mt-auto pt-4">
       <div className="space-y-3">
         <div className="flex justify-between items-end border-b border-white/10 pb-2">
-          <p className="text-[10px] uppercase font-black tracking-widest text-[#D6C6BA]">
+          <p className="text-[10px] uppercase font-bold tracking-widest text-[#D6C6BA]">
             Real-time Sales
           </p>
           <TrendingUp
@@ -247,10 +210,10 @@ const BetterAnalyticsGraph = () => {
     <div className="w-full mt-10 flex flex-col gap-4">
       <div className="flex justify-between items-end px-1">
         <div>
-          <p className="text-[#D6C6BA] text-[10px] font-black uppercase tracking-widest mb-1">
+          <p className="text-[#D6C6BA] text-[10px] font-bold uppercase tracking-widest mb-1">
             Weekly Revenue
           </p>
-          <div className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+          <div className="text-3xl font-bold text-white tracking-tight flex items-center gap-2">
             ₹4,240
             <span className="flex h-3 w-3 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#81C784] opacity-75"></span>
@@ -312,7 +275,7 @@ const BetterAnalyticsGraph = () => {
           className="absolute right-[20%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
         >
           <div className="w-4 h-4 rounded-full bg-[#FF9E75] border-[3px] border-[#5C4D45] shadow-[0_0_10px_#FF9E75]" />
-          <div className="px-2 py-1 bg-[#FF9E75] text-[#5C4D45] text-[9px] font-black rounded-full shadow-lg whitespace-nowrap">
+          <div className="px-2 py-1 bg-[#FF9E75] text-[#5C4D45] text-[9px] font-bold rounded-full shadow-lg whitespace-nowrap">
             Peak: 12 PM
           </div>
         </motion.div>
@@ -341,10 +304,9 @@ const CompactAccordionItem = ({
       whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
       viewport={viewportMotion.viewport ?? { once: true }}
       transition={{ duration: 0.3 }}
-      className={`group rounded-[1.5rem] overflow-hidden transition-all duration-300 border border-white dark:border-[#2A2A2A]
+      className={`group ${CLAY.radius.md} overflow-hidden transition-all duration-300 border border-white dark:border-[#2A2A2A]
         ${isOpen ? "bg-[#FFFBF7] dark:bg-[#1E1E1E] z-10" : "bg-[#FFFBF7] dark:bg-[#1E1E1E] hover:bg-[#FAF9F6] dark:hover:bg-[#252525]"}
-        shadow-[6px_6px_12px_rgba(214,198,186,0.4),_-4px_-4px_10px_rgba(255,255,255,0.8)]
-        dark:shadow-[6px_6px_15px_rgba(0,0,0,0.5),_-2px_-2px_10px_rgba(255,255,255,0.05)]`}
+        ${CLAY.shadow.md} ${CLAY.shadowDark.md}`}
     >
       <motion.button
         layout="position"
@@ -352,7 +314,7 @@ const CompactAccordionItem = ({
         className="w-full px-6 py-5 flex items-center justify-between text-left outline-none cursor-pointer"
       >
         <span
-          className={`text-lg font-black tracking-tight transition-colors duration-300 pr-4
+          className={`text-lg font-bold tracking-tight transition-colors duration-300 pr-4
           ${isOpen ? "text-[#FF9E75] dark:text-[#ff7c50]" : "text-[#5C4D45] dark:text-[#E0E0E0] group-hover:text-[#5C4D45]/80 dark:group-hover:text-white"}`}
         >
           {question}
@@ -361,7 +323,7 @@ const CompactAccordionItem = ({
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
           ${isOpen
               ? "bg-[#FF9E75] text-white rotate-180 shadow-inner"
-              : "bg-[#F5EFE8] dark:bg-[#2A2A2A] text-[#5C4D45] dark:text-[#A0A0A0] shadow-[4px_4px_8px_rgba(214,198,186,0.4),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_8px_rgba(0,0,0,0.5),inset_1px_1px_2px_rgba(255,255,255,0.05)]"
+              : `bg-[#F5EFE8] dark:bg-[#2A2A2A] text-[#5C4D45] dark:text-[#A0A0A0] ${CLAY.shadow.sm} ${CLAY.shadowDark.sm}`
             }`}
         >
           {isOpen ? (
@@ -382,11 +344,9 @@ const CompactAccordionItem = ({
           >
             <div className="px-6 pb-6 pt-0">
               <div
-                className="bg-[#F5EFE8] dark:bg-[#151515] rounded-xl p-5 
-                shadow-[inset_4px_4px_8px_rgba(204,190,178,0.3),_inset_-4px_-4px_8px_rgba(255,255,255,0.7)]
-                dark:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.8),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
+                className={`${CLAY.color.inset} ${CLAY.radius.sm} p-5 ${CLAY.shadow.inset} ${CLAY.shadowDark.inset}`}
               >
-                <p className="text-[#9C8C84] dark:text-[#888888] text-sm leading-relaxed font-medium">
+                <p className="text-[#9C8C84] dark:text-[#888888] text-sm leading-relaxed">
                   {answer}
                 </p>
               </div>
@@ -404,6 +364,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const { user, loading } = useAuth();
+  const heroRef = useRef<HTMLElement>(null);
 
   const toggleIndex = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -426,9 +387,10 @@ export default function LandingPage() {
       <BackgroundElements />
 
       <main className="relative z-10 pt-20 pb-20 px-4 md:px-10">
+        <ClayCursor containerRef={heroRef} />
         <div className="max-w-7xl mx-auto px-2 lg:px-8">
           {/* --- HERO SECTION --- */}
-          <section className="grid lg:grid-cols-2 gap-12 lg:gap-0 items-center mb-20 lg:mb-32">
+          <section ref={heroRef} className={`grid lg:grid-cols-2 gap-12 lg:gap-0 items-center ${CLAY.spacing.sectionGap} lg:cursor-none`}>
             <motion.div
               initial="hidden"
               animate="visible"
@@ -437,14 +399,14 @@ export default function LandingPage() {
             >
               <motion.div
                 variants={fadeInUp}
-                className={`inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-full border border-white/50 dark:border-white/10 shadow-sm mb-8`}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-full border border-white/50 dark:border-white/10 shadow-sm mb-8"
               >
                 <span className="flex h-2 w-2 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF9E75] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF9E75]"></span>
                 </span>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#9C8C84]">
-                  Now Live
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#9C8C84]">
+                  Campus Food, Reimagined
                 </span>
               </motion.div>
 
@@ -452,18 +414,17 @@ export default function LandingPage() {
                 variants={fadeInUp}
                 className={`text-4xl sm:text-5xl md:text-7xl font-black ${THEME.textDark} leading-[1.15] tracking-tight mb-6`}
               >
-                Skip the line. <br />
+                Order local. <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7043]">
-                  Order instantly with Byte.
+                  Skip the queues.
                 </span>
               </motion.h1>
 
               <motion.p
                 variants={fadeInUp}
-                className={`text-base md:text-lg ${THEME.textSoft} font-medium mb-10 max-w-md leading-relaxed`}
+                className={`text-base md:text-lg ${THEME.textSoft} mb-10 max-w-md leading-relaxed`}
               >
-                Byte lets students pre-order food and skip queues, while helping
-                vendors prepare smarter using real-time demand analytics.
+                Byte helps students save time with pre-orders and affordable delivery, while helping vendors reduce food wastage and manage operations efficiently.
               </motion.p>
 
               <motion.div
@@ -478,22 +439,22 @@ export default function LandingPage() {
                         "_blank",
                       )
                     }
-                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                   >
                     <Smartphone size={18} /> Get the App
                   </button>
                 ) : (
                   <button
                     onClick={() => router.push("/register?state=open_app")}
-                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                    className={`${THEME.btnPrimary} h-14 md:h-16 px-8 rounded-full text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                   >
                     <User size={18} /> Get the App
                   </button>
                 )}
 
                 <button
-                  onClick={() => router.push("/invite")}
-                  className={`${THEME.btnSecondary} h-14 md:h-16 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
+                  onClick={() => router.push("/partner")}
+                  className={`${THEME.btnSecondary} h-14 md:h-16 px-8 rounded-full text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-3 w-full sm:w-auto`}
                 >
                   <Store size={18} /> Partner as Vendor
                 </button>
@@ -512,52 +473,62 @@ export default function LandingPage() {
           </section>
 
           {/* --- PROBLEM SECTION --- */}
-          <section className="mb-20 lg:mb-32">
-            <div className="text-center mb-12 lg:mb-16">
-              <h2
-                className={`text-3xl md:text-5xl font-black ${THEME.textDark} mb-4 tracking-tight`}
-              >
-                Short breaks.{" "}
+          <section className={`${CLAY.spacing.sectionGap} relative`}>
+            {/* Floating background text */}
+            <div className="absolute -inset-x-10 -top-10 -bottom-10 pointer-events-none select-none hidden md:block overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_5%,black_30%,transparent_52%,transparent_52%,black_70%,transparent_95%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_5%,black_30%,transparent_52%,transparent_52%,black_70%,transparent_95%)]" aria-hidden="true">
+              {[
+                { text: "25 MIN WAIT", left: "3%", top: "20%", delay: "0s", size: "text-4xl" },
+                { text: "SOLD OUT", left: "65%", top: "12%", delay: "1.5s", size: "text-5xl" },
+                { text: "NO TIME", left: "30%", top: "65%", delay: "3.5s", size: "text-4xl" },
+                { text: "BREAK OVER", left: "72%", top: "72%", delay: "0.8s", size: "text-3xl" },
+                { text: "TOO LATE", left: "12%", top: "82%", delay: "2.8s", size: "text-5xl" },
+                { text: "HUNGRY", left: "50%", top: "35%", delay: "4.5s", size: "text-3xl" },
+                { text: "QUEUE FULL", left: "80%", top: "45%", delay: "1.2s", size: "text-4xl" },
+              ].map((item, i) => (
+                <span
+                  key={i}
+                  className={`absolute ${item.size} font-black uppercase tracking-widest text-[#5C4D45]/[0.06] dark:text-white/[0.06] whitespace-nowrap`}
+                  style={{
+                    left: item.left,
+                    top: item.top,
+                    animation: `float-fade 6.5s ${item.delay} infinite ease-in-out`,
+                  }}
+                >
+                  {item.text}
+                </span>
+              ))}
+            </div>
+
+            <div className="relative z-10 text-center mb-14 lg:mb-16">
+              <h2 className={`text-3xl md:text-5xl font-extrabold ${THEME.textDark} mb-4 tracking-tight`}>
+                Campus breaks are{" "}
                 <span className="text-[#FF9E75] dark:text-[#ff7c50]">
-                  Long queues.
+                  too short for queues.
                 </span>
               </h2>
-              <p
-                className={`text-base md:text-lg font-medium ${THEME.textSoft} max-w-2xl mx-auto`}
-              >
-                Campus food rush isn’t about payments — it’s about timing. We
-                solve the chaos between the bell ringing and your first bite.
+              <p className={`text-base md:text-lg ${THEME.textSoft} max-w-2xl mx-auto`}>
+                Every day, hundreds of students rush to nearby vendors during the same window. Students lose valuable time waiting, while vendors struggle to handle unpredictable demand.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div className={`relative z-10 grid grid-cols-1 md:grid-cols-3 ${CLAY.spacing.gridGap}`}>
               {problems.map((item, i) => (
                 <motion.div
                   key={i}
                   initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
-                  whileInView={viewportMotion.animate ?? { opacity: 1, y: 0 }}
+                  whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
                   viewport={viewportMotion.viewport ?? { once: true }}
                   transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -8 }}
-                  className={`p-8 rounded-[2.5rem] ${THEME.card} flex flex-col items-start relative overflow-hidden group`}
+                  whileHover={{ y: -4 }}
+                  className={`${CLAY.spacing.cardSmall} ${CLAY.radius.md} ${THEME.card} flex flex-col items-start relative overflow-hidden group transition-all duration-300`}
                 >
-                  <div
-                    className={`w-16 h-16 rounded-2xl ${THEME.cardInset} flex items-center justify-center mb-6 relative z-10`}
-                  >
-                    <item.icon
-                      size={32}
-                      strokeWidth={2.5}
-                      className={item.color}
-                    />
+                  <div className={`w-14 h-14 ${CLAY.radius.sm} ${THEME.cardInset} flex items-center justify-center mb-6 relative z-10`}>
+                    <item.icon size={28} strokeWidth={2.5} className={THEME.textDark} />
                   </div>
-                  <h3
-                    className={`text-2xl font-black ${THEME.textDark} mb-3 relative z-10 leading-tight`}
-                  >
+                  <h3 className={`text-xl md:text-2xl font-bold ${THEME.textDark} mb-3 relative z-10 leading-tight`}>
                     {item.title}
                   </h3>
-                  <p
-                    className={`text-sm font-medium ${THEME.textSoft} leading-relaxed relative z-10`}
-                  >
+                  <p className={`text-sm ${THEME.textSoft} leading-relaxed relative z-10`}>
                     {item.desc}
                   </p>
                 </motion.div>
@@ -566,88 +537,72 @@ export default function LandingPage() {
           </section>
 
           {/* --- BENTO GRID FEATURES --- */}
-          <section className="mb-20 lg:mb-32">
-            <SectionHeading title="Why Byte is Different." align="center" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[280px]">
-              <div
-                className={`md:col-span-2 ${THEME.card} rounded-[3rem] p-10 flex flex-col justify-center relative overflow-hidden group`}
-              >
+          <section className={CLAY.spacing.sectionGap}>
+            <SectionHeading title="Why Byte Works." align="center" />
+            <div className={`grid grid-cols-1 md:grid-cols-3 ${CLAY.spacing.gridGap} auto-rows-auto`}>
+              <div className={`md:col-span-2 ${THEME.cardElevated} ${CLAY.spacing.cardLarge} flex flex-col justify-center relative overflow-hidden group`}>
                 <div className="relative z-10 max-w-md">
-                  <div className="w-12 h-12 bg-[#FFF0E6] dark:bg-white/10 rounded-xl flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-6">
+                  <div className={`w-12 h-12 ${CLAY.color.accentLight} ${CLAY.radius.sm} flex items-center justify-center ${THEME.brand} mb-6`}>
                     <CalendarClock size={24} />
                   </div>
-                  <h3
-                    className={`text-2xl md:text-3xl font-black ${THEME.textDark} mb-3`}
-                  >
-                    Pre-Orders, Not Guesswork
+                  <h3 className={`text-2xl md:text-3xl font-bold ${THEME.textDark} mb-3`}>
+                    Order Ahead. Pick Up Faster.
                   </h3>
-                  <p className={`text-base font-medium ${THEME.textSoft}`}>
-                    Students order early. Vendors know exactly what to prepare.
+                  <p className={`text-base ${THEME.textSoft}`}>
+                    Students pre-order meals before breaks begin. Know exactly when your food will be ready. No waiting. No uncertainty.
                   </p>
                 </div>
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-30 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-20 group-hover:scale-110 transition-transform duration-700"></div>
               </div>
 
-              <div
-                className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 rounded-[3rem] p-8 flex flex-col relative overflow-hidden shadow-xl text-white`}
-              >
+              <div className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 ${CLAY.radius.lg} p-8 flex flex-col relative overflow-hidden ${CLAY.shadow.lg} dark:shadow-none text-white`}>
                 <div className="relative z-10 w-full h-full flex flex-col">
-                  <div className="w-12 h-12 absolute right-0 bg-white/10 rounded-xl hidden md:flex items-center justify-center text-[#FF9E75] dark:text-[#ff7c50] mb-4">
+                  <div className={`w-12 h-12 absolute right-0 bg-white/10 ${CLAY.radius.sm} hidden md:flex items-center justify-center ${THEME.brand} mb-4`}>
                     <BarChart3 size={24} />
                   </div>
-                  <h3 className="text-2xl font-black mb-1">Cook with Data</h3>
-                  <p className="text-[#D6C6BA] text-xs font-bold ">
-                    Real-time demand forecasting.
+                  <h3 className="text-2xl font-bold mb-1">Better Operations</h3>
+                  <p className="text-[#D6C6BA] text-xs font-semibold">
+                    Real-time demand analytics.
                   </p>
                   <BetterAnalyticsGraph />
                   <AnalyticsGraph />
                 </div>
               </div>
 
-              <div
-                className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
-              >
-                <ShieldCheck
-                  size={32}
-                  className="text-[#FF9E75] dark:text-[#ff7c50] mb-4"
-                />
-                <h3 className={`text-xl font-black ${THEME.textDark} mb-2`}>
-                  Bank-Grade Wallet
+              <div className={`${THEME.card} ${CLAY.spacing.cardSmall} flex flex-col justify-center ${THEME.cardHover}`}>
+                <Smartphone size={28} className={`${THEME.textDark} mb-4`} />
+                <h3 className={`text-xl font-bold ${THEME.textDark} mb-2`}>
+                  Affordable Campus Delivery
                 </h3>
-                <p className={`text-sm font-medium ${THEME.textSoft}`}>
-                  256-bit encryption. Money is held in escrow until pickup.
+                <p className={`text-sm ${THEME.textSoft}`}>
+                  Designed specifically for campuses, making deliveries practical and affordable for everyday student use.
                 </p>
               </div>
 
-              <div
-                className={`${THEME.card} rounded-[3rem] p-8 flex flex-col justify-center ${THEME.cardHover}`}
-              >
-                <Leaf
-                  size={32}
-                  className="text-[#FF9E75] dark:text-[#ff7c50] mb-4"
-                />
-                <h3 className={`text-xl font-black ${THEME.textDark} mb-2`}>
-                  Zero Food Waste
+              <div className={`${THEME.card} ${CLAY.spacing.cardSmall} flex flex-col justify-center ${THEME.cardHover}`}>
+                <Leaf size={28} className={`${THEME.textDark} mb-4`} />
+                <h3 className={`text-xl font-bold ${THEME.textDark} mb-2`}>
+                  Reduce Food Wastage
                 </h3>
-                <p className={`text-sm font-medium ${THEME.textSoft}`}>
-                  Cook based on confirmed orders. Boost profit margins.
+                <p className={`text-sm ${THEME.textSoft}`}>
+                  Use real order data instead of guesswork. Cook closer to actual demand and minimize unsold inventory.
                 </p>
               </div>
             </div>
           </section>
 
           {/* --- FAQ --- */}
-          <section className="w-full bg-transparent dark:bg-transparent py-12 md:py-20 px-2 md:px-12 flex justify-center font-sans">
+          <section className="w-full py-12 md:py-20 px-2 md:px-12 flex justify-center">
             <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col gap-4">
-                <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-black tracking-tight leading-[1.1]">
+                <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
                   Common <br />{" "}
                   <span className="text-[#FF9E75] dark:text-[#ff7c50]">
                     Questions.
                   </span>
                 </h2>
-                <p className="text-[#9C8C84] text-md font-medium leading-relaxed mt-4 md:mt-8 max-w-xs">
-                  Quick answers to questions you might have about Byte's
+                <p className="text-[#9C8C84] text-md leading-relaxed mt-4 md:mt-8 max-w-xs">
+                  Quick answers to questions you might have about Byte&apos;s
                   security, features, and reliability.
                 </p>
               </div>
@@ -665,108 +620,33 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* --- DATA USAGE & PRIVACY SECTION (Google Verification) --- */}
-          {/* <section className="mb-20 lg:mb-32">
-            <motion.div
-              initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
-              whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
-              viewport={viewportMotion.viewport ?? { once: true }}
-              className={`max-w-3xl mx-auto p-8 md:p-12 rounded-[3rem] ${THEME.card} relative overflow-hidden`}
-            >
-              <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#FF9E75]/10 blur-[60px] rounded-full pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className={`w-14 h-14 rounded-2xl ${THEME.cardInset} flex items-center justify-center shrink-0`}
-                  >
-                    <ShieldCheck
-                      size={28}
-                      className="text-[#FF9E75] dark:text-[#ff7c50]"
-                    />
-                  </div>
-                  <h2
-                    className={`text-2xl md:text-3xl font-black ${THEME.textDark} tracking-tight`}
-                  >
-                    How Byte Uses Your Data
-                  </h2>
-                </div>
-
-                <div className="space-y-4">
-                  <p
-                    className={`text-base font-medium ${THEME.textSoft} leading-relaxed`}
-                  >
-                    Byte uses{" "}
-                    <strong className={THEME.textDark}>Google Sign-In</strong>{" "}
-                    to authenticate users and provide a secure login experience.
-                    We only access basic Google account information such as:
-                  </p>
-
-                  <ul
-                    className={`list-disc ml-6 space-y-1 text-base font-bold ${THEME.textDark}`}
-                  >
-                    <li>Name</li>
-                    <li>Email address</li>
-                  </ul>
-
-                  <p
-                    className={`text-base font-medium ${THEME.textSoft} leading-relaxed`}
-                  >
-                    This information is used solely for account creation, login,
-                    and personalization. We do not sell or share your personal
-                    data with third parties.
-                  </p>
-
-                  <div className="pt-4 mt-2 border-t border-black/5 dark:border-white/5">
-                    <p className={`text-sm font-medium ${THEME.textSoft}`}>
-                      You can read more in our{" "}
-                      <button
-                        onClick={() => router.push("/privacy")}
-                        className={`font-bold ${THEME.textDark} underline decoration-2 underline-offset-4 decoration-[#FF9E75]/40 hover:decoration-[#FF9E75] transition-colors`}
-                      >
-                        Privacy Policy
-                      </button>
-                      .
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </section> */}
-
           {/* --- FINAL CTA --- */}
-          <section className="text-center pb-12">
-            <div
-              className={`p-10 md:p-16 rounded-[3.5rem] ${THEME.card} relative overflow-hidden`}
-            >
+          <section className={`text-center pb-12 ${CLAY.spacing.sectionGap}`}>
+            <div className={`${CLAY.spacing.cardCta} ${CLAY.radius.xl} ${THEME.cardElevated} relative overflow-hidden group border border-[#FF9E75]/10 hover:border-[#FF9E75]/30 transition-all duration-700 hover:shadow-[0_0_40px_rgba(255,158,117,0.15),12px_12px_24px_rgba(214,198,186,0.45),-6px_-6px_16px_rgba(255,255,255,0.85)] dark:hover:shadow-[0_0_40px_rgba(255,124,80,0.1)]`}>
+              <div className="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ boxShadow: "inset 0 0 30px rgba(255,158,117,0.08)" }}></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF9E75]/10 blur-[80px] rounded-full"></div>
               <div className="relative z-10 max-w-3xl mx-auto">
-                <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] dark:text-[#ff7c50] font-black text-[10px] uppercase tracking-widest mb-6">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] dark:text-[#ff7c50] font-semibold text-[10px] uppercase tracking-widest mb-6">
                   Join the movement
                 </span>
-                <h2
-                  className={`text-3xl md:text-6xl font-black ${THEME.textDark} mb-6 tracking-tight leading-[1.25]`}
-                >
-                  Built for students. <br /> Designed for vendors.
+                <h2 className={`text-3xl md:text-6xl font-extrabold ${THEME.textDark} mb-6 tracking-tight leading-[1.25]`}>
+                  The future of campus <br /> dining starts here.
                 </h2>
-                <p
-                  className={`text-base md:text-lg font-medium ${THEME.textSoft} mb-10 max-w-lg mx-auto`}
-                >
-                  Whether you run a campus kitchen or rush between classes, Byte
-                  is the upgrade you've been waiting for.
+                <p className={`text-base md:text-lg ${THEME.textSoft} mb-10 max-w-lg mx-auto`}>
+                  Byte connects students with local vendors through intelligent pre-ordering, affordable delivery, and data-driven operations.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <button
                     onClick={() => router.push("/register")}
-                    className={`${THEME.btnPrimary} h-14 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2`}
+                    className={`${THEME.btnPrimary} h-14 px-8 rounded-full text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2`}
                   >
-                    I'm a Student <ArrowUpRight size={18} />
+                    I&apos;m a Student <ArrowUpRight size={18} />
                   </button>
                   <button
-                    onClick={() => router.push("/invite")}
-                    className={`${THEME.btnSecondary} h-14 px-8 rounded-full text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2`}
+                    onClick={() => router.push("/partner")}
+                    className={`${THEME.btnSecondary} h-14 px-8 rounded-full text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2`}
                   >
-                    I'm a Vendor <Store size={18} />
+                    I&apos;m a Vendor <Store size={18} />
                   </button>
                 </div>
               </div>
