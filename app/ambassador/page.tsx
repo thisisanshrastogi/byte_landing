@@ -5,13 +5,17 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { BackgroundElements } from "@/components/background-element";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, Loader2, Users, Handshake, Gift, Send, ArrowRight, ArrowLeft } from "lucide-react";
+import { CheckCircle, Loader2, Users, Handshake, Gift, Send, ArrowRight, ArrowLeft, ChevronDown } from "lucide-react";
 import { THEME, CLAY } from "@/lib/design-tokens";
 
 export default function AmbassadorPage() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [currentStep, setCurrentStep] = useState(1);
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
   const totalSteps = 4;
+
+  const currentYear = new Date().getFullYear();
+  const graduationYears = Array.from({ length: 11 }, (_, i) => (currentYear + i).toString());
 
   const [formData, setFormData] = useState({
     name: "", email: "", phone: "", college: "", year: "", major: "", address: "",
@@ -213,13 +217,45 @@ export default function AmbassadorPage() {
                         {currentStep === 2 && (
                           <div className="space-y-5 md:space-y-6">
                             <div><label className={labelClass}>College / University *</label><input required type="text" name="college" value={formData.college} onChange={handleChange} className={inputClass} placeholder="University Name" /></div>
-                            <div>
-                              <label className={labelClass}>Year of Study *</label>
-                              <div className="flex flex-wrap gap-2">
-                                {["First Year", "Second Year", "Third Year", "Final Year", "Postgraduate"].map((yr) => (
-                                  <div key={yr} onClick={() => setFormData({ ...formData, year: yr })} className={`${selectableBase} px-3 py-2 font-bold text-xs ${formData.year === yr ? selectableOn : selectableOff}`}>{yr}</div>
-                                ))}
+                            <div className="relative">
+                              <label className={labelClass}>Expected Graduation Year *</label>
+                              <div 
+                                onClick={() => setShowYearDropdown(!showYearDropdown)}
+                                className={`${inputClass} cursor-pointer flex justify-between items-center`}
+                              >
+                                <span className={!formData.year ? "text-[#9C8C84] dark:text-[#555]" : ""}>
+                                  {formData.year || "Select Year"}
+                                </span>
+                                <motion.div animate={{ rotate: showYearDropdown ? 180 : 0 }}>
+                                  <ChevronDown size={18} />
+                                </motion.div>
                               </div>
+                              
+                              <AnimatePresence>
+                                {showYearDropdown && (
+                                  <motion.div 
+                                    initial={{ opacity: 0, y: -10 }} 
+                                    animate={{ opacity: 1, y: 0 }} 
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className={`absolute z-50 w-full mt-2 p-3 grid grid-cols-3 md:grid-cols-4 gap-2 ${CLAY.radius.lg} ${THEME.cardInset} border border-white/50 dark:border-white/5 shadow-xl`}
+                                  >
+                                    {graduationYears.map(yr => (
+                                      <div
+                                        key={yr}
+                                        onClick={() => {
+                                          setFormData({ ...formData, year: yr });
+                                          setShowYearDropdown(false);
+                                        }}
+                                        className={`${selectableBase} px-2 py-2 font-bold text-xs text-center ${
+                                          formData.year === yr ? selectableOn : selectableOff
+                                        }`}
+                                      >
+                                        {yr}
+                                      </div>
+                                    ))}
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </div>
                             <div><label className={labelClass}>Major / Department *</label><input required type="text" name="major" value={formData.major} onChange={handleChange} className={inputClass} placeholder="e.g. Computer Science" /></div>
                             <div><label className={labelClass}>Campus Address / Hostel *</label><input required type="text" name="address" value={formData.address} onChange={handleChange} className={inputClass} placeholder="Room 404, North Campus" /></div>
