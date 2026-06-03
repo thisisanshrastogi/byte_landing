@@ -22,7 +22,7 @@ import {
   ArrowUpRight,
   Settings,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CLAY } from "@/lib/design-tokens";
 
 export function Navbar() {
@@ -30,6 +30,7 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const { user, logout, loading } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
 
   // --- CLAY TOKENS ---
   const navGlass = `bg-[#FFFBF7] backdrop-blur-md border border-[#F5EFE8] ${CLAY.shadow.md} dark:bg-card/80 dark:border-border dark:shadow-none`;
@@ -171,32 +172,22 @@ export function Navbar() {
                         <DropdownMenuSeparator className="bg-[#F5EFE8] dark:bg-border my-2" />
 
                         <DropdownMenuItem
-                          asChild
-                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent"
+                          onClick={() => router.push("/wallet")}
+                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent flex items-center gap-2"
                         >
-                          <Link
-                            href="/wallet"
-                            className="flex items-center gap-2"
-                          >
-                            <Wallet className="h-4 w-4" />
-                            <span>
-                              Wallet: ₹{user.walletBalance?.toFixed(0) || "0"}
-                            </span>
-                          </Link>
+                          <Wallet className="h-4 w-4" />
+                          <span>
+                            Wallet: ₹{user.walletBalance?.toFixed(0) || "0"}
+                          </span>
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator className="bg-[#F5EFE8] dark:bg-border my-2" />
                         <DropdownMenuItem
-                          asChild
-                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent"
+                          onClick={() => router.push("/profile")}
+                          className="rounded-[1rem] focus:bg-[#FFF0E6] focus:text-[#FF9E75] cursor-pointer p-3 font-bold text-[#5C4D45] dark:text-foreground dark:focus:bg-accent flex items-center gap-2"
                         >
-                          <Link
-                            href="/profile"
-                            className="flex items-center gap-2"
-                          >
-                            <Settings className="h-4 w-4" />
-                            <span>Settings</span>
-                          </Link>
+                          <Settings className="h-4 w-4" />
+                          <span>Settings</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={logout}
