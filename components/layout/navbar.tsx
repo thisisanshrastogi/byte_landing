@@ -108,7 +108,7 @@ export function Navbar() {
 
           {/* 2. CENTER: Desktop Links (Justify Center) - Hidden on Mobile */}
           <div className="hidden md:flex justify-center items-center space-x-8">
-            {["/", "/about", "/contact"].map((path) => (
+            {["/", "/about", "/contact", "/ambassador"].map((path) => (
               <Link
                 key={path}
                 href={path}
@@ -274,7 +274,7 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden px-2 pb-2">
             <div className="rounded-[1.5rem] bg-[#FFFBF7] dark:bg-card border border-[#F5EFE8] dark:border-border shadow-inner p-2 space-y-1">
-              {["Home", "About", "Contact", "Profile"].map((label) => {
+              {["Home", "About", "Contact", "Ambassador", "Profile"].map((label) => {
                 const path = label === "Home" ? "/" : `/${label.toLowerCase()}`;
                 return (
                   <Link

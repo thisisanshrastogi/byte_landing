@@ -35,13 +35,14 @@ import {
   FlameKindling,
   Heater,
   LogIn,
+  Mail,
 } from "lucide-react";
 import PhoneSimulator from "@/components/dummy/phone";
 import { BackgroundElements } from "@/components/background-element";
 import useIsMobile from "@/components/mobile-detector";
 import { useAuth } from "@/contexts/auth-context";
 
-// --- EXISTING DATA & CONSTANTS (Unchanged) ---
+// --- EXISTING DATA & CONSTANTS ---
 const problems = [
   {
     icon: Megaphone,
@@ -100,18 +101,11 @@ const THEME = {
   brand: "text-[#FF9E75] dark:text-[#ff7c50]",
 };
 
-// --- NEW COMPONENT: MOBILE STICKY NAV ---
+// --- MOBILE STICKY NAV ---
 const MobileStickyNav = () => {
   const router = useRouter();
-
   const { user, loading } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
-
-  // Delay appearance slightly so it doesn't clash with hero animation
-  // useEffect(() => {
-  //   const timer = setTimeout(() => setIsVisible(true), 800);
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   useEffect(() => {
     if (!loading && user) {
@@ -131,23 +125,14 @@ const MobileStickyNav = () => {
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
           className="fixed bottom-6 inset-x-4 z-50 md:hidden flex justify-center"
         >
-          {/* Claymorphism Floating Dock 
-             - Frosted Glass Background
-             - Soft Shadow
-          */}
           <div className="w-full max-w-sm bg-white/80 dark:bg-[#1E1E1E]/90 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12),_0_2px_8px_rgba(0,0,0,0.05)] rounded-[2rem] p-2 flex gap-2 items-center">
-            {/* Login Button (Ghost/Secondary) */}
             <button
               onClick={() => router.push("/register")}
               className="flex-1 h-10 rounded-[1.5rem] font-bold text-[#5C4D45] dark:text-[#E0E0E0] hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm flex items-center justify-center gap-2"
             >
               Sign Up
             </button>
-
-            {/* Divider */}
             <div className="w-px h-6 bg-[#E5DCD5] dark:bg-white/10" />
-
-            {/* Sign Up Button (Primary Clay) */}
             <button
               onClick={() => router.push("/login")}
               className="flex-1 h-10 rounded-[1.5rem] bg-[#FF9E75] dark:bg-[#ff7c50] text-white font-black uppercase text-xs tracking-wider shadow-[4px_4px_10px_rgba(255,158,117,0.4)] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
@@ -161,7 +146,7 @@ const MobileStickyNav = () => {
   );
 };
 
-// --- HELPER COMPONENTS (Unchanged) ---
+// --- HELPER COMPONENTS ---
 const SectionHeading = ({
   title,
   subtitle,
@@ -213,7 +198,7 @@ function useViewportMotion() {
   return {};
 }
 
-// --- ANALYTICS GRAPH COMPONENTS (Unchanged) ---
+// --- ANALYTICS GRAPH COMPONENTS ---
 const AnalyticsGraph = () => {
   return (
     <div className="w-full mt-auto pt-4">
@@ -336,7 +321,7 @@ const BetterAnalyticsGraph = () => {
   );
 };
 
-// --- FAQ ITEM COMPONENT (Unchanged) ---
+// --- FAQ ITEM COMPONENT ---
 const CompactAccordionItem = ({
   question,
   answer,
@@ -438,8 +423,6 @@ export default function LandingPage() {
       className={`min-h-screen font-sans overflow-x-hidden relative ${THEME.bg}`}
     >
       <Navbar />
-
-      {/* ADDED: Mobile Sticky Nav for easy access to Login/Signup */}
       <MobileStickyNav />
       <BackgroundElements />
 
@@ -655,7 +638,7 @@ export default function LandingPage() {
           </section>
 
           {/* --- FAQ --- */}
-          <section className=" w-full bg-transparent dark:bg-transparent py-12 md:py-20 px-2 md:px-12 flex justify-center font-sans">
+          <section className="w-full bg-transparent dark:bg-transparent py-12 md:py-20 px-2 md:px-12 flex justify-center font-sans">
             <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col gap-4">
                 <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-black tracking-tight leading-[1.1]">
@@ -681,6 +664,75 @@ export default function LandingPage() {
                 ))}
               </div>
             </div>
+          </section>
+
+          {/* --- DATA USAGE & PRIVACY SECTION (Google Verification) --- */}
+          <section className="mb-20 lg:mb-32">
+            <motion.div
+              initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+              whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
+              viewport={viewportMotion.viewport ?? { once: true }}
+              className={`max-w-3xl mx-auto p-8 md:p-12 rounded-[3rem] ${THEME.card} relative overflow-hidden`}
+            >
+              <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#FF9E75]/10 blur-[60px] rounded-full pointer-events-none"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div
+                    className={`w-14 h-14 rounded-2xl ${THEME.cardInset} flex items-center justify-center shrink-0`}
+                  >
+                    <ShieldCheck
+                      size={28}
+                      className="text-[#FF9E75] dark:text-[#ff7c50]"
+                    />
+                  </div>
+                  <h2
+                    className={`text-2xl md:text-3xl font-black ${THEME.textDark} tracking-tight`}
+                  >
+                    How Byte Uses Your Data
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <p
+                    className={`text-base font-medium ${THEME.textSoft} leading-relaxed`}
+                  >
+                    Byte uses{" "}
+                    <strong className={THEME.textDark}>Google Sign-In</strong>{" "}
+                    to authenticate users and provide a secure login experience.
+                    We only access basic Google account information such as:
+                  </p>
+
+                  <ul
+                    className={`list-disc ml-6 space-y-1 text-base font-bold ${THEME.textDark}`}
+                  >
+                    <li>Name</li>
+                    <li>Email address</li>
+                  </ul>
+
+                  <p
+                    className={`text-base font-medium ${THEME.textSoft} leading-relaxed`}
+                  >
+                    This information is used solely for account creation, login,
+                    and personalization. We do not sell or share your personal
+                    data with third parties.
+                  </p>
+
+                  <div className="pt-4 mt-2 border-t border-black/5 dark:border-white/5">
+                    <p className={`text-sm font-medium ${THEME.textSoft}`}>
+                      You can read more in our{" "}
+                      <button
+                        onClick={() => router.push("/privacy")}
+                        className={`font-bold ${THEME.textDark} underline decoration-2 underline-offset-4 decoration-[#FF9E75]/40 hover:decoration-[#FF9E75] transition-colors`}
+                      >
+                        Privacy Policy
+                      </button>
+                      .
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </section>
 
           {/* --- FINAL CTA --- */}
