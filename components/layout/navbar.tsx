@@ -87,17 +87,17 @@ export function Navbar() {
         */}
         <div className="grid h-16 grid-cols-2 md:grid-cols-3 items-center px-6 md:px-8">
           {/* 1. LEFT: Logo (Justify Start) */}
-          <div className="flex justify-start">
+          <div className="flex justify-start overflow-hidden">
             <Link href="/" className="flex items-center gap-2">
               <img
                 src="/byte-logo.png"
                 alt="Byte"
-                className="w-20 h-14 object-cover -ml-1 -mb-2 block dark:hidden"
+                className="w-20 h-10 object-contain block dark:hidden"
               />
               <img
                 src="/byte-logo-dark.png"
                 alt="Byte Dark"
-                className="w-24 h-10 object-cover -ml-2 pt-1 mt-1 px-2 rounded-full hidden dark:block"
+                className="w-20 h-10 object-contain hidden dark:block"
               />
             </Link>
           </div>
