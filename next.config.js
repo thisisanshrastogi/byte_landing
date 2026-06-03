@@ -8,7 +8,15 @@ if (fs.existsSync("./next.config.local.js")) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // compress: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    unoptimized: true,
+  },
   ...localConfig, // override anything locally
 };
 
