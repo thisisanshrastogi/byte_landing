@@ -30,32 +30,27 @@ import { set } from "date-fns";
 import { start } from "repl";
 
 const slideVariants: Variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? "100%" : "-100%",
+  enter: {
     opacity: 0,
-    scale: 0.9,
     zIndex: 1,
-  }),
+  },
   center: {
-    x: 0,
     opacity: 1,
-    scale: 1,
     zIndex: 2,
     transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
+      duration: 0.15,
     },
   },
-  exit: (direction: number) => ({
-    x: direction > 0 ? "-20%" : "100%",
+  exit: {
     opacity: 0,
     zIndex: 0,
     transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
+      duration: 0.15,
     },
-  }),
+  },
 };
+
+import { PhoneProvider } from "./phone-context";
 
 const PhoneSimulator = () => {
   // Start in "locked" state to grab attention
@@ -75,27 +70,31 @@ const PhoneSimulator = () => {
 
   // --- COMPONENT: THE "STUDENT LOCK SCREEN" ---
   const StudentLockScreen = () => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
     // Format: 12:30
-    const currentTime = new Date().toLocaleTimeString([], {
+    const currentTime = mounted ? new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    });
+    }) : "--:--";
     // Format: Monday, January 12
-    const currentDate = new Date().toLocaleDateString([], {
+    const currentDate = mounted ? new Date().toLocaleDateString([], {
       weekday: "long",
       month: "long",
       day: "numeric",
-    });
+    }) : "Loading...";
 
     return (
       <div className="w-full h-full flex flex-col p-6 bg-[#FFFBF7] relative overflow-hidden font-sans">
         {/* --- BACKGROUND AMBIENCE --- */}
         {/* A soft warm gradient moving gently */}
-        <motion.div
-          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-20 -left-20 w-[150%] h-[60%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] pointer-events-none blur-3xl"
+        <div
+          className="absolute -top-20 -left-20 w-[150%] h-[60%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] pointer-events-none blur-3xl opacity-40"
         />
 
         {/* --- 1. HEADER (Time & Date) --- */}
@@ -199,6 +198,7 @@ const PhoneSimulator = () => {
       onRestaurantClick: () => navigate("menu"),
       onHistoryClick: () => navigate("history"),
       onBack: () => navigate("home"),
+      onPayNow: () => navigate("history"),
     };
 
     switch (screen) {
@@ -225,11 +225,9 @@ const PhoneSimulator = () => {
     shaking: {
       rotate: [-1.5, 0.5, -1.5, 0.5, 0],
       transition: {
-        startDelay: 0,
         repeat: Infinity,
-        repeatDelay: 2,
-        duration: 0.2,
-        // ease: [0.42, 0, 0.58, 1], // cubic-bezier for easeInOut
+        repeatDelay: 2.5,
+        duration: 0.3,
       },
     },
   };
@@ -253,69 +251,70 @@ const PhoneSimulator = () => {
   }, [screen]);
 
   return (
-    <div className="w-full md:w-fit h-full mt-6 flex items-center justify-center px-4 font-sans relative">
-      {/* THE PHONE CONTAINER */}
-      <motion.div
-        variants={shakeVariants}
-        animate={screen === "locked" ? "shaking" : "idle"}
-        className={phoneChassis}
-      >
-        {/* DYNAMIC ISLAND (Notification Context) */}
-        <div className="absolute top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500">
-          <motion.div
-            animate={{
-              width: screen === "locked" ? 140 : 100,
-              height: 32,
-            }}
-            className="bg-[#5C4D45] rounded-full flex justify-center items-center shadow-inner relative overflow-hidden"
-          >
-            <div className="absolute left-3 flex items-center gap-2">
-              <div className="w-2 h-2  rounded-full bg-[#3a302c] shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]"></div>
-            </div>
-
-            <AnimatePresence>
-              {screen === "locked" && (
-                <motion.span
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 20 }}
-                  exit={{ opacity: 0 }}
-                  className="text-[9px] font-black text-[#FF9E75] uppercase tracking-wider ml-3 "
-                >
-                  Pickup Now
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-
-        {/* PHYSICAL BUTTONS */}
-        <div className="absolute top-36 -right-[12px] w-[12px] h-16 bg-[#F5EFE8] rounded-r-md shadow-[inset_2px_2px_4px_rgba(204,190,178,0.4)] border-l border-[#dcdcdc]"></div>
-        <div className="absolute top-56 -right-[12px] w-[12px] h-24 bg-[#FF9E75] rounded-r-md shadow-[inset_2px_2px_4px_rgba(180,100,60,0.2)] border-l border-[#ff8a65]"></div>
-
-        {/* SCREEN CONTENT */}
-        <div className="flex-1 w-full h-full relative bg-[#FFFBF7] overflow-hidden rounded-[2.8rem]">
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+    <PhoneProvider>
+      <div className="w-full md:w-fit h-full mt-6 flex items-center justify-center px-4 font-sans relative">
+        {/* THE PHONE CONTAINER */}
+        <motion.div
+          variants={shakeVariants}
+          animate={screen === "locked" ? "shaking" : "idle"}
+          className={phoneChassis}
+        >
+          {/* DYNAMIC ISLAND (Notification Context) */}
+          <div className="absolute top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500">
             <motion.div
-              key={screen}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="absolute inset-0 w-full h-full bg-[#FFFBF7] py-3"
+              animate={{
+                width: screen === "locked" ? 140 : 100,
+                height: 32,
+              }}
+              className="bg-[#5C4D45] rounded-full flex justify-center items-center shadow-inner relative overflow-hidden"
             >
-              {renderScreen()}
+              <div className="absolute left-3 flex items-center gap-2">
+                <div className="w-2 h-2  rounded-full bg-[#3a302c] shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]"></div>
+              </div>
+
+              <AnimatePresence>
+                {screen === "locked" && (
+                  <motion.span
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 20 }}
+                    exit={{ opacity: 0 }}
+                    className="text-[9px] font-black text-[#FF9E75] uppercase tracking-wider ml-3 "
+                  >
+                    Pickup Now
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </motion.div>
-          </AnimatePresence>
-        </div>
+          </div>
 
-        {/* GLASS GLARE */}
-        <div className="pointer-events-none absolute inset-0 rounded-[3.5rem] bg-gradient-to-tr from-white/30 via-transparent to-transparent opacity-40 z-40"></div>
-      </motion.div>
+          {/* PHYSICAL BUTTONS */}
+          <div className="absolute top-36 -right-[12px] w-[12px] h-16 bg-[#F5EFE8] rounded-r-md shadow-[inset_2px_2px_4px_rgba(204,190,178,0.4)] border-l border-[#dcdcdc]"></div>
+          <div className="absolute top-56 -right-[12px] w-[12px] h-24 bg-[#FF9E75] rounded-r-md shadow-[inset_2px_2px_4px_rgba(180,100,60,0.2)] border-l border-[#ff8a65]"></div>
 
-      {/* --- FLOATING DECORATIONS (Student Context) --- */}
-      {/* <motion.div
+          {/* SCREEN CONTENT */}
+          <div className="flex-1 w-full h-full relative bg-[#FFFBF7] overflow-hidden rounded-[2.8rem]">
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+              <motion.div
+                key={screen}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute inset-0 w-full h-full bg-[#FFFBF7] py-3"
+              >
+                {renderScreen()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* GLASS GLARE */}
+          <div className="pointer-events-none absolute inset-0 rounded-[3.5rem] bg-gradient-to-tr from-white/30 via-transparent to-transparent opacity-40 z-40"></div>
+        </motion.div>
+
+        {/* --- FLOATING DECORATIONS (Student Context) --- */}
+        {/* <motion.div
         animate={{ y: [0, -15, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-20 right-10 lg:right-32 w-16 h-16 bg-[#FFFBF7] rounded-2xl shadow-[8px_8px_16px_rgba(214,198,186,0.3)] flex items-center justify-center -z-10 rotate-12"
@@ -323,20 +322,13 @@ const PhoneSimulator = () => {
         <Clock className="text-[#D6C6BA]" />
       </motion.div> */}
 
-      <motion.div
-        animate={{ y: [0, 20, 0] }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        className="absolute bottom-32 left-10 lg:left-32 w-14 h-14 bg-[#FFFBF7] rounded-full shadow-[8px_8px_16px_rgba(214,198,186,0.3)] flex items-center justify-center -z-10 -rotate-12"
-      >
-        <MapPin className="text-[#FF9E75]" />
-      </motion.div>
+        <div
+          className="absolute bottom-32 left-10 lg:left-32 w-14 h-14 bg-[#FFFBF7] rounded-full shadow-[8px_8px_16px_rgba(214,198,186,0.3)] flex items-center justify-center -z-10 -rotate-12"
+        >
+          <MapPin className="text-[#FF9E75]" />
+        </div>
 
-      <style jsx global>{`
+        <style jsx global>{`
         @keyframes shimmer {
           100% {
             transform: translateX(100%);
@@ -350,7 +342,8 @@ const PhoneSimulator = () => {
           scrollbar-width: none;
         }
       `}</style>
-    </div>
+      </div>
+    </PhoneProvider>
   );
 };
 

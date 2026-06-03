@@ -8,6 +8,8 @@ import {
   Search,
   Clock,
   ShoppingBag,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 const VegIcon = () => (
@@ -22,6 +24,8 @@ const NonVegIcon = () => (
   </div>
 );
 
+import { usePhone } from "./phone-context";
+
 const ClayMenuPage = ({
   onBack,
   onCartClick,
@@ -29,8 +33,10 @@ const ClayMenuPage = ({
   onBack: () => void;
   onCartClick: () => void;
 }) => {
+  const { activeRestaurant, addToCart, removeFromCart, cartItems } = usePhone();
   const [activeCategory, setActiveCategory] = useState("Recommended");
-  const cartCount = 2;
+  const cartCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
+  const cartTotal = cartItems.reduce((acc, item) => acc + (parseInt(item.price) * item.qty), 0);
 
   const clayFloat =
     "bg-white shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-3px_-3px_10px_rgba(255,255,255,0.8)] rounded-[1.5rem]";
@@ -81,11 +87,11 @@ const ClayMenuPage = ({
   ];
 
   return (
-    <div className="w-full h-full relative flex flex-col bg-orange-100  overflow-hidden -mt-4">
+    <div className={`w-full h-full relative flex flex-col ${activeRestaurant?.bg || 'bg-orange-100'} overflow-hidden -mt-4`}>
       {/* Hero */}
-      <div className="h-40 w-full bg-orange-100  relative shrink-0 mt-4">
+      <div className={`h-40 w-full ${activeRestaurant?.bg || 'bg-orange-100'} relative shrink-0 mt-4`}>
         <div className="absolute inset-0 flex items-center justify-center text-8xl opacity-20 select-none">
-          🍔
+          {activeRestaurant?.icon || "🍔"}
         </div>
         <div className="absolute top-10 left-0 w-full px-5 flex justify-between items-center z-10">
           <button
@@ -116,7 +122,7 @@ const ClayMenuPage = ({
         <div className="px-5 pt-6 pb-2 shrink-0">
           <div className="flex justify-between items-start mb-1">
             <h1 className="text-xl font-black text-[#5C4D45]">
-              The Burger Joint
+              {activeRestaurant?.name || "The Burger Joint"}
             </h1>
             <button
               className={`${clayButtonSmall} w-8 h-8 flex items-center justify-center !rounded-full`}
@@ -126,11 +132,11 @@ const ClayMenuPage = ({
           </div>
           <div className="flex items-center gap-3 text-[10px] font-bold text-[#9C8C84]">
             <span className="flex items-center gap-1">
-              <Star size={12} className="fill-[#FF9E75] text-[#FF9E75]" /> 4.8
+              <Star size={12} className="fill-[#FF9E75] text-[#FF9E75]" /> {activeRestaurant?.rating || "4.8"}
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">
-              <Clock size={12} /> 25 mins
+              <Clock size={12} /> {activeRestaurant?.time || "25 mins"}
             </span>
           </div>
         </div>
@@ -188,11 +194,32 @@ const ClayMenuPage = ({
                   {item.image}
                 </div>
                 <div className="relative z-10">
-                  <button
-                    className={`${clayButtonSmall} px-4 py-1.5 font-black text-[10px] uppercase tracking-wide hover:scale-105 transition-transform`}
-                  >
-                    ADD
-                  </button>
+                  {(() => {
+                    const cartItem = cartItems.find(i => i.id === item.id);
+                    if (cartItem) {
+                      return (
+                        <div className="bg-white shadow-[4px_4px_8px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] rounded-[0.8rem] flex items-center h-8 px-1">
+                          <button onClick={() => removeFromCart(item.id)} className="w-7 h-full flex items-center justify-center text-[#9C8C84] active:text-[#FF9E75] active:scale-90">
+                            <Minus size={12} strokeWidth={3} />
+                          </button>
+                          <span className="w-5 text-center text-[10px] font-black text-[#5C4D45]">
+                            {cartItem.qty}
+                          </span>
+                          <button onClick={() => addToCart(item)} className="w-7 h-full flex items-center justify-center text-[#9C8C84] active:text-[#FF9E75] active:scale-90">
+                            <Plus size={12} strokeWidth={3} />
+                          </button>
+                        </div>
+                      );
+                    }
+                    return (
+                      <button
+                        onClick={() => addToCart(item)}
+                        className={`${clayButtonSmall} px-4 py-1.5 font-black text-[10px] uppercase tracking-wide hover:scale-105 transition-transform`}
+                      >
+                        ADD
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
             </div>
@@ -212,7 +239,7 @@ const ClayMenuPage = ({
                 {cartCount} Items
               </span>
               <span className="text-lg font-black">
-                ₹{parseInt(menuItems[0].price) + parseInt(menuItems[1].price)}
+                ₹{cartTotal}
               </span>
             </div>
             <div className="flex items-center gap-2 font-black text-sm tracking-wide">

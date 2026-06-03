@@ -10,7 +10,11 @@ import {
   Bike,
   Wallet,
   ShoppingCartIcon,
+  CheckCircle2,
+  X,
 } from "lucide-react";
+
+import { usePhone } from "./phone-context";
 
 const ClayRestaurantHome = ({
   onCartClick,
@@ -23,6 +27,7 @@ const ClayRestaurantHome = ({
   onRestaurantClick: () => void;
   onHistoryClick: () => void;
 }) => {
+  const { setActiveRestaurant } = usePhone();
   const clayFloat =
     "bg-white shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-3px_-3px_10px_rgba(255,255,255,0.8)] rounded-[1.5rem]";
   const clayInset =
@@ -33,6 +38,14 @@ const ClayRestaurantHome = ({
     "bg-white text-[#5C4D45] shadow-sm rounded-full px-2 py-0.5 font-bold text-[10px] flex items-center gap-1";
 
   const [activeCategory, setActiveCategory] = useState("All");
+  const [showAddressSlideUp, setShowAddressSlideUp] = useState(false);
+  const [activeAddress, setActiveAddress] = useState("Downtown, Apt 4B");
+
+  const addresses = [
+    { id: 1, title: "Home", desc: "Downtown, Apt 4B" },
+    { id: 2, title: "University", desc: "North Campus, Block C" },
+    { id: 3, title: "Work", desc: "Tech Park, Building 2" }
+  ];
 
   const restaurants = [
     {
@@ -73,6 +86,11 @@ const ClayRestaurantHome = ({
     },
   ];
 
+  const handleRestaurantClick = (res: any) => {
+    setActiveRestaurant(res);
+    onRestaurantClick();
+  };
+
   return (
     <div className="w-full h-full relative flex flex-col bg-[#FFFBF7] pt-4">
       {/* Header */}
@@ -82,11 +100,12 @@ const ClayRestaurantHome = ({
             Delivering to
           </span>
           <button
+            onClick={() => setShowAddressSlideUp(true)}
             className={`${clayFloat} px-3 py-1.5 flex items-center gap-2 active:scale-95 transition-transform`}
           >
             <MapPin size={14} className="text-[#FF9E75] fill-[#FF9E75]" />
             <span className="font-extrabold text-xs text-[#5C4D45]">
-              Downtown, Apt 4B
+              {activeAddress.length > 15 ? activeAddress.substring(0, 15) + "..." : activeAddress}
             </span>
           </button>
         </div>
@@ -145,7 +164,7 @@ const ClayRestaurantHome = ({
           {restaurants.map((res) => (
             <div
               key={res.id}
-              onClick={onRestaurantClick}
+              onClick={() => handleRestaurantClick(res)}
               className={`${clayFloat} p-2.5 flex flex-col relative active:scale-[0.98] transition-transform duration-200 cursor-pointer`}
             >
               <div
@@ -216,6 +235,47 @@ const ClayRestaurantHome = ({
           </button>
         </nav>
       </div>
+
+      {/* Address Selection Slide-up */}
+      {showAddressSlideUp && (
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-sm z-[60] flex flex-col justify-end">
+          <div className="bg-[#FFFBF7] p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(214,198,186,0.6)] animate-in slide-in-from-bottom-full duration-300 flex flex-col gap-3">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-base font-black text-[#5C4D45]">Select Address</h2>
+              <button 
+                onClick={() => setShowAddressSlideUp(false)}
+                className="w-8 h-8 flex items-center justify-center bg-[#F5EFE8] rounded-full text-[#9C8C84] active:scale-90"
+              >
+                <X size={16} strokeWidth={3} />
+              </button>
+            </div>
+            
+            {addresses.map(addr => (
+              <div 
+                key={addr.id}
+                onClick={() => {
+                  setActiveAddress(addr.desc);
+                  setShowAddressSlideUp(false);
+                }}
+                className={`${clayFloat} p-3 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#FFF0E6] text-[#FF9E75] rounded-xl flex items-center justify-center">
+                    <MapPin size={18} strokeWidth={2.5} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-black text-[#5C4D45]">{addr.title}</span>
+                    <span className="text-[10px] font-bold text-[#9C8C84]">{addr.desc}</span>
+                  </div>
+                </div>
+                {activeAddress === addr.desc && (
+                  <CheckCircle2 size={20} strokeWidth={3} className="text-[#4CAF50]" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

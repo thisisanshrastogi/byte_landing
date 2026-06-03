@@ -10,7 +10,10 @@ import {
   History,
 } from "lucide-react";
 
+import { usePhone } from "./phone-context";
+
 const ClayWallet = ({ onBack }: { onBack: () => void }) => {
+  const { walletBalance, setWalletBalance } = usePhone();
   const clayFloat =
     "bg-white shadow-[6px_6px_12px_rgba(214,198,186,0.5),_-3px_-3px_10px_rgba(255,255,255,0.8)] rounded-[1.5rem]";
   const clayInset =
@@ -49,6 +52,19 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
     },
   ];
 
+  const [localTx, setLocalTx] = React.useState(transactions);
+
+  const handleTopUp = () => {
+    setWalletBalance(walletBalance + 500);
+    setLocalTx([{
+      id: Date.now(),
+      title: "Top Up",
+      date: "Just now",
+      amount: "+₹500.00",
+      type: "credit",
+    }, ...localTx]);
+  };
+
   return (
     <div className="w-full h-full relative flex flex-col bg-[#FFFBF7]">
       {/* Header */}
@@ -84,7 +100,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
               className={`${clayInset} p-4 flex items-center justify-between mb-4`}
             >
               <span className="text-2xl font-black text-[#5C4D45] tracking-tight">
-                ₹1000
+                ₹{walletBalance}
               </span>
               <div className="w-2 h-2 bg-[#FF9E75] rounded-full animate-pulse"></div>
             </div>
@@ -122,6 +138,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
 
         {/* Action */}
         <button
+          onClick={handleTopUp}
           className={`${clayButtonPrimary} w-full h-12 shrink-0 rounded-[1.2rem] flex items-center justify-center gap-2 font-black text-sm tracking-wide group mb-6`}
         >
           <Plus
@@ -137,7 +154,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
           <h3 className="text-sm font-black text-[#5C4D45] px-1">
             Recent Activity
           </h3>
-          {transactions.map((tx) => (
+          {localTx.map((tx) => (
             <div
               key={tx.id}
               className={`${clayFloat} p-2.5 flex items-center justify-between active:scale-[0.98] transition-transform`}

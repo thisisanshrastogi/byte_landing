@@ -359,11 +359,10 @@ const CompactAccordionItem = ({
         </span>
         <div
           className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
-          ${
-            isOpen
+          ${isOpen
               ? "bg-[#FF9E75] text-white rotate-180 shadow-inner"
               : "bg-[#F5EFE8] dark:bg-[#2A2A2A] text-[#5C4D45] dark:text-[#A0A0A0] shadow-[4px_4px_8px_rgba(214,198,186,0.4),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_8px_rgba(0,0,0,0.5),inset_1px_1px_2px_rgba(255,255,255,0.05)]"
-          }`}
+            }`}
         >
           {isOpen ? (
             <Minus size={18} strokeWidth={3} />
@@ -667,7 +666,7 @@ export default function LandingPage() {
           </section>
 
           {/* --- DATA USAGE & PRIVACY SECTION (Google Verification) --- */}
-          <section className="mb-20 lg:mb-32">
+          {/* <section className="mb-20 lg:mb-32">
             <motion.div
               initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
               whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
@@ -733,7 +732,7 @@ export default function LandingPage() {
                 </div>
               </div>
             </motion.div>
-          </section>
+          </section> */}
 
           {/* --- FINAL CTA --- */}
           <section className="text-center pb-12">
