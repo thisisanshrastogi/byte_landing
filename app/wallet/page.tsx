@@ -260,7 +260,7 @@ export default function WalletPage() {
           animate="visible"
         >
           {/* ---------------- TOP ROW (Cards) ---------------- */}
-          <div className="grid lg:grid-cols-2 gap-20">
+          <div className="grid lg:grid-cols-2 gap-8">
             {/* ---------------- Wallet Card ---------------- */}
             <motion.div variants={clayPopVariants} className="w-full h-fit">
               <div

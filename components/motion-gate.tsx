@@ -1,34 +1,44 @@
 "use client";
 
-import { AnimatePresence, MotionConfig } from "framer-motion";
-import useIsMobile from "./mobile-detector";
+import { useState, useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import IntroShutter from "./ui/intro-shutter";
 import ClientProviders from "./ClientProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
+function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return prefersReduced;
+}
 
 export default function MotionGate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isMobile = useIsMobile();
+  const prefersReduced = usePrefersReducedMotion();
 
-  if (isMobile) {
+  if (prefersReduced) {
     return (
       <MotionConfig reducedMotion="always">
-        <AnimatePresence initial={false} mode="wait">
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-          >
-            {/* {!isMobile && <IntroShutter />} */}
-            <ClientProviders>{children}</ClientProviders>
-          </GoogleOAuthProvider>
-        </AnimatePresence>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+        >
+          <ClientProviders>{children}</ClientProviders>
+        </GoogleOAuthProvider>
       </MotionConfig>
     );
   }
 
-  // Desktop: no restrictions
   return (
     <>
       <IntroShutter />

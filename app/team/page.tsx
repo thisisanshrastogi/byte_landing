@@ -14,27 +14,10 @@ import {
   Terminal,
   Code2,
 } from "lucide-react";
+import { THEME, CLAY } from "@/lib/design-tokens";
 
-// --- DESIGN TOKENS ---
-const THEME = {
-  // Backgrounds
-  bg: "bg-[#FFFBF7] dark:bg-[#050505] transition-colors duration-500",
-
-  // The Clay Card
-  card: "bg-[#FFFBF7] dark:bg-[#121212] shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] dark:shadow-none border border-white dark:border-white/10 relative overflow-hidden",
-
-  // The "Pressed" Well (for images)
-  inset:
-    "bg-[#F5EFE8] dark:bg-[#0a0a0a] shadow-[inset_4px_4px_8px_rgba(204,190,178,0.4),_inset_-4px_-4px_8px_rgba(255,255,255,0.8)] dark:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.8)]",
-
-  // Typography
-  heading: "text-[#5C4D45] dark:text-[#E0E0E0] font-black tracking-tight",
-  body: "text-[#9C8C84] dark:text-[#A1A1AA] font-bold",
-
-  // Buttons
-  socialBtn:
-    "w-10 h-10 rounded-full bg-[#F5EFE8] dark:bg-[#1A1A1A] flex items-center justify-center text-[#9C8C84] dark:text-[#888] shadow-[4px_4px_8px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-none dark:border dark:border-white/5 hover:text-[#FF9E75] dark:hover:text-[#FF9E75] hover:scale-110 active:scale-95 transition-all",
-};
+const socialBtnClass =
+  "w-10 h-10 rounded-full bg-[#F5EFE8] dark:bg-[#1A1A1A] flex items-center justify-center text-[#9C8C84] dark:text-[#888] shadow-[4px_4px_8px_rgba(214,198,186,0.5),_-2px_-2px_6px_rgba(255,255,255,0.8)] dark:shadow-none dark:border dark:border-white/5 hover:text-[#FF9E75] dark:hover:text-[#FF9E75] hover:scale-110 active:scale-95 transition-all";
 
 const teamMembers = [
   {
@@ -42,7 +25,6 @@ const teamMembers = [
     name: "Ansh Rastogi",
     role: "Backend Chef",
     bio: "The architect behind the infrastructure. Orchestrating the API and ensuring the kitchen runs without a hitch.",
-    // Terracotta Theme
     color: "text-[#D68C75]",
     bg: "bg-[#FFF0EB] dark:bg-[#D68C75]/10",
     border: "border-[#D68C75]/20",
@@ -59,7 +41,6 @@ const teamMembers = [
     name: "Mathew Manachery",
     role: "Vendor Ops Chef",
     bio: "Bridging the gap between the kitchen and the cloud. Building the tools that power our food partners.",
-    // Sage Theme
     color: "text-[#81C784]",
     bg: "bg-[#F2F9F2] dark:bg-[#81C784]/10",
     border: "border-[#81C784]/20",
@@ -76,7 +57,6 @@ const teamMembers = [
     name: "Abhinav V S",
     role: "Web Experience Chef",
     bio: "Crafting the digital storefront. Ensuring our landing experience is as buttery smooth as the food.",
-    // Honey/Gold Theme
     color: "text-[#EDAA55]",
     bg: "bg-[#FFF8E1] dark:bg-[#EDAA55]/10",
     border: "border-[#EDAA55]/20",
@@ -93,7 +73,6 @@ const teamMembers = [
     name: "Arjun Manjunath",
     role: "Mobile App Chef",
     bio: "The wizard behind the mobile experience. Turning caffeine into Flutter code.",
-    // Lavender Theme (Distinct from background)
     color: "text-[#9575CD]",
     bg: "bg-[#F3E5F5] dark:bg-[#9575CD]/10",
     border: "border-[#9575CD]/20",
@@ -120,7 +99,7 @@ export default function MeetTeamSection() {
         <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] bg-[#D6C6BA]/20 dark:bg-[#D6C6BA]/5 blur-[100px] rounded-full"></div>
       </div>
 
-      <section className="relative z-10 w-full py-24 px-6 md:px-8">
+      <main className="relative z-10 w-full py-24 px-6 md:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-20 space-y-6 mt-10">
@@ -141,7 +120,7 @@ export default function MeetTeamSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               viewport={{ once: true }}
-              className={`text-4xl md:text-6xl ${THEME.heading}`}
+              className={`text-4xl md:text-6xl ${THEME.textDark} font-black tracking-tight`}
             >
               Meet the{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7043]">
@@ -155,7 +134,7 @@ export default function MeetTeamSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               viewport={{ once: true }}
-              className={`max-w-xl mx-auto text-lg md:text-xl ${THEME.body} leading-relaxed`}
+              className={`max-w-xl mx-auto text-lg md:text-xl ${THEME.textSoft} font-bold leading-relaxed`}
             >
               Trading aprons for IDEs to cook up the smoothest dining experience
               on campus. Powered by code, driven by hunger.
@@ -175,12 +154,12 @@ export default function MeetTeamSection() {
                   duration: 0.8,
                 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -8 }}
-                className={`group rounded-[2.5rem] p-6 flex flex-col items-center text-center h-full ${THEME.card}`}
+                whileHover={{ y: -3 }}
+                className={`group ${CLAY.color.card} ${CLAY.shadow.md} ${CLAY.shadowDark.md} ${CLAY.color.cardBorder} ${CLAY.radius.xl} p-6 flex flex-col items-center text-center h-full relative overflow-hidden`}
               >
                 {/* Image Well */}
                 <div
-                  className={`w-28 h-28 rounded-full p-2 mb-6 relative ${THEME.inset}`}
+                  className={`w-28 h-28 rounded-full p-2 mb-6 relative ${CLAY.color.inset} ${CLAY.shadow.inset} ${CLAY.shadowDark.inset}`}
                 >
                   <img
                     src={member.image}
@@ -188,17 +167,16 @@ export default function MeetTeamSection() {
                     className="w-full h-full rounded-full object-cover shadow-sm bg-white dark:bg-[#222]"
                   />
                   {/* Floating Icon Badge */}
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 10 }}
+                  <div
                     className={`absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center shadow-md border-2 border-white dark:border-[#121212] ${member.bg} ${member.color}`}
                   >
                     {member.icon}
-                  </motion.div>
+                  </div>
                 </div>
 
                 {/* Info */}
                 <div className="w-full">
-                  <h3 className={`text-xl mb-3 ${THEME.heading}`}>
+                  <h3 className={`text-xl mb-3 ${THEME.textDark} font-black tracking-tight`}>
                     {member.name}
                   </h3>
                   <span
@@ -209,7 +187,7 @@ export default function MeetTeamSection() {
                 </div>
 
                 <p
-                  className={`text-sm ${THEME.body} mb-8 leading-relaxed flex-grow`}
+                  className={`text-sm ${THEME.textSoft} font-bold mb-8 leading-relaxed flex-grow`}
                 >
                   {member.bio}
                 </p>
@@ -221,7 +199,7 @@ export default function MeetTeamSection() {
                       href={member.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={THEME.socialBtn}
+                      className={socialBtnClass}
                       aria-label={`${member.name}'s Github`}
                     >
                       <Github size={18} strokeWidth={2.5} />
@@ -232,7 +210,7 @@ export default function MeetTeamSection() {
                       href={member.links.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={THEME.socialBtn}
+                      className={socialBtnClass}
                       aria-label={`${member.name}'s LinkedIn`}
                     >
                       <Linkedin size={18} strokeWidth={2.5} />
@@ -243,7 +221,7 @@ export default function MeetTeamSection() {
                       href={member.links.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={THEME.socialBtn}
+                      className={socialBtnClass}
                       aria-label={`${member.name}'s Twitter`}
                     >
                       <Twitter size={18} strokeWidth={2.5} />
@@ -254,7 +232,7 @@ export default function MeetTeamSection() {
             ))}
           </div>
         </div>
-      </section>
+      </main>
       <Footer />
     </div>
   );

@@ -26,8 +26,6 @@ const SCREEN_DEPTH = {
 
 import type { Variants } from "framer-motion";
 import useIsMobile from "../mobile-detector";
-import { set } from "date-fns";
-import { start } from "repl";
 
 const slideVariants: Variants = {
   enter: {

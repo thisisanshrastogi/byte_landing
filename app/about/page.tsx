@@ -16,11 +16,11 @@ import { THEME, CLAY } from "@/lib/design-tokens";
 
 export default function AboutPage() {
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 60, damping: 12 },
+      transition: { type: "spring", duration: 0.45, bounce: 0 },
     },
   };
 
@@ -29,8 +29,8 @@ export default function AboutPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
+        staggerChildren: 0.06,
+        delayChildren: 0.05,
       },
     },
   };
@@ -41,7 +41,7 @@ export default function AboutPage() {
       <BackgroundElements />
 
       <main className="relative z-10 pt-24 pb-20 lg:pt-16 lg:pb-32">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* --- HERO --- */}
           <motion.div
             initial="hidden"

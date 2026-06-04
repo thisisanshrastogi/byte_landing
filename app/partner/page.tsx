@@ -41,7 +41,7 @@ export default function VendorApplicationPage() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+      transition: { duration: 0.3 },
     },
   };
 
@@ -78,16 +78,8 @@ export default function VendorApplicationPage() {
       {/* --- LEFT PANEL --- */}
       <div className="hidden lg:flex w-1/2 relative bg-[#FFF0E6] dark:bg-gradient-to-br dark:from-[#120804] dark:to-[#050505] flex-col justify-between p-12 lg:p-20 overflow-hidden border-r border-[#EBE0D6] dark:border-white/5">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FF9E75]/20 dark:bg-[#FF7E47]/20 rounded-full blur-3xl dark:blur-[100px]"
-          />
-          <motion.div
-            animate={{ x: [0, -30, 0], y: [0, 50, 0], scale: [1, 1.1, 1] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#FFD166]/20 dark:bg-[#FF9E75]/15 rounded-full blur-3xl dark:blur-[120px]"
-          />
+          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#FF9E75]/20 dark:bg-[#FF7E47]/20 rounded-full blur-3xl dark:blur-[100px]" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#FFD166]/20 dark:bg-[#FF9E75]/15 rounded-full blur-3xl dark:blur-[120px]" />
         </div>
 
         <div className="relative z-10" />
@@ -128,7 +120,7 @@ export default function VendorApplicationPage() {
 
         <div className="relative z-10 mt-auto pt-12 flex items-center justify-between">
           <p className={`text-sm ${THEME.textSoft} opacity-60`}>
-            © 2026 Byte Technologies
+            © {new Date().getFullYear()} Byte Technologies
           </p>
           <div className="w-20 h-10 overflow-hidden rounded-lg bg-white dark:bg-[#0a0a0a] flex items-center justify-center p-2">
             <img src="/byte-logo.png" alt="Byte" className="w-[160%] object-cover block dark:hidden" />
@@ -192,7 +184,7 @@ export default function VendorApplicationPage() {
                       required
                       type="text"
                       className={inputClass}
-                      placeholder="John Doe"
+                      placeholder="Priya Sharma"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
@@ -220,7 +212,7 @@ export default function VendorApplicationPage() {
                       required
                       type="text"
                       className={inputClass}
-                      placeholder="John's Cafe"
+                      placeholder="Campus Bites"
                       value={formData.outletName}
                       onChange={(e) => setFormData({ ...formData, outletName: e.target.value })}
                     />

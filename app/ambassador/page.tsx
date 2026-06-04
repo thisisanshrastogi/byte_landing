@@ -125,9 +125,9 @@ export default function AmbassadorPage() {
 
           <div className="flex flex-col gap-4">
             {[
-              { icon: Users, title: "Bring Byte to Your Campus", desc: "Be the bridge between Byte and your peers." },
-              { icon: Handshake, title: "Build Your Network", desc: "Connect with amazing people and opportunities." },
-              { icon: Gift, title: "Access Exclusive Perks", desc: "Enjoy rewards, swag, and special privileges." },
+              { icon: Users, title: "Bring Byte to Your Campus", desc: "Lead the launch, collaborate on ops, marketing, and tech." },
+              { icon: Handshake, title: "Actual Startup Experience", desc: "Run campus operations, own outcomes, ship things that matter." },
+              { icon: Gift, title: "Perks & Early Access", desc: "Exclusive rewards, swag, and direct line to the founding team." },
             ].map((item, i) => (
               <div
                 key={i}
@@ -210,7 +210,7 @@ export default function AmbassadorPage() {
                           <div className="space-y-5 md:space-y-6">
                             <div><label className={labelClass}>Full Name *</label><input required type="text" name="name" value={formData.name} onChange={handleChange} className={inputClass} placeholder="John Doe" /></div>
                             <div><label className={labelClass}>Email Address *</label><input required type="email" name="email" value={formData.email} onChange={handleChange} className={inputClass} placeholder="john@example.com" /></div>
-                            <div><label className={labelClass}>Phone Number *</label><input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className={inputClass} placeholder="+1 234 567 8900" /></div>
+                            <div><label className={labelClass}>Phone Number *</label><input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className={inputClass} placeholder="10 digit phone number" /></div>
                           </div>
                         )}
 
@@ -219,7 +219,7 @@ export default function AmbassadorPage() {
                             <div><label className={labelClass}>College / University *</label><input required type="text" name="college" value={formData.college} onChange={handleChange} className={inputClass} placeholder="University Name" /></div>
                             <div className="relative">
                               <label className={labelClass}>Expected Graduation Year *</label>
-                              <div 
+                              <div
                                 onClick={() => setShowYearDropdown(!showYearDropdown)}
                                 className={`${inputClass} cursor-pointer flex justify-between items-center`}
                               >
@@ -230,12 +230,12 @@ export default function AmbassadorPage() {
                                   <ChevronDown size={18} />
                                 </motion.div>
                               </div>
-                              
+
                               <AnimatePresence>
                                 {showYearDropdown && (
-                                  <motion.div 
-                                    initial={{ opacity: 0, y: -10 }} 
-                                    animate={{ opacity: 1, y: 0 }} 
+                                  <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     className={`absolute z-50 w-full mt-2 p-3 grid grid-cols-3 md:grid-cols-4 gap-2 ${CLAY.radius.lg} ${THEME.cardInset} border border-white/50 dark:border-white/5 shadow-xl`}
                                   >
@@ -246,9 +246,8 @@ export default function AmbassadorPage() {
                                           setFormData({ ...formData, year: yr });
                                           setShowYearDropdown(false);
                                         }}
-                                        className={`${selectableBase} px-2 py-2 font-bold text-xs text-center ${
-                                          formData.year === yr ? selectableOn : selectableOff
-                                        }`}
+                                        className={`${selectableBase} px-2 py-2 font-bold text-xs text-center ${formData.year === yr ? selectableOn : selectableOff
+                                          }`}
                                       >
                                         {yr}
                                       </div>

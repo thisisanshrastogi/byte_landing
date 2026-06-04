@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/contexts/auth-context";
 import {
@@ -259,8 +260,15 @@ export function Navbar() {
         </div>
 
         {/* Mobile Dropdown */}
-        {isMenuOpen && (
-          <div className="md:hidden px-2 pb-2">
+        <AnimatePresence>
+          {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: "spring", duration: 0.35, bounce: 0 }}
+            className="md:hidden px-2 pb-2 overflow-hidden"
+          >
             <div className="rounded-[1.5rem] bg-[#FFFBF7] dark:bg-card border border-[#F5EFE8] dark:border-border shadow-inner p-2 space-y-1">
               {["Home", "About", "Contact", "Ambassador", "Profile"].map((label) => {
                 const path = label === "Home" ? "/" : `/${label.toLowerCase()}`;
@@ -330,8 +338,9 @@ export function Navbar() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </nav>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -58,6 +59,14 @@ const faqs = [
     q: "Is it just for students?",
     a: "It is designed for any high-traffic campus environment with short breaks, including corporate offices and tech parks.",
   },
+  {
+    q: "Which colleges is Byte available at?",
+    a: (<>We are currently rolling out across select campuses in India. If your college isn&apos;t listed yet, you can bring Byte to your campus by becoming a <Link href="/ambassador" className="text-[#FF9E75] dark:text-[#ff7c50] font-bold hover:underline">Campus Ambassador</Link> — apply and help us launch at your institution.</>),
+  },
+  {
+    q: "How do refunds work?",
+    a: "If a vendor rejects or cancels your order, the money is instantly returned to your Byte wallet. No waiting for bank processing.",
+  },
 ];
 
 const footerBg =
@@ -84,7 +93,7 @@ const MobileStickyNav = () => {
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
+          exit={{ y: 40, opacity: 0, filter: "blur(4px)" }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
           className="fixed bottom-6 inset-x-4 z-50 md:hidden flex justify-center"
         >
@@ -126,23 +135,20 @@ const SectionHeading = ({
       className={`${CLAY.spacing.headingGap} ${align === "center" ? "text-center" : "text-left"}`}
     >
       <motion.h2
-        initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+        initial={viewportMotion.initial ?? { opacity: 0, y: 12 }}
         whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
         viewport={viewportMotion.viewport ?? { once: true }}
+        transition={{ type: "spring", duration: 0.4, bounce: 0 }}
         className={`text-3xl md:text-5xl font-extrabold ${THEME.textDark} tracking-tight mb-4`}
       >
         {title}
       </motion.h2>
       {subtitle && (
-        <motion.p
-          initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
-          whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
-          viewport={viewportMotion.viewport ?? { once: true }}
-          transition={{ delay: 0.1 }}
+        <p
           className={`text-base md:text-lg ${THEME.textSoft} max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
         >
           {subtitle}
-        </motion.p>
+        </p>
       )}
     </div>
   );
@@ -215,10 +221,7 @@ const BetterAnalyticsGraph = () => {
           </p>
           <div className="text-3xl font-bold text-white tracking-tight flex items-center gap-2">
             ₹4,240
-            <span className="flex h-3 w-3 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#81C784] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#81C784]"></span>
-            </span>
+            <span className="inline-flex rounded-full h-3 w-3 bg-[#81C784]"></span>
           </div>
         </div>
         <div className="px-2 py-1 bg-white/10 rounded-lg flex items-center gap-1 text-[#81C784] text-xs font-bold border border-white/5 shadow-inner">
@@ -269,9 +272,9 @@ const BetterAnalyticsGraph = () => {
           />
         </svg>
         <motion.div
-          initial={viewportMotion.initial ?? { opacity: 0, scale: 0 }}
-          whileInView={viewportMotion.whileInView ?? { opacity: 1, scale: 1 }}
-          transition={{ delay: 1.8 }}
+          initial={viewportMotion.initial ?? { opacity: 0, scale: 0.92, filter: "blur(2px)" }}
+          whileInView={viewportMotion.whileInView ?? { opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ delay: 1.8, type: "spring", duration: 0.4, bounce: 0 }}
           className="absolute right-[20%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
         >
           <div className="w-4 h-4 rounded-full bg-[#FF9E75] border-[3px] border-[#5C4D45] shadow-[0_0_10px_#FF9E75]" />
@@ -292,7 +295,7 @@ const CompactAccordionItem = ({
   onClick,
 }: {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
   isOpen: boolean;
   onClick: () => void;
 }) => {
@@ -311,6 +314,7 @@ const CompactAccordionItem = ({
       <motion.button
         layout="position"
         onClick={onClick}
+        aria-expanded={isOpen}
         className="w-full px-6 py-5 flex items-center justify-between text-left outline-none cursor-pointer"
       >
         <span
@@ -339,8 +343,14 @@ const CompactAccordionItem = ({
           <motion.div
             initial={viewportMotion.initial ?? { height: 0, opacity: 0 }}
             animate={viewportMotion.animate ?? { height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            exit={{ height: 0, opacity: 0, filter: "blur(2px)" }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 40,
+              opacity: { duration: 0.1 },
+              filter: { duration: 0.08 },
+            }}
           >
             <div className="px-6 pb-6 pt-0">
               <div
@@ -370,11 +380,12 @@ export default function LandingPage() {
     setActiveIndex(activeIndex === index ? null : index);
   };
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", duration: 0.8 },
+      filter: "blur(0px)",
+      transition: { type: "spring", duration: 0.6, bounce: 0 },
     },
   };
 
@@ -386,25 +397,22 @@ export default function LandingPage() {
       <MobileStickyNav />
       <BackgroundElements />
 
-      <main className="relative z-10 pt-20 pb-20 px-4 md:px-10">
+      <main className="relative z-10 pt-20 pb-20 px-6 lg:px-8">
         <ClayCursor containerRef={heroRef} />
-        <div className="max-w-7xl mx-auto px-2 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           {/* --- HERO SECTION --- */}
           <section ref={heroRef} className={`grid lg:grid-cols-2 gap-12 lg:gap-0 items-center ${CLAY.spacing.sectionGap} lg:cursor-none`}>
             <motion.div
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-              className="text-left flex flex-col items-start relative z-10 lg:pr-12 mt-10"
+              className="text-left flex flex-col items-start relative z-10 lg:pr-12"
             >
               <motion.div
                 variants={fadeInUp}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-full border border-white/50 dark:border-white/10 shadow-sm mb-8"
               >
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF9E75] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF9E75]"></span>
-                </span>
+                <span className="inline-flex rounded-full h-2 w-2 bg-[#FF9E75]"></span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#9C8C84]">
                   Campus Food, Reimagined
                 </span>
@@ -412,10 +420,10 @@ export default function LandingPage() {
 
               <motion.h1
                 variants={fadeInUp}
-                className={`text-4xl sm:text-5xl md:text-7xl font-black ${THEME.textDark} leading-[1.15] tracking-tight mb-6`}
+                className={`text-4xl sm:text-5xl md:text-7xl font-black ${THEME.textDark} leading-[1.1] tracking-[-0.03em] mb-6`}
               >
                 Order local. <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9E75] to-[#FF7043]">
+                <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(to right in oklch, #FF9E75, #FF7043)" }}>
                   Skip the queues.
                 </span>
               </motion.h1>
@@ -464,8 +472,8 @@ export default function LandingPage() {
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="flex justify-center lg:justify-end relative w-full mt-10 lg:mt-0"
+              transition={{ duration: 0.5 }}
+              className="flex justify-center lg:justify-end relative w-full"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(255,158,117,0.15)_0%,rgba(0,0,0,0)_70%)] -z-10 blur-3xl"></div>
               <PhoneSimulator />
@@ -499,8 +507,14 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <div className="relative z-10 text-center mb-14 lg:mb-16">
-              <h2 className={`text-3xl md:text-5xl font-extrabold ${THEME.textDark} mb-4 tracking-tight`}>
+            <motion.div
+              initial={viewportMotion.initial ?? { opacity: 0, y: 12 }}
+              whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
+              viewport={viewportMotion.viewport ?? { once: true }}
+              transition={{ type: "spring", duration: 0.4, bounce: 0 }}
+              className="relative z-10 text-center mb-14 lg:mb-16"
+            >
+              <h2 className={`text-3xl md:text-5xl font-extrabold ${THEME.textDark} mb-4 tracking-tight [text-wrap:balance]`}>
                 Campus breaks are{" "}
                 <span className="text-[#FF9E75] dark:text-[#ff7c50]">
                   too short for queues.
@@ -509,18 +523,18 @@ export default function LandingPage() {
               <p className={`text-base md:text-lg ${THEME.textSoft} max-w-2xl mx-auto`}>
                 Every day, hundreds of students rush to nearby vendors during the same window. Students lose valuable time waiting, while vendors struggle to handle unpredictable demand.
               </p>
-            </div>
+            </motion.div>
 
             <div className={`relative z-10 grid grid-cols-1 md:grid-cols-3 ${CLAY.spacing.gridGap}`}>
               {problems.map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={viewportMotion.initial ?? { opacity: 0, y: 20 }}
+                  initial={viewportMotion.initial ?? { opacity: 0, y: 16 }}
                   whileInView={viewportMotion.whileInView ?? { opacity: 1, y: 0 }}
                   viewport={viewportMotion.viewport ?? { once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
-                  className={`${CLAY.spacing.cardSmall} ${CLAY.radius.md} ${THEME.card} flex flex-col items-start relative overflow-hidden group transition-all duration-300`}
+                  transition={{ delay: i * 0.12, type: "spring", duration: 0.5, bounce: 0 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className={`${CLAY.spacing.cardSmall} ${CLAY.radius.md} ${THEME.card} flex flex-col items-start relative overflow-hidden group transition-all duration-200`}
                 >
                   <div className={`w-14 h-14 ${CLAY.radius.sm} ${THEME.cardInset} flex items-center justify-center mb-6 relative z-10`}>
                     <item.icon size={28} strokeWidth={2.5} className={THEME.textDark} />
@@ -552,7 +566,7 @@ export default function LandingPage() {
                     Students pre-order meals before breaks begin. Know exactly when your food will be ready. No waiting. No uncertainty.
                   </p>
                 </div>
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-20 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#ffd8b2] dark:bg-[#ff9e75cf] rounded-full blur-[80px] opacity-20 group-hover:scale-110 transition-transform duration-300"></div>
               </div>
 
               <div className={`md:col-span-1 md:row-span-2 min-h-[500px] md:min-h-0 ${footerBg} dark:border dark:border-white/10 ${CLAY.radius.lg} p-8 flex flex-col relative overflow-hidden ${CLAY.shadow.lg} dark:shadow-none text-white`}>
@@ -592,7 +606,7 @@ export default function LandingPage() {
           </section>
 
           {/* --- FAQ --- */}
-          <section className="w-full py-12 md:py-20 px-2 md:px-12 flex justify-center">
+          <section className={`w-full flex justify-center ${CLAY.spacing.sectionGap}`}>
             <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               <div className="lg:col-span-4 lg:sticky lg:top-24 h-full flex flex-col gap-4">
                 <h2 className="text-[#5C4D45] dark:text-white text-4xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
@@ -622,14 +636,14 @@ export default function LandingPage() {
 
           {/* --- FINAL CTA --- */}
           <section className={`text-center pb-12 ${CLAY.spacing.sectionGap}`}>
-            <div className={`${CLAY.spacing.cardCta} ${CLAY.radius.xl} ${THEME.cardElevated} relative overflow-hidden group border border-[#FF9E75]/10 hover:border-[#FF9E75]/30 transition-all duration-700 hover:shadow-[0_0_40px_rgba(255,158,117,0.15),12px_12px_24px_rgba(214,198,186,0.45),-6px_-6px_16px_rgba(255,255,255,0.85)] dark:hover:shadow-[0_0_40px_rgba(255,124,80,0.1)]`}>
-              <div className="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ boxShadow: "inset 0 0 30px rgba(255,158,117,0.08)" }}></div>
+            <div className={`${CLAY.spacing.cardCta} ${CLAY.radius.xl} ${THEME.cardElevated} relative overflow-hidden group border border-[#FF9E75]/10 hover:border-[#FF9E75]/30 transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,158,117,0.15),12px_12px_24px_rgba(214,198,186,0.45),-6px_-6px_16px_rgba(255,255,255,0.85)] dark:hover:shadow-[0_0_40px_rgba(255,124,80,0.1)]`}>
+              <div className="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ boxShadow: "inset 0 0 30px rgba(255,158,117,0.08)" }}></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF9E75]/10 blur-[80px] rounded-full"></div>
               <div className="relative z-10 max-w-3xl mx-auto">
                 <span className="inline-block px-3 py-1 rounded-full bg-[#FF9E75]/10 text-[#FF9E75] dark:text-[#ff7c50] font-semibold text-[10px] uppercase tracking-widest mb-6">
                   Join the movement
                 </span>
-                <h2 className={`text-3xl md:text-6xl font-extrabold ${THEME.textDark} mb-6 tracking-tight leading-[1.25]`}>
+                <h2 className={`text-3xl md:text-6xl font-extrabold ${THEME.textDark} mb-6 tracking-tight leading-[1.25] [text-wrap:balance]`}>
                   The future of campus <br /> dining starts here.
                 </h2>
                 <p className={`text-base md:text-lg ${THEME.textSoft} mb-10 max-w-lg mx-auto`}>

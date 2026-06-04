@@ -102,7 +102,7 @@ const ClayWallet = ({ onBack }: { onBack: () => void }) => {
               <span className="text-2xl font-black text-[#5C4D45] tracking-tight">
                 ₹{walletBalance}
               </span>
-              <div className="w-2 h-2 bg-[#FF9E75] rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-[#FF9E75] rounded-full"></div>
             </div>
             <div className="flex gap-4">
               <div className="flex-1 flex flex-col gap-1">

@@ -13,9 +13,10 @@ export const CLAY = {
     inset:
       "dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.6),inset_-1px_-1px_3px_rgba(255,255,255,0.03)]",
     sm: "dark:shadow-[3px_3px_8px_rgba(0,0,0,0.4),-1px_-1px_4px_rgba(255,255,255,0.03)]",
-    md: "dark:shadow-none",
-    lg: "dark:shadow-none",
-    brand: "dark:shadow-none",
+    md: "dark:shadow-[6px_6px_12px_rgba(0,0,0,0.5),-3px_-3px_8px_rgba(255,255,255,0.02)]",
+    lg: "dark:shadow-[8px_8px_16px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)]",
+    brand:
+      "dark:shadow-[4px_4px_8px_rgba(255,124,80,0.2),-2px_-2px_4px_rgba(255,255,255,0.02)]",
   },
 
   radius: {
@@ -29,7 +30,7 @@ export const CLAY = {
   color: {
     bg: "bg-[#FFFBF7] dark:bg-[#050505]",
     card: "bg-[#FFFBF7] dark:bg-[#121212]",
-    cardBorder: "border border-white dark:border-white/10",
+    cardBorder: "border border-[#F5EFE8] dark:border-white/10",
     inset: "bg-[#F5EFE8] dark:bg-[#0a0a0a]",
     accent: "bg-[#FF9E75] dark:bg-[#ff7c50]",
     accentLight: "bg-[#FFF0E6] dark:bg-[#1a1512]",
@@ -52,7 +53,7 @@ export const THEME = {
   bg: `${CLAY.color.bg} transition-colors duration-500`,
   card: `${CLAY.color.card} ${CLAY.shadow.md} ${CLAY.shadowDark.md} ${CLAY.color.cardBorder} ${CLAY.radius.md}`,
   cardHover:
-    "hover:-translate-y-1 hover:shadow-[12px_12px_24px_rgba(214,198,186,0.5),-6px_-6px_16px_rgba(255,255,255,0.85)] transition-all duration-300 ease-out",
+    "hover:-translate-y-1 hover:shadow-[12px_12px_24px_rgba(214,198,186,0.5),-6px_-6px_16px_rgba(255,255,255,0.85)] dark:hover:shadow-[8px_8px_16px_rgba(0,0,0,0.6)] transition-all duration-300 ease-out",
   cardElevated: `${CLAY.color.card} ${CLAY.shadow.lg} ${CLAY.shadowDark.lg} ${CLAY.color.cardBorder} ${CLAY.radius.xl}`,
   cardInset: `${CLAY.color.inset} ${CLAY.shadow.inset} ${CLAY.shadowDark.inset} ${CLAY.radius.sm}`,
   btnPrimary: `${CLAY.color.accent} text-white ${CLAY.shadow.brand} ${CLAY.shadowDark.brand} hover:opacity-90 active:scale-95 transition-all ${CLAY.radius.full}`,

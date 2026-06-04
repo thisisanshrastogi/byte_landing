@@ -44,7 +44,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0); /* Dark Teal for dark mode background */
+  --background: oklch(0.145 0.008 50); /* Warm dark background */
   --foreground: oklch(0.985 0 0); /* Light Peach for dark mode text */
   --card: oklch(0.145 0 0); /* Dark Teal for dark mode cards */
   --card-foreground: oklch(0.985 0 0); /* Light Peach for dark mode card text */
@@ -128,6 +128,12 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Accessible focus ring for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid #FF9E75;
+    outline-offset: 2px;
   }
 
   /* --------------------------------------------------
@@ -241,5 +247,31 @@
   100% {
     opacity: 0;
     transform: translateY(-200px);
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+    margin-left: 0%;
+  }
+  50% {
+    width: 60%;
+    margin-left: 20%;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

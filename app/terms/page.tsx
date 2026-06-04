@@ -18,34 +18,29 @@ import {
     LucideIcon,
     Headphones,
 } from "lucide-react";
+import { THEME, CLAY } from "@/lib/design-tokens";
 
 export default function TermsPage() {
-    // --- CLAY TOKENS ---
-    const clayCard =
-        "bg-white shadow-[8px_8px_16px_rgba(214,198,186,0.5),_-4px_-4px_12px_rgba(255,255,255,0.8)] rounded-[2rem] border border-transparent dark:bg-card dark:border-border dark:shadow-none";
-    const textHeading =
-        "text-[#5C4D45] dark:text-foreground font-black tracking-tight";
-    const textBody =
-        "text-[#9C8C84] dark:text-muted-foreground font-bold leading-relaxed";
+    const clayCard = `${CLAY.color.card} ${CLAY.shadow.md} ${CLAY.shadowDark.md} ${CLAY.color.cardBorder} ${CLAY.radius.lg}`;
+    const textHeading = `${THEME.textDark} font-black tracking-tight`;
+    const textBody = `${THEME.textSoft} font-bold leading-relaxed`;
 
-    const iconBox =
-        "w-12 h-12 rounded-[1rem] flex items-center justify-center mb-4 bg-[#FFF0E6] text-[#FF9E75] dark:bg-primary/10 dark:text-primary shadow-sm";
+    const iconBox = `w-12 h-12 ${CLAY.radius.sm} flex items-center justify-center mb-4 ${CLAY.color.accentLight} ${THEME.brand} shadow-sm`;
 
     // --- ANIMATION ---
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+            transition: { duration: 0.3 },
         },
     };
 
     const itemUpVariants: Variants = {
-        hidden: { y: 20, opacity: 0 },
+        hidden: { opacity: 0 },
         visible: {
-            y: 0,
             opacity: 1,
-            transition: { type: "spring", stiffness: 100, damping: 20 },
+            transition: { duration: 0.2 },
         },
     };
 

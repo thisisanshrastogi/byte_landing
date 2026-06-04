@@ -36,7 +36,7 @@ export function Footer() {
             <div className={`text-xs sm:text-sm font-bold ${textBase}`}>
               Contact:{" "}
               <a
-                href="mailto:hello@support@byteapp.tech"
+                href="mailto:support@byteapp.tech"
                 className={`text-[#FF9E75] hover:text-white dark:text-primary dark:hover:underline transition-colors`}
               >
                 support@byteapp.tech
@@ -81,6 +81,14 @@ export function Footer() {
                   className={`text-sm font-bold ${textBase} ${hoverLink}`}
                 >
                   Partner as Vendor
+                </Link>
+              </li>
+              <li key="ambassador">
+                <Link
+                  href="/ambassador"
+                  className={`text-sm font-bold ${textBase} ${hoverLink}`}
+                >
+                  Campus Ambassador
                 </Link>
               </li>
               <li key="delete_account">
