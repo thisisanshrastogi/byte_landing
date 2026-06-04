@@ -47,7 +47,7 @@ export default function AboutPage() {
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center py-16 md:py-24"
+            className={`text-center py-20 md:py-32 ${CLAY.spacing.sectionGap}`}
           >
             <motion.div
               variants={fadeInUp}
