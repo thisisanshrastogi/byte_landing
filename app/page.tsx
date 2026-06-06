@@ -397,7 +397,7 @@ export default function LandingPage() {
       <MobileStickyNav />
       <BackgroundElements />
 
-      <main className="relative z-10 pt-20 pb-20 px-6 lg:px-8">
+      <main className="relative z-10 pt-28 md:pt-20 pb-20 px-6 lg:px-8">
         <ClayCursor containerRef={heroRef} />
         <div className="max-w-7xl mx-auto">
           {/* --- HERO SECTION --- */}
